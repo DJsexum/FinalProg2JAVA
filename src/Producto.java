@@ -2,7 +2,7 @@ import Enumerados.Categoria;
 import java.util.ArrayList;
 
 
-public class Producto
+public class Producto implements Comparable<Producto>
 {
     private int codigo;
     private String detalle;
@@ -138,14 +138,14 @@ public class Producto
         {
             throw new Excepciones.ListaProductosNulaException("La lista de productos no puede ser nula.");
         }
-        if (productos.removeIf(producto -> producto.getCodigo() == codigo))
-        {
-            System.out.println("Producto con código " + codigo + " eliminado.");
-        }
-            else
+            if (!productos.removeIf(producto -> producto.getCodigo() == codigo))
             {
-                System.out.println("No se encontró el producto con código " + codigo + ".");
+                System.out.println("No se encontro el producto con codigo " + codigo + ".");
             }
+                else
+                {
+                    System.out.println("Producto con codigo " + codigo + " eliminado.");
+                }
     }
 
     public void modificarProducto(String detalle, String talle, double precio, String marca, String material, Categoria categoria, int stock)
@@ -172,20 +172,20 @@ public class Producto
         return new ArrayList<>(productos);
     }
 
-    public static Producto busquedaProducto(ArrayList<Producto> productos, int codigo)
+    public static Producto buscarProducto(ArrayList<Producto> productos, int codigo)
     {
         if (productos == null)
         {
             throw new Excepciones.ListaProductosNulaException("La lista de productos no puede ser nula.");
         }
-            for (Producto producto : productos)
+        for (Producto producto : productos)
+        {
+            if (producto.getCodigo() == codigo)
             {
-                if (producto.getCodigo() == codigo)
-                {
-                    return producto;
-                }
+                return producto;
             }
-            throw new Excepciones.ProductoNoEncontradoException("No se encontró el producto con código " + codigo + ".");
+        }
+        throw new Excepciones.ProductoNoEncontradoExcepcion("No se encontro el producto con codigo " + codigo + ".");
     }
 
     public static void verDetalleProducto(Producto producto)
@@ -202,5 +202,41 @@ public class Producto
         System.out.println("Material: " + producto.getMaterial());
         System.out.println("Categoría: " + producto.getCategoria());
         System.out.println("Stock: " + producto.getStock());
+    }
+
+    public void actualizarStock(int cantidad)
+    {
+        if (this.stock + cantidad < 0)
+        {
+            throw new Excepciones.ProductoInvalidoException("El stock no puede ser negativo.");
+        }
+        this.stock += cantidad;
+    }
+
+    /*
+    El System.out.println() es para la salida de información en la consola en momentos especificos.
+    El toString() es para la salida de informacion en la consola cuando se imprime el objeto.
+    Por ejemplo, si se imprime un objeto de la clase Producto, se llamara automaticamente al metodo toString() para mostrar la informacion del objeto.
+    */
+    @Override
+    public String toString() // God no?
+    {
+        return "Producto\n" +
+                "{\n" +
+                "Codigo = " + codigo + ",\n" +
+                "Detalle = '" + detalle + "',\n" +
+                "Talle = '" + talle + "',\n" +
+                "Precio = " + precio + ",\n" +
+                "Marca = '" + marca + "',\n" +
+                "Material ='" + material + "',\n" +
+                "Categoria =" + categoria + ",\n" +
+                "Stock=" + stock + "\n" +
+                "}";
+    }
+
+    @Override
+    public int compareTo(Producto otroProducto)
+    {
+        return Integer.compare(this.codigo, otroProducto.codigo); // Es para ordenar por codigo
     }
 }

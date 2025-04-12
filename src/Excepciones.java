@@ -23,4 +23,12 @@ public class Excepciones
       super(mensaje);
     }
   }
+
+  public static class ProductoNoEncontradoExcepcion extends RuntimeException //Esto es una excepcion personalizada no comprobada, osea una RuntimeException (me dijo un pajarito)
+  {
+    public ProductoNoEncontradoExcepcion(String mensaje)
+    {
+      super(mensaje);
+    }
+  }
 }
