@@ -3,7 +3,6 @@ package Clases;
 import Enumerados.Categoria;
 import java.util.ArrayList;
 
-
 public class Producto implements Comparable<Producto>
 {
     private int codigo;
@@ -25,7 +24,7 @@ public class Producto implements Comparable<Producto>
         {
             throw new Excepciones.ProductoInvalidoException("El detalle del producto no puede estar vacío.");
         }
-        if (precio <= 0)
+        if (precio < 0) //A ver, podés poner que algo vale cero pesos?, si, si podes. Es coherente? No, pero después el que se funde sos vos por regalar las cosas. Igual esto está bien porque dejo que seas libre y pongas el precio que vos quieras
         {
             throw new Excepciones.ProductoInvalidoException("El precio del producto debe ser un número positivo.");
         }
@@ -33,6 +32,7 @@ public class Producto implements Comparable<Producto>
         {
             throw new Excepciones.ProductoInvalidoException("El stock del producto no puede ser negativo.");
         }
+
         this.codigo = codigo;
         this.detalle = detalle;
         this.talle = talle;
@@ -221,7 +221,7 @@ public class Producto implements Comparable<Producto>
     Por ejemplo, si se imprime un objeto de la clase Clases.Producto, se llamara automaticamente al metodo toString() para mostrar la informacion del objeto.
     */
     @Override
-    public String toString() // God no?
+    public String toString() //God no?
     {
         return "Clases.Producto\n" +
                 "{\n" +
@@ -239,6 +239,6 @@ public class Producto implements Comparable<Producto>
     @Override
     public int compareTo(Producto otroProducto)
     {
-        return Integer.compare(this.codigo, otroProducto.codigo); // Es para ordenar por codigo
+        return Integer.compare(this.codigo, otroProducto.codigo); //Es para ordenar por codigo
     }
 }
