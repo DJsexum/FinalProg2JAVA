@@ -6,7 +6,7 @@ public enum Categoria
     CALZADO,
     ACCESORIO;
 
-    public String obtenerCategoria()
+    public String getCategoria()
     {
         return this.name();
     }

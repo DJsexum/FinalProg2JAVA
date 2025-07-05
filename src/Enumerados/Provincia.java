@@ -29,12 +29,12 @@ public enum Provincia
     Provincia(int i, String s)
     {}
 
-    public String obtenerProvincia(int i, String s)
+    public String getProvincia(int i, String s)
     {
         return this.name();
     }
 
-    public String obtenerProvinciaPorCodigo(int codigo)
+    public String getProvinciaPorCodigo(int codigo)
     {
         for (Provincia provincia : Provincia.values())
         {
@@ -46,7 +46,7 @@ public enum Provincia
         return null; // O lanzar una exception si el codigo no existe
     }
 
-    public String obtenerProvinciaPorNombre(String nombre)
+    public String getProvinciaPorNombre(String nombre)
     {
         for (Provincia provincia : Provincia.values())
         {

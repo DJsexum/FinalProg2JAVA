@@ -1,9 +1,8 @@
 package Clases;
 
-import java.time.LocalDate;
-
-import Enumerados.Sexo;
 import Enumerados.Provincia;
+import Enumerados.Sexo;
+import java.time.LocalDate;
 
 public class Cliente extends Persona
 {
@@ -22,7 +21,7 @@ public class Cliente extends Persona
         if (CtaCte != null)
         {
             System.out.println("Detalles de la Cuenta Corriente:");
-            System.out.println("Saldo actual: " + CtaCte.ObtenerSaldo());
+            System.out.println("Saldo actual: " + CtaCte.getSaldo());
             CtaCte.VerMovimientos(); // Mostramos todos los movimientos de la cuenta
         }
             else
@@ -36,7 +35,7 @@ public class Cliente extends Persona
     {
         if (CtaCte != null)
         {
-            Movimiento movimiento = new Movimiento(1, "Haber", 0.0, monto, CtaCte.ObtenerSaldo() + monto, LocalDate.now());
+            Movimiento movimiento = new Movimiento(1, "Haber", 0.0, monto, CtaCte.getSaldo() + monto, LocalDate.now());
             CtaCte.AgregarMovimiento(movimiento);
             System.out.println("Deposito realizado: " + monto + " (" + descripcion + ")");
         }
@@ -51,9 +50,9 @@ public class Cliente extends Persona
     {
         if (CtaCte != null)
         {
-            if (CtaCte.ObtenerSaldo() >= monto)
+            if (CtaCte.getSaldo() >= monto)
             {
-                Movimiento movimiento = new Movimiento(2, "Debe", monto, 0.0, CtaCte.ObtenerSaldo() - monto, LocalDate.now());
+                Movimiento movimiento = new Movimiento(2, "Debe", monto, 0.0, CtaCte.getSaldo() - monto, LocalDate.now());
                 CtaCte.AgregarMovimiento(movimiento);
                 System.out.println("Retiro realizado: " + monto + " (" + descripcion + ")");
             }
@@ -73,5 +72,11 @@ public class Cliente extends Persona
     {
         super.DatosPersona(); /*Mostramos los datos generales del cliente*/
         VerCtaCte(); /*Muestra los detalles de la cuenta corriente*/
+    }
+
+    @Override
+    public Sexo getSexo()
+    {
+        return super.getSexo(); // Llamada al metodo de la clase Persona
     }
 }

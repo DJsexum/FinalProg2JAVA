@@ -44,62 +44,62 @@ public class Movimiento
 
 
     /*Metodos Getters y Setters si se necesitan*/
-    public int ObtenerCodigo()
+    public int getCodigo()
     {
         return Codigo;
     }
 
-    public void EstablecerCodigo (int codigo)
+    public void setCodigo (int codigo)
     {
         this.Codigo = codigo;
     }
 
-    public String ObtenerTipo ()
+    public String getTipo ()
     {
         return Tipo;
     }
 
-    public void EstablecerTipo (String tipo)
+    public void setTipo (String tipo)
     {
         this.Tipo = tipo;
     }
 
-    public double ObtenerMontoDebe ()
+    public double getMontoDebe ()
     {
         return MontoDebe;
     }
 
-    public void EstablecerMontoDebe (double montoDebe)
+    public void setMontoDebe (double montoDebe)
     {
         this.MontoDebe = montoDebe;
     }
 
-    public double ObtenerMontoHaber ()
+    public double getMontoHaber ()
     {
         return MontoHaber;
     }
 
-    public void EstablecerMontoHaber (double MontoHaber)
+    public void setMontoHaber (double MontoHaber)
     {
         this.MontoHaber = MontoHaber;
     }
 
-    public double ObtenerSaldoAcumulado ()
+    public double getSaldoAcumulado ()
     {
         return SaldoAcumulado;
     }
 
-    public void EstablecerSaldoAcumulado (double saldoAcumulado)
+    public void setSaldoAcumulado (double saldoAcumulado)
     {
         this.SaldoAcumulado = saldoAcumulado;
     }
 
-    public LocalDate ObtenerFechaMovimiento ()
+    public LocalDate getFechaMovimiento ()
     {
         return FechaMovimiento;
     }
 
-    public void EstablecerFechaMovimiento (LocalDate fechaMovimiento)
+    public void setFechaMovimiento (LocalDate fechaMovimiento)
     {
         this.FechaMovimiento = fechaMovimiento;
     }

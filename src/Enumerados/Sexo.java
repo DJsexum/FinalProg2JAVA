@@ -7,7 +7,7 @@ public enum Sexo
     FEMENINO,
     OTRO;
 
-    public static Sexo obtenerSexoDesdeConsola()
+    public static Sexo getSexoDesdeConsola()
     {
         Scanner scanner = new Scanner(System.in);
         while (true)

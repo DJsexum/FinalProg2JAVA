@@ -8,7 +8,7 @@ public enum FormaPago
     TRANSFERENCIA,
     CUENTA_CORRIENTE;
 
-    public String obtenerFormaPago()
+    public String getFormaPago()
     {
         return this.name();
     }

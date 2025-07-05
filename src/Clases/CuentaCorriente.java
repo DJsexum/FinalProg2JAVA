@@ -44,19 +44,19 @@ public class CuentaCorriente
         for (Movimiento movimiento : Movimientos)
         {
             // Sumamos o restamos el monto del movimiento dependiendo de si es un debito o credito
-            if (movimiento.ObtenerTipo().equals("Debe"))
+            if (movimiento.getTipo().equals("Debe"))
             {
-                Saldo = Saldo - movimiento.ObtenerMontoDebe();
+                Saldo = Saldo - movimiento.getMontoDebe();
             }
                 else
                 {
-                    Saldo = Saldo + movimiento.ObtenerMontoHaber();
+                    Saldo = Saldo + movimiento.getMontoHaber();
                 }
         }
     }
 
-    // Metodo para obtener el saldo actual de la cuenta corriente
-    public double ObtenerSaldo()
+    // Metodo para get el saldo actual de la cuenta corriente
+    public double getSaldo()
     {
         return Saldo;
     }
@@ -66,7 +66,7 @@ public class CuentaCorriente
     {
         for (Movimiento movimiento : Movimientos)
         {
-            System.out.println("Código: " + movimiento.ObtenerCodigo() + ", Tipo: " + movimiento.ObtenerTipo() + ", Fecha: " + movimiento.ObtenerFechaMovimiento() + ", Monto: " + (movimiento.ObtenerMontoDebe() - movimiento.ObtenerMontoHaber()));
+            System.out.println("Código: " + movimiento.getCodigo() + ", Tipo: " + movimiento.getTipo() + ", Fecha: " + movimiento.getFechaMovimiento() + ", Monto: " + (movimiento.getMontoDebe() - movimiento.getMontoHaber()));
         }
     }
 }

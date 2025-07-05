@@ -1,8 +1,8 @@
 package Clases;
 
-import java.time.LocalDate;
-import Enumerados.Sexo;
 import Enumerados.Provincia;
+import Enumerados.Sexo;
+import java.time.LocalDate;
 
 // No podemos generar personas asi porque si, por eso es una clase abstracta
 // Podrias hacer dos contstructores, 1 para el empleado, el cual deberia tener todas las cosas de la clase Clases.Persona
@@ -54,102 +54,102 @@ public abstract class Persona
     }
 
     // Metodos Getters y Setters
-    public int ObtenerDni()
+    public int getDni()
     {
         return Dni;
     }
 
-    public void EstablecerDni(int dni)
+    public void setDni(int dni)
     {
         this.Dni = dni;
     }
 
-    public boolean ObtenerActivo()
+    public boolean getActivo()
     {
         return Activo;
     }
 
-    public void EstablecerActivo(boolean activo)
+    public void setActivo(boolean activo)
     {
         this.Activo = activo;
     }
 
-    public String ObtenerNombres()
+    public String getNombres()
     {
         return Nombres;
     }
 
-    public void EstablecerNombres(String nombres)
+    public void setNombres(String nombres)
     {
         this.Nombres = nombres;
     }
 
-    public String ObtenerApellidos()
+    public String getApellidos()
     {
         return Apellidos;
     }
 
-    public void EstablecerApellidos(String apellidos)
+    public void setApellidos(String apellidos)
     {
         this.Apellidos = apellidos;
     }
 
-    public String ObtenerTelefono()
+    public String getTelefono()
     {
         return Telefono;
     }
 
-    public void EstablecerTelefono(String telefono)
+    public void setTelefono(String telefono)
     {
         this.Telefono = telefono;
     }
 
-    public String ObtenerDireccion()
+    public String getDireccion()
     {
         return Direccion;
     }
 
-    public void EstablecerDireccion(String direccion)
+    public void setDireccion(String direccion)
     {
         this.Direccion = direccion;
     }
 
-    public String ObtenerLocalidad()
+    public String getLocalidad()
     {
         return Localidad;
     }
 
-    public void EstablecerLocalidad(String localidad)
+    public void setLocalidad(String localidad)
     {
         this.Localidad = localidad;
     }
 
-    public Provincia ObtenerProvincia()
+    public Provincia getProvincia()
     {
         return Provincia;
     }
 
-    public void EstablecerProvincia(Provincia provincia)
+    public void setProvincia(Provincia provincia)
     {
         this.Provincia = provincia;
     }
 
-    public Sexo ObtenerSexo()
+    public Sexo getSexo()
     {
         return Sexo;
     }
 
-    public void EstablecerSexo(Sexo sexo)
+    public void setSexo(Sexo sexo)
     {
         this.Sexo = sexo;
     }
 
-    public LocalDate ObtenerFechaNacimiento()
+    public LocalDate getFechaNacimiento()
     {
         return FechaNacimiento;
     }
 
-    public void EstablecerFechaNacimiento(LocalDate fechaNacimiento)
+    public void setFechaNacimiento(LocalDate fechaNacimiento)
     {
         this.FechaNacimiento = fechaNacimiento;
     }
