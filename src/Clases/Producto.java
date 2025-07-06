@@ -16,31 +16,37 @@ public class Producto implements Comparable<Producto>
 
     public Producto(int codigo, String detalle, String talle, double precio, String marca, String material, Categoria categoria, int stock)
     {
-        if (codigo <= 0)
+        try
         {
-            throw new Excepciones.ProductoInvalidoException("El código del producto debe ser un número positivo.");
-        }
-        if (detalle == null || detalle.trim().isEmpty())
-        {
-            throw new Excepciones.ProductoInvalidoException("El detalle del producto no puede estar vacío.");
-        }
-        if (precio < 0) //A ver, podés poner que algo vale cero pesos?, si, si podes. Es coherente? No, pero después el que se funde sos vos por regalar las cosas. Igual esto está bien porque dejo que seas libre y pongas el precio que vos quieras
-        {
-            throw new Excepciones.ProductoInvalidoException("El precio del producto debe ser un número positivo.");
-        }
-        if (stock < 0)
-        {
-            throw new Excepciones.ProductoInvalidoException("El stock del producto no puede ser negativo.");
-        }
+            if (codigo <= 0)
+            {
+                throw new Excepciones.ProductoInvalidoException("El código del producto debe ser un número positivo.");
+            }
+            if (detalle == null || detalle.trim().isEmpty())
+            {
+                throw new Excepciones.ProductoInvalidoException("El detalle del producto no puede estar vacío.");
+            }
+            if (precio < 0) //A ver, podés poner que algo vale cero pesos?, si, si podes. Es coherente? No, pero después el que se funde sos vos por regalar las cosas. Igual esto está bien porque dejo que seas libre y pongas el precio que vos quieras
+            {
+                throw new Excepciones.ProductoInvalidoException("El precio del producto debe ser un número positivo.");
+            }
+            if (stock < 0)
+            {
+                throw new Excepciones.ProductoInvalidoException("El stock del producto no puede ser negativo.");
+            }
 
-        this.codigo = codigo;
-        this.detalle = detalle;
-        this.talle = talle;
-        this.precio = precio;
-        this.marca = marca;
-        this.material = material;
-        this.categoria = categoria;
-        this.stock = stock;
+            this.codigo = codigo;
+            this.detalle = detalle;
+            this.talle = talle;
+            this.precio = precio;
+            this.marca = marca;
+            this.material = material;
+            this.categoria = categoria;
+            this.stock = stock;
+        } catch (Excepciones.ProductoInvalidoException errorDeProductoInvalido)
+        {
+            System.out.println(errorDeProductoInvalido);
+        }
     }
 
     public int getCodigo()
