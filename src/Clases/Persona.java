@@ -26,7 +26,7 @@ public abstract class Persona
     private Provincia Provincia;
     private Sexo Sexo;
     private LocalDate FechaNacimiento;
-    private Scanner scanner;
+    private Scanner scanner = new Scanner(System.in);
 
     // Constructor de la clase Clases.Persona
     public Persona(int dni, boolean activo, String nombres, String apellidos, String telefono, String direccion, String localidad, Provincia provincia, Sexo sexo, LocalDate fechaNacimiento)
@@ -43,20 +43,33 @@ public abstract class Persona
         this.FechaNacimiento = fechaNacimiento;
     }
 
-    @Override
-    public String toString()
+    // @Override
+    // public String toString()
+    // {
+    //     return "Clases.Persona\n" +
+    //             "{\n" +
+    //             "DNI = " + Dni + ",\n" +
+    //             "Nombre = " + Nombres + " " + Apellidos + ",\n" +
+    //             "Teléfono = " + Telefono + ",\n" +
+    //             "Dirección = " + Direccion + ",\n" +
+    //             "Localidad = " + Localidad + ",\n" +
+    //             "Provincia = " + Provincia + ",\n" +
+    //             "Sexo = " + Sexo + ",\n" +
+    //             "Fecha de Nacimiento = " + FechaNacimiento + "\n" +
+    //             "}";
+    // }
+
+    public void VerResumenPersona()
     {
-        return "Clases.Persona\n" +
-                "{\n" +
-                "DNI = " + Dni + ",\n" +
-                "Nombre = " + Nombres + " " + Apellidos + ",\n" +
-                "Teléfono = " + Telefono + ",\n" +
-                "Dirección = " + Direccion + ",\n" +
-                "Localidad = " + Localidad + ",\n" +
-                "Provincia = " + Provincia + ",\n" +
-                "Sexo = " + Sexo + ",\n" +
-                "Fecha de Nacimiento = " + FechaNacimiento + "\n" +
-                "}";
+        System.out.println("Resumen de la Persona:");
+        System.out.println("DNI: " + Dni);
+        System.out.println("Nombre: " + Nombres + " " + Apellidos);
+        System.out.println("Teléfono: " + Telefono);
+        System.out.println("Dirección: " + Direccion);
+        System.out.println("Localidad: " + Localidad);
+        System.out.println("Provincia: " + Provincia);
+        System.out.println("Sexo: " + Sexo);
+        System.out.println("Fecha de Nacimiento: " + FechaNacimiento);
     }
 
     // Metodos Getters y Setters

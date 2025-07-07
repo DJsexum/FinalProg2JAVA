@@ -66,6 +66,7 @@ public class Menus {
                     break;
                 case 2:
                     agregarCliente();
+                    scanner.nextLine(); // Consumir el salto de línea
                     break;
                 case 3:
                     mostrarMenuCuentasCorrientes();
@@ -98,6 +99,7 @@ public class Menus {
     private void agregarCliente() {
         cliente = new Cliente();
         // Lógica para agregar un cliente
+        scanner.nextLine(); // Consumir el salto de línea
         
         cliente.setDni();
         
@@ -121,7 +123,7 @@ public class Menus {
 
         
         System.out.println("Cliente agregado exitosamente.");
-        cliente.VerResumenCliente();
+        cliente.VerResumenPersona();
     }
 
 }
