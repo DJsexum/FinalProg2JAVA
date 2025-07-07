@@ -33,4 +33,14 @@ public class Excepciones
       super(mensaje);
     }
   }
+
+  public static boolean verificarEntero (String numero) {
+    try{
+      Integer.parseInt(numero);
+      return true;
+    } catch (NumberFormatException error) {
+      System.out.println("ERROR: " + error.getMessage());
+      return false;
+    }
+  }
 }

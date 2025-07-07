@@ -31,7 +31,8 @@ public class Menus {
 
             int opcion = scanner.nextInt();
 
-            switch (opcion) {
+            switch (opcion)
+            {
                 case 1:
                     mostrarMenuClientes();
                     break;
@@ -42,15 +43,15 @@ public class Menus {
                     mostrarMenuCuentasCorrientes();
                     break;
                 case 4:
-                    System.out.println("Saliendo del sistema...");
-                    return;
+                    System.exit(0);
                 default:
                     System.out.println("Opción inválida, intente de nuevo.");
             }
         }
     }
 
-    private void mostrarMenuClientes() {
+    private void mostrarMenuClientes()
+    {
         // Lógica para mostrar el menú de clientes
         System.out.println("Menú de Clientes:");
         System.out.println("1. Ver Clientes");
@@ -59,11 +60,19 @@ public class Menus {
         System.out.println("4. Eliminar Cliente");
 
         int opcion = scanner.nextInt();
-
     }
 
-    private void mostrarMenuProductos() {
+    private void mostrarMenuProductos()
+    {
         // Lógica para mostrar el menú de productos
+        System.out.println("Menú de Productos:");
+        System.out.println("1. Ver Productos");
+        System.out.println("2. Agregar Producto");
+        System.out.println("3. Modificar producto");
+        System.out.println("4. Eliminar Producto");
+
+        int opcion = scanner.nextInt();
+
     }
 
     private void mostrarMenuCuentasCorrientes() {

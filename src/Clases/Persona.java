@@ -40,17 +40,20 @@ public abstract class Persona
         this.FechaNacimiento = fechaNacimiento;
     }
 
-    // Metodo para ver los datos de la persona
-    public void DatosPersona()
+    @Override
+    public String toString()
     {
-        System.out.println("DNI: " + Dni);
-        System.out.println("Nombre: " + Nombres + " " + Apellidos);
-        System.out.println("Teléfono: " + Telefono);
-        System.out.println("Dirección: " + Direccion);
-        System.out.println("Localidad: " + Localidad);
-        System.out.println("Provincia: " + Provincia);
-        System.out.println("Sexo: " + Sexo);
-        System.out.println("Fecha de Nacimiento: " + FechaNacimiento);
+        return "Clases.Persona\n" +
+                "{\n" +
+                "DNI = " + Dni + ",\n" +
+                "Nombre = " + Nombres + " " + Apellidos + ",\n" +
+                "Teléfono = " + Telefono + ",\n" +
+                "Dirección = " + Direccion + ",\n" +
+                "Localidad = " + Localidad + ",\n" +
+                "Provincia = " + Provincia + ",\n" +
+                "Sexo = " + Sexo + ",\n" +
+                "Fecha de Nacimiento = " + FechaNacimiento + "\n" +
+                "}";
     }
 
     // Metodos Getters y Setters

@@ -67,10 +67,10 @@ public class Cliente extends Persona
             }
     }
 
-    // Metodo para ver el resumen completo del cliente
+//     Metodo para ver el resumen completo del cliente
     public void VerResumenCliente()
     {
-        super.DatosPersona(); /*Mostramos los datos generales del cliente*/
+        super.toString(); /*Mostramos los datos generales del cliente*/
         VerCtaCte(); /*Muestra los detalles de la cuenta corriente*/
     }
 
