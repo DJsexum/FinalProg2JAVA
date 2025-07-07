@@ -2,7 +2,9 @@ package Clases;
 
 import Enumerados.Provincia;
 import Enumerados.Sexo;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.Scanner;
 
 // No podemos generar personas asi porque si, por eso es una clase abstracta
 // Podrias hacer dos contstructores, 1 para el empleado, el cual deberia tener todas las cosas de la clase Clases.Persona
@@ -24,6 +26,7 @@ public abstract class Persona
     private Provincia Provincia;
     private Sexo Sexo;
     private LocalDate FechaNacimiento;
+    private Scanner scanner;
 
     // Constructor de la clase Clases.Persona
     public Persona(int dni, boolean activo, String nombres, String apellidos, String telefono, String direccion, String localidad, Provincia provincia, Sexo sexo, LocalDate fechaNacimiento)
@@ -62,8 +65,12 @@ public abstract class Persona
         return Dni;
     }
 
-    public void setDni(int dni)
+    public void setDni()
     {
+        System.out.println("Ingrese los datos del nuevo cliente:");
+        System.out.print("DNI: ");
+        int dni = scanner.nextInt();
+        scanner.nextLine(); // Consumir el salto de línea
         this.Dni = dni;
     }
 
@@ -82,9 +89,11 @@ public abstract class Persona
         return Nombres;
     }
 
-    public void setNombres(String nombres)
+    public void setNombres()
     {
-        this.Nombres = nombres;
+        System.out.print("Nombre: ");
+        String nombre = scanner.nextLine();
+        this.Nombres = nombre;
     }
 
     public String getApellidos()
@@ -92,18 +101,21 @@ public abstract class Persona
         return Apellidos;
     }
 
-    public void setApellidos(String apellidos)
-    {
-        this.Apellidos = apellidos;
+    public void setApellidos()
+    {   System.out.print("Apellido: ");
+        String apellido = scanner.nextLine();
+        this.Apellidos = apellido;
     }
 
     public String getTelefono()
-    {
+    {  
         return Telefono;
     }
 
-    public void setTelefono(String telefono)
+    public void setTelefono()
     {
+        System.out.print("Teléfono: ");
+        String telefono = scanner.nextLine();
         this.Telefono = telefono;
     }
 
@@ -112,8 +124,10 @@ public abstract class Persona
         return Direccion;
     }
 
-    public void setDireccion(String direccion)
+    public void setDireccion()
     {
+        System.out.print("Dirección: ");
+        String direccion = scanner.nextLine();
         this.Direccion = direccion;
     }
 
@@ -122,8 +136,10 @@ public abstract class Persona
         return Localidad;
     }
 
-    public void setLocalidad(String localidad)
+    public void setLocalidad()
     {
+        System.out.print("Localidad: ");
+        String localidad = scanner.nextLine();
         this.Localidad = localidad;
     }
 
@@ -134,6 +150,7 @@ public abstract class Persona
 
     public void setProvincia()
     {
+        System.out.print("Provincia (seleccione por código): ");
         this.Provincia = Enumerados.Provincia.seleccionarProvincia();
     }
 
@@ -144,6 +161,7 @@ public abstract class Persona
 
     public void setSexo()
     {
+        System.out.print("Sexo: ");
         this.Sexo = Enumerados.Sexo.getSexoDesdeConsola();
     }
 
@@ -152,8 +170,31 @@ public abstract class Persona
         return FechaNacimiento;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento)
-    {
-        this.FechaNacimiento = fechaNacimiento;
+    public void setFechaNacimiento() {
+    int dia = -1, mes = -1, anio = -1;
+    LocalDate fechaValida = null;
+
+        while (fechaValida == null) {
+            try {
+                System.out.print("Año (YYYY): ");
+                anio = Integer.parseInt(scanner.nextLine());
+
+                System.out.print("Mes (1-12): ");
+                mes = Integer.parseInt(scanner.nextLine());
+
+                System.out.print("Día (1-31): ");
+                dia = Integer.parseInt(scanner.nextLine());
+
+                // Intenta crear la fecha, lanza excepción si no es válida
+                fechaValida = LocalDate.of(anio, mes, dia);
+            } catch (NumberFormatException e) {
+                System.out.println("Ingresaste un número no válido. Intentá de nuevo.");
+            } catch (DateTimeException e) {
+                System.out.println("Fecha inválida. Verificá si el día, mes o año son correctos.");
+            }
+        }
+
+        this.FechaNacimiento = fechaValida;
     }
+
 }
