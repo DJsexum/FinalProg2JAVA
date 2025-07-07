@@ -1,7 +1,6 @@
-import Clases.Cliente;
+import Clases.Menus;
 import Clases.Producto;
 import Enumerados.*;
-import java.time.LocalDate;
 
 
 public class Main
@@ -15,6 +14,8 @@ public class Main
 //        System.out.println("El programa ha finalizado correctamente.");
 
         Producto P1 = new Producto(4, "Collar", "xl", 2, "ardidas", "cuero de perro", Categoria.ACCESORIO, 0);
+        Menus menu = new Menus();
+
 
     }
 }
