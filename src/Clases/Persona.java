@@ -129,9 +129,9 @@ public abstract class Persona
         return Provincia;
     }
 
-    public void setProvincia(Provincia provincia)
+    public void setProvincia()
     {
-        this.Provincia = provincia;
+        this.Provincia = Enumerados.Provincia.seleccionarProvincia();
     }
 
     public Sexo getSexo()
@@ -139,9 +139,9 @@ public abstract class Persona
         return Sexo;
     }
 
-    public void setSexo(Sexo sexo)
+    public void setSexo()
     {
-        this.Sexo = sexo;
+        this.Sexo = Enumerados.Sexo.getSexoDesdeConsola();
     }
 
     public LocalDate getFechaNacimiento()

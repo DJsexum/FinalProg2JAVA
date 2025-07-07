@@ -1,5 +1,6 @@
 package Clases;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Menus {
@@ -56,10 +57,25 @@ public class Menus {
         System.out.println("1. Ver Clientes");
         System.out.println("2. Agregar Cliente");
         System.out.println("3. Modificar Cliente");
-        System.out.println("4. Eliminar Cliente");
 
         int opcion = scanner.nextInt();
 
+        switch (opcion) {
+                case 1:
+                    mostrarMenuClientes();
+                    break;
+                case 2:
+                    agregarCliente();
+                    break;
+                case 3:
+                    mostrarMenuCuentasCorrientes();
+                    break;
+                case 4:
+                    System.out.println("Saliendo del sistema...");
+                    return;
+                default:
+                    System.out.println("Opción inválida, intente de nuevo.");
+            }
     }
 
     private void mostrarMenuProductos() {
@@ -69,4 +85,43 @@ public class Menus {
     private void mostrarMenuCuentasCorrientes() {
         // Lógica para mostrar el menú de cuentas corrientes
     }
+
+    private void agregarCliente() {
+        cliente = new Cliente();
+        // Lógica para agregar un cliente
+        System.out.println("Ingrese los datos del nuevo cliente:");
+        System.out.print("DNI: ");
+        int dni = scanner.nextInt();
+        cliente.setDni(dni);
+        scanner.nextLine(); // Consumir el salto de línea
+        System.out.print("Nombre: ");
+        String nombre = scanner.nextLine();
+        cliente.setNombres(nombre);
+        System.out.print("Apellido: ");
+        String apellido = scanner.nextLine();
+        cliente.setApellidos(apellido);
+        System.out.print("Teléfono: ");
+        String telefono = scanner.nextLine();
+        cliente.setTelefono(telefono);
+        System.out.print("Dirección: ");
+        String direccion = scanner.nextLine();
+        cliente.setDireccion(direccion);
+        System.out.print("Localidad: ");
+        String localidad = scanner.nextLine();
+        cliente.setLocalidad(localidad);
+        System.out.print("Provincia (seleccione por código): ");
+        cliente.setProvincia();
+        System.out.print("Sexo: ");
+        cliente.setSexo(); // Llama al método para seleccionar el sexo desde la consola\
+        System.out.print("Fecha de Nacimiento (YYYY-MM-DD): ");
+        String fechaNacimientoStr = scanner.nextLine();
+        // Convertir la fecha de nacimiento a LocalDate
+        cliente.setFechaNacimiento(LocalDate.parse(fechaNacimientoStr));
+        cliente.setActivo(true); // Por defecto, el cliente está activo
+
+        
+        System.out.println("Cliente agregado exitosamente.");
+        cliente.VerResumenCliente();
+    }
+
 }
