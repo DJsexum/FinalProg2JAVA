@@ -14,20 +14,28 @@ public enum FormaPago
 
     private final String detallePago;
 
-    private static int castearEntero (String mensaje, String dato) {
-        int num = 0; boolean flag = true;
+    private static int castearEntero (String mensaje, String dato) //Castear un dato es el proceso de convertir un valor de un tipo de dato a otro tipo de dato.
+    {
+        int num = 0;
+        boolean flag = true;
         Scanner teclado = new Scanner(System.in);
 
-        do {
+        do
+        {
             System.out.print(mensaje);
             dato = teclado.nextLine();
-            if(Excepciones.verificarEntero(dato)) {
+
+            if(Excepciones.verificarEntero(dato))
+            {
                 num = Integer.parseInt(dato);
                 flag = true;
-            } else {
-                flag = false;
             }
-        }while(flag == false);
+                else
+                {
+                    flag = false;
+                }
+        }
+        while(flag == false);
 
         return num;
     }
@@ -44,11 +52,13 @@ public enum FormaPago
 
     public static FormaPago escogerFomaPago ()
     {
-        int seleccion; String seleccionAux = null;
+        int seleccion;
+        String seleccionAux = null;
 
         do
         {
             System.out.println("Formas de pago disponibles:");
+
             for(FormaPago forma: FormaPago.values())
             {
                 System.out.println(forma.ordinal() + 1 + "." + forma.obetenerFormaPago());
