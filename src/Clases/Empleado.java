@@ -63,20 +63,29 @@ public class Empleado extends Persona
     }
 
     // Métodos de Clases.Empleado
+
     public Empleado altaEmpleado()
     {
         return null;
     }
 
     public void bajaEmpleado()
-    {}
+    {
+
+    }
 
     public void modificarEmpleado(Empleado empleado)
-    {}
+    {
+
+    }
 
     public Empleado buscarEmpleado(int legajo)
-    {return null;}
+    {
+        return null;
+    }
 
     public ArrayList<Empleado> listarEmpleados()
-    {return null;}
+    {
+        return null;
+    }
 }

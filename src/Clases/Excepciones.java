@@ -34,13 +34,17 @@ public class Excepciones
     }
   }
 
-  public static boolean verificarEntero (String numero) {
-    try{
+  public static boolean verificarEntero (String numero)
+  {
+    try
+    {
       Integer.parseInt(numero);
       return true;
-    } catch (NumberFormatException error) {
-      System.out.println("ERROR: " + error.getMessage());
-      return false;
     }
+      catch (NumberFormatException error)
+      {
+        System.out.println("ERROR: " + error.getMessage());
+        return false;
+      }
   }
 }

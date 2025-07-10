@@ -2,7 +2,8 @@ package Clases;
 
 import java.util.Scanner;
 
-public class Menus {
+public class Menus
+{
     private Cliente cliente;
     private Producto producto;
     private CuentaCorriente cuentaCorriente;
@@ -14,15 +15,19 @@ public class Menus {
     private Persona persona;
     private Scanner scanner = new Scanner(System.in);
 
-    public Menus() {
+    public Menus()
+    {
         mostrarMenuPrincipal();
         // Constructor de la clase Menus
     }
 
-    private void mostrarMenuPrincipal() {
+    private void mostrarMenuPrincipal()
+    {
         // Lógica para mostrar el menú principal
         System.out.println("Bienvenido al sistema de gestión.");
-        while (true) {
+
+        while (true)
+        {
             System.out.println("Seleccione una opción:");
             System.out.println("1. Clientes");
             System.out.println("2. Productos");
@@ -60,7 +65,8 @@ public class Menus {
 
         int opcion = scanner.nextInt();
 
-        switch (opcion) {
+        switch (opcion)
+        {
                 case 1:
                     mostrarMenuClientes();
                     break;
@@ -89,41 +95,34 @@ public class Menus {
         System.out.println("4. Eliminar Producto");
 
         int opcion = scanner.nextInt();
-
     }
 
-    private void mostrarMenuCuentasCorrientes() {
+    private void mostrarMenuCuentasCorrientes()
+    {
         // Lógica para mostrar el menú de cuentas corrientes
     }
 
-    private void agregarCliente() {
-        cliente = new Cliente();
+    private void agregarCliente()
+    {
         // Lógica para agregar un cliente
+        cliente = new Cliente();
+
         scanner.nextLine(); // Consumir el salto de línea
-        
+
+        // Llama al metodo para seleccionar el sexo desde la consola
+
         cliente.setDni();
-        
-        
         cliente.setNombres();
-        
         cliente.setApellidos();
-        
         cliente.setTelefono();
-        
         cliente.setDireccion();
-        
         cliente.setLocalidad();
-       
         cliente.setProvincia();
-       
-        cliente.setSexo(); // Llama al método para seleccionar el sexo desde la consola\
-        
+        cliente.setSexo();
         cliente.setFechaNacimiento();
         cliente.setActivo(true); // Por defecto, el cliente está activo
-
         
         System.out.println("Cliente agregado exitosamente.");
         cliente.VerResumenPersona();
     }
-
 }

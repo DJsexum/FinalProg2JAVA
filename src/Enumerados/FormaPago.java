@@ -5,7 +5,6 @@ import Clases.*;
 
 public enum FormaPago
 {
-
     EFECTIVO("Efectivo."),
     TARJETA_DEBITO("Tarjeta de debito."),
     TARJETA_CREDITO("Tarjeta de credito."),
@@ -13,7 +12,13 @@ public enum FormaPago
     CUENTA_CORRIENTE("Cuenta corriente.");
 
     private final String detallePago;
-
+    /*
+    Lo de arriba, "detallePago" es private para encapsular la información
+    y "final" para asegurar que el detalle asociado a cada constante del enum
+    sea INMUTABLE. Una vez asignado en el constructor, su valor no puede cambiar.
+    Es crucial para que la DEFINICIÓN de la forma de pago sea fija,
+    aunque la SELECCIÓN del usuario pueda variar.
+    */
     private static int castearEntero (String mensaje, String dato) //Castear un dato es el proceso de convertir un valor de un tipo de dato a otro tipo de dato.
     {
         int num = 0;

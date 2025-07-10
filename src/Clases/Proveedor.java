@@ -16,5 +16,8 @@ public class Proveedor extends Persona
         this.CtaCte = ctaCte;
     }
 
-    public void verCtaCte() { /* Implementación */ }
+    public void verCtaCte()
+    {
+        /*Implementar metodo para ver la cuenta corriente*/
+    }
 }
