@@ -1,6 +1,7 @@
 package Enumerados;
 
 import java.util.Scanner;
+import java.util.InputMismatchException; // Importado para manejar entradas no numéricas de forma robusta
 
 public enum Provincia
 {
@@ -26,84 +27,91 @@ public enum Provincia
     SANTA_FE (20, "SANTA FE"),
     SANTIAGO_DEL_ESTERO (21, "SANTIAGO DEL ESTERO"),
     TIERRA_DEL_FUEGO (22, "TIERRA DEL FUEGO"),
-    TUCUMAN (23, "TUCUMAN"),;
+    TUCUMAN (23, "TUCUMAN");
 
     private final int codigo;
     private final String nombre;
 
-    Provincia(int codigo, String nombre) 
+    Provincia(int codigo, String nombre)
     {
         this.codigo = codigo;
         this.nombre = nombre;
     }
 
-    public int getCodigo() 
+    public int getCodigo()
     {
         return codigo;
     }
 
-    public String getNombre() 
+    public String getNombre()
     {
         return nombre;
     }
 
-
-    public static Provincia seleccionarProvincia() 
+    // Método para seleccionar una provincia por código, replicando el patrón de 'Sexo'
+    public static Provincia seleccionarProvincia()
     {
+        // Se recomienda que el Scanner se gestione externamente y se pase como parámetro
+        // o que haya una única instancia global para System.in para evitar problemas.
+        // Por la replicación del patrón, se crea aquí localmente.
         Scanner scanner = new Scanner(System.in);
-        Provincia seleccion = null;
 
-        while (seleccion == null) 
+        while (true) // Bucle infinito hasta que se devuelva una provincia válida
         {
             System.out.println("Seleccione una provincia por código:");
-            for (Provincia p : Provincia.values()) 
+            for (Provincia p : Provincia.values())
             {
-                System.out.printf("%d - %s%n", p.getCodigo(), p.getNombre());
+                System.out.println(p.getCodigo() + "-" + p.getNombre());
             }
 
-            try 
+            System.out.println("Ingrese el código de la provincia: "); // Solicitud de entrada
+            try
             {
-                int opcion = Integer.parseInt(scanner.nextLine());
-                seleccion = getProvinciaPorCodigo(opcion);
+                int opcion = scanner.nextInt();
+                scanner.nextLine();
 
-                if (seleccion == null) {
-                    System.out.println("Código inválido, intentá de nuevo.");
+                Provincia provinciaSeleccionada = getProvinciaPorCodigo(opcion); // Usa el metodo de búsqueda por codigo
+
+                if (provinciaSeleccionada != null)
+                {
+                    return provinciaSeleccionada; // Retorna la provincia valida y sale del bucle
                 }
-            } 
-            catch (NumberFormatException e) 
-            {
-                System.out.println("Por favor, ingresá un número válido.");
+                    else
+                    {
+                        System.out.println("Código inválido. La provincia con ese código no existe. Intente de nuevo.");
+                    }
             }
+                catch (InputMismatchException e) // Captura si la entrada no es un entero
+                {
+                    System.out.println("Entrada inválida. Por favor, ingrese un número.");
+                    scanner.nextLine(); // Consume la entrada inválida para evitar un bucle infinito
+                }
         }
-
-        return seleccion;
     }
 
+    // Método auxiliar para obtener una provincia por su código explícito
     public static Provincia getProvinciaPorCodigo(int codigo)
     {
         for (Provincia provincia : Provincia.values())
         {
-            if (provincia.ordinal() + 1 == codigo)
+            if (provincia.getCodigo() == codigo) // Compara con el codigo explicito del enum
             {
                 return provincia;
             }
         }
-        return null; // O lanzar una exception si el codigo no existe
+        return null; // Si no encuentra ninguna provincia con ese codigo
     }
 
-    public Provincia getProvinciaPorNombre(String nombre)
+    // Este metodo ya existe y es útil, lo mantengo.
+    public static Provincia getProvinciaPorNombre(String nombre)
     {
         for (Provincia provincia : Provincia.values())
         {
-            if (provincia.name().equalsIgnoreCase(nombre))
+            if (provincia.getNombre().equalsIgnoreCase(nombre)) // Compara con el nombre de la provincia
             {
                 return provincia;
             }
         }
-        return null; // O lanzar una excepcion si el nombre no existe
+        return null;
     }
-
-
 }
-
-// Fijate que chota tengo que hacer aca para que me quede bien, por que no se si esta bien esto que hice, es para buscar por nombre o por numero

@@ -23,16 +23,16 @@ public enum FormaPago
     {
         int num = 0;
         boolean flag = true;
-        Scanner teclado = new Scanner(System.in);
+        Scanner datoAceptado = new Scanner(System.in);
 
         do
         {
             System.out.print(mensaje);
-            dato = teclado.nextLine();
+            dato = datoAceptado.nextLine();
 
             if(Excepciones.verificarEntero(dato))
             {
-                num = Integer.parseInt(dato);
+                num = Integer.parseInt(dato); // Convertir el String a un entero (funciona algo asi como el ASCCII, pero con numeros)
                 flag = true;
             }
                 else
@@ -50,12 +50,12 @@ public enum FormaPago
         this.detallePago = detallePago;
     }
 
-    public String obetenerFormaPago()
+    public String getFormaPago()
     {
         return this.detallePago;
     }
 
-    public static FormaPago escogerFomaPago ()
+    public static FormaPago escogerFormaPago ()
     {
         int seleccion;
         String seleccionAux = null;
@@ -64,14 +64,14 @@ public enum FormaPago
         {
             System.out.println("Formas de pago disponibles:");
 
-            for(FormaPago forma: FormaPago.values())
+            for(FormaPago forma : FormaPago.values())
             {
-                System.out.println(forma.ordinal() + 1 + "." + forma.obetenerFormaPago());
+                System.out.println(forma.ordinal() + 1 + "." + forma.getFormaPago());
             }
             seleccion = castearEntero("Seleccione alguna forma de pago: ", seleccionAux);
         }
         while(seleccion < 1 || seleccion > 5);
 
-        return FormaPago.values()[seleccion - 1];
+        return FormaPago.values() [seleccion - 1];
     }
 }

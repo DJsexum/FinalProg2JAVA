@@ -3,11 +3,24 @@ import java.util.Scanner;
 
 public enum Sexo
 {
-    MASCULINO,
-    FEMENINO,
-    OTRO;
-
-    public static Sexo getSexoDesdeConsola()
+	
+	MASCULINO("Masculino."),
+	FEMENINO("Femenino."),
+	OTRO("Otro.");
+	
+	private final String detalleSexo;
+	
+	Sexo (String detalleSexo)
+    {
+		this.detalleSexo = detalleSexo;
+	}
+	
+	public String getSexo ()
+    {
+		return this.detalleSexo;
+	}
+	
+    public static Sexo seleccionarSexo()
     {
         Scanner scanner = new Scanner(System.in);
         while (true)

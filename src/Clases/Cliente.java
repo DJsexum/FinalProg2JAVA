@@ -1,7 +1,6 @@
 package Clases;
 
-import Enumerados.Provincia;
-import Enumerados.Sexo;
+import Enumerados.*;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -94,5 +93,4 @@ public class Cliente extends Persona
     {
         this.CtaCte = ctaCte;
     }
-
 }

@@ -175,7 +175,7 @@ public abstract class Persona
     public void setSexo()
     {
         System.out.print("Sexo: ");
-        this.Sexo = Enumerados.Sexo.getSexoDesdeConsola();
+        this.Sexo = Enumerados.Sexo.seleccionarSexo();
     }
 
     public LocalDate getFechaNacimiento()
