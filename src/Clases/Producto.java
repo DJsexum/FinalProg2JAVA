@@ -196,7 +196,7 @@ public class Producto implements Comparable<Producto>
         throw new Excepciones.ProductoNoEncontradoExcepcion("No se encontro el producto con codigo " + codigo + ".");
     }
 
-    public static void verDetalleProducto(Producto producto)
+    public void verDetalleProducto(Producto producto)
     {
         if (producto == null)
         {
