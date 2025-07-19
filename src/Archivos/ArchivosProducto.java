@@ -13,7 +13,7 @@ Ahora usa excepciones personalizadas para manejo de errores.
 public class ArchivosProducto
 {
     // Nombre del archivo donde se guardan los productos
-    private static final String ARCHIVO = "productos.csv";
+    private static final String ARCHIVO = "src/Datos/productos.csv";
 
     /*
     Guarda un producto en el archivo CSV (agrega al final).

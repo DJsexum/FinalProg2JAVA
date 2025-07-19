@@ -8,7 +8,7 @@ import java.io.*;
 public class ArchivosCuentaCorriente
 {
     // Nombre del archivo CSV donde se guardan las cuentas corrientes
-    private static final String ARCHIVO = "cuentas_corrientes.csv";
+    private static final String ARCHIVO = "src/Datos/cuentas_corrientes.csv";
 
     /*
     Guarda todas las cuentas corrientes y sus movimientos en el archivo CSV.

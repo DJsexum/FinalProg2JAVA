@@ -13,7 +13,7 @@ Permite guardar, leer, buscar, modificar y eliminar empleados.
 public class ArchivosEmpleado
 {
     // Nombre del archivo donde se guardarán los empleados
-    private static final String ARCHIVO = "empleados.csv";
+    private static final String ARCHIVO = "src/Datos/empleados.csv";
 
     /*
     Guarda un empleado en el archivo CSV (agrega al final del archivo).
