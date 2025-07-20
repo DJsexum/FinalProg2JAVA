@@ -173,37 +173,102 @@ public abstract class Persona
 
     public void setNombresInteractivo()
     {
-        System.out.print("NOMBRE: ");
-        String nombre = scanner.nextLine();
-        this.Nombres = nombre.toUpperCase();
+        String nombres = null;
+        while (nombres == null)
+        {
+            try
+            {
+                System.out.print("NOMBRE: ");
+                String inputNombres = scanner.nextLine();
+                Principal.Excepciones.validarNombre(inputNombres, "NOMBRE");
+                nombres = quitarAcentos(inputNombres).toUpperCase();
+            }
+                catch (Principal.Excepciones.NombreInvalidoException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
+        this.Nombres = nombres;
     }
 
     public void setApellidosInteractivo()
     {
-        System.out.print("APELLIDO: ");
-        String apellido = scanner.nextLine();
-        this.Apellidos = apellido.toUpperCase();
+        String apellidos = null;
+        while (apellidos == null)
+        {
+            try
+            {
+                System.out.print("APELLIDO: ");
+                String inputApellidos = scanner.nextLine();
+                Principal.Excepciones.validarNombre(inputApellidos, "APELLIDO");
+                apellidos = quitarAcentos(inputApellidos).toUpperCase();
+            }
+                catch (Principal.Excepciones.NombreInvalidoException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
+        this.Apellidos = apellidos;
     }
 
     public void setTelefonoInteractivo()
     {
-        System.out.print("TELEFONO: ");
-        String telefono = scanner.nextLine();
-        this.Telefono = telefono.toUpperCase();
+        String telefono = null;
+        while (telefono == null)
+        {
+            try
+            {
+                System.out.print("TELEFONO: ");
+                String inputTelefono = scanner.nextLine();
+                Principal.Excepciones.validarTelefono(inputTelefono);
+                telefono = inputTelefono;
+            }
+                catch (Principal.Excepciones.TelefonoInvalidoException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
+        this.Telefono = telefono;
     }
 
     public void setDireccionInteractivo()
     {
-        System.out.print("DIRECCION: ");
-        String direccion = scanner.nextLine();
-        this.Direccion = direccion.toUpperCase();
+        String direccion = null;
+        while (direccion == null)
+        {
+            try
+            {
+                System.out.print("DIRECCION: ");
+                String inputDireccion = scanner.nextLine();
+                Principal.Excepciones.validarDireccion(inputDireccion);
+                direccion = quitarAcentos(inputDireccion).toUpperCase();
+            }
+                catch (Principal.Excepciones.DireccionInvalidaException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
+        this.Direccion = direccion;
     }
 
     public void setLocalidadInteractivo()
     {
-        System.out.print("LOCALIDAD: ");
-        String localidad = scanner.nextLine();
-        this.Localidad = localidad.toUpperCase();
+        String localidad = null;
+        while (localidad == null)
+        {
+            try
+            {
+                System.out.print("LOCALIDAD: ");
+                String inputLocalidad = scanner.nextLine();
+                Principal.Excepciones.validarLocalidad(inputLocalidad);
+                localidad = quitarAcentos(inputLocalidad).toUpperCase();
+            }
+                catch (Principal.Excepciones.LocalidadInvalidaException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
+        this.Localidad = localidad;
     }
 
     public void setProvinciaInteractivo()
@@ -298,10 +363,18 @@ public abstract class Persona
                 setFechaNacimientoInteractivo(); // Llamada recursiva para reiniciar
             }
     }
+
+    // Metodo para quitar solo acentos (no modifica ñ/Ñ)
+    protected String quitarAcentos(String texto)
+    {
+        if (texto == null) return null;
+        return texto
+            .replace("Á", "A").replace("É", "E").replace("Í", "I").replace("Ó", "O").replace("Ú", "U")
+            .replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u");
+    }
 }
 
 /*
-
 Correccion, ahora no se, por que cambie un monton de cosas, asi que a la hora de ver esto, puede ser que esten, como puede que no, todo depende de como haya hecho las cosas a estas alturas de la vida.
 Pero por las dudas dejo estos datitos:
 

@@ -182,20 +182,90 @@ public class Cliente extends Persona
                     }
         }
 
-        System.out.print(quitarAcentos("\nINGRESE NOMBRES: ").toUpperCase());
-        String nombres = scanner.nextLine();
+        // Validación de nombres con control de excepciones
+        String nombres = null;
+        while (nombres == null)
+        {
+            try
+            {
+                System.out.print(quitarAcentos("\nINGRESE NOMBRES: ").toUpperCase());
+                String inputNombres = scanner.nextLine();
+                Principal.Excepciones.validarNombre(inputNombres, "NOMBRE");
+                nombres = quitarAcentos(inputNombres).toUpperCase();
+            }
+                catch (Principal.Excepciones.NombreInvalidoException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
 
-        System.out.print(quitarAcentos("INGRESE APELLIDOS: ").toUpperCase());
-        String apellidos = scanner.nextLine();
+        // Validación de apellidos con control de excepciones
+        String apellidos = null;
+        while (apellidos == null)
+        {
+            try
+            {
+                System.out.print(quitarAcentos("INGRESE APELLIDOS: ").toUpperCase());
+                String inputApellidos = scanner.nextLine();
+                Principal.Excepciones.validarNombre(inputApellidos, "APELLIDO");
+                apellidos = quitarAcentos(inputApellidos).toUpperCase();
+            }
+                catch (Principal.Excepciones.NombreInvalidoException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
 
-        System.out.print(quitarAcentos("INGRESE TELEFONO: ").toUpperCase());
-        String telefono = scanner.nextLine();
+        // Validación de teléfono con control de excepciones
+        String telefono = null;
+        while (telefono == null)
+        {
+            try
+            {
+                System.out.print(quitarAcentos("INGRESE TELEFONO: ").toUpperCase());
+                String inputTelefono = scanner.nextLine();
+                Principal.Excepciones.validarTelefono(inputTelefono);
+                telefono = inputTelefono;
+            }
+                catch (Principal.Excepciones.TelefonoInvalidoException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
 
-        System.out.print(quitarAcentos("INGRESE DIRECCION: ").toUpperCase());
-        String direccion = scanner.nextLine();
+        // Validación de dirección con control de excepciones
+        String direccion = null;
+        while (direccion == null)
+        {
+            try
+            {
+                System.out.print(quitarAcentos("INGRESE DIRECCION: ").toUpperCase());
+                String inputDireccion = scanner.nextLine();
+                Principal.Excepciones.validarDireccion(inputDireccion);
+                direccion = quitarAcentos(inputDireccion).toUpperCase();
+            }
+                catch (Principal.Excepciones.DireccionInvalidaException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
 
-        System.out.print(quitarAcentos("INGRESE LOCALIDAD: ").toUpperCase());
-        String localidad = scanner.nextLine();
+        // Validación de localidad con control de excepciones
+        String localidad = null;
+        while (localidad == null)
+        {
+            try
+            {
+                System.out.print(quitarAcentos("INGRESE LOCALIDAD: ").toUpperCase());
+                String inputLocalidad = scanner.nextLine();
+                Principal.Excepciones.validarLocalidad(inputLocalidad);
+                localidad = quitarAcentos(inputLocalidad).toUpperCase();
+            }
+                catch (Principal.Excepciones.LocalidadInvalidaException e)
+                {
+                    System.out.println("ERROR: " + e.getMessage());
+                }
+        }
 
         Provincia provincia = Provincia.seleccionarProvincia();
         Sexo sexo = Sexo.seleccionarSexo();
@@ -226,10 +296,13 @@ public class Cliente extends Persona
         }
             else
             {
+                mostrarEncabezadoClientes();
                 for (Cliente c : clientes)
                 {
                     System.out.println(c);
                 }
+                mostrarPieClientes();
+                System.out.println();
             }
     }
 
@@ -240,12 +313,11 @@ public class Cliente extends Persona
         Cliente encontrado = ArchivosCliente.buscarPorDni(dni);
         if (encontrado != null)
         {
-            System.out.println(quitarAcentos("\nCLIENTE ENCONTRADO:").toUpperCase());
-            System.out.println(encontrado);
+            encontrado.mostrarClienteIndividual();
         }
             else
             {
-                System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI").toUpperCase());
+                System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI\n").toUpperCase());
             }
             return encontrado;
     }
@@ -254,36 +326,230 @@ public class Cliente extends Persona
     @Override
     public void modificarPersona()
     {
-        System.out.println(quitarAcentos("=== MODIFICAR DATOS DEL CLIENTE ===\n").toUpperCase());
-        System.out.print(quitarAcentos("INGRESE DNI DEL CLIENTE A MODIFICAR: ").toUpperCase());
-        int dni = scanner.nextInt();
-        scanner.nextLine();
-
-        Cliente clienteMod = ArchivosCliente.buscarPorDni(dni);
-        if (clienteMod == null)
+        try
         {
-            System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI\n").toUpperCase());
-            return;
-        }
-
-        System.out.print(quitarAcentos("NUEVO TELEFONO: ").toUpperCase());
-        clienteMod.setTelefono(scanner.nextLine());
-
-        System.out.print(quitarAcentos("NUEVA DIRECCION: ").toUpperCase());
-        clienteMod.setDireccion(scanner.nextLine());
-
-        System.out.print(quitarAcentos("NUEVA LOCALIDAD: ").toUpperCase());
-        clienteMod.setLocalidad(scanner.nextLine());
-
-        boolean modificado = ArchivosCliente.modificarCliente(clienteMod);
-        if (modificado)
-        {
-            System.out.println(quitarAcentos("DATOS MODIFICADOS CORRECTAMENTE.").toUpperCase());
-        }
+            // Primero mostrar todos los clientes disponibles
+            ArrayList<Cliente> lista = ArchivosCliente.leerClientes();
+            if (lista.isEmpty())
+            {
+                System.out.println(quitarAcentos("NO HAY CLIENTES REGISTRADOS.\n").toUpperCase());
+                return;
+            }
+            
+            System.out.println(quitarAcentos("CLIENTES DISPONIBLES:").toUpperCase());
+            mostrarEncabezadoClientes();
+            for (Cliente c : lista)
+            {
+                System.out.println(c);
+            }
+            mostrarPieClientes();
+            
+            System.out.print(quitarAcentos("\nINGRESE DNI DEL CLIENTE A MODIFICAR (0 PARA CANCELAR): ").toUpperCase());
+            int dni = leerEntero();
+            if (dni == 0)
+            {
+                System.out.println(quitarAcentos("OPERACION CANCELADA.\n").toUpperCase());
+                return;
+            }
+            
+            Cliente clienteMod = ArchivosCliente.buscarPorDni(dni);
+            if (clienteMod != null)
+            {
+                System.out.println(quitarAcentos("\nCLIENTE SELECCIONADO PARA MODIFICAR:").toUpperCase());
+                clienteMod.mostrarClienteIndividual();
+                
+                System.out.print(quitarAcentos("¿CONFIRMA MODIFICACION? (S/N): ").toUpperCase());
+                String confirmacion = scanner.nextLine().toUpperCase();
+                if (confirmacion.equals("S"))
+                {
+                    // MENU DE SELECCION DE CAMPO A MODIFICAR
+                    boolean continuar = true;
+                    while (continuar)
+                    {
+                        System.out.println("\n┌───────────────────────────────────────────────┐");
+                        System.out.println("│          SELECCIONE CAMPO A MODIFICAR:        │");
+                        System.out.println("├───────────────────────────────────────────────┤");
+                        System.out.println("│          [1] TELEFONO                         │");
+                        System.out.println("│          [2] DIRECCION                        │");
+                        System.out.println("│          [3] LOCALIDAD                        │");
+                        System.out.println("│          [4] PROVINCIA                        │");
+                        System.out.println("│          [5] MODIFICAR TODO                   │");
+                        System.out.println("│          [0] SALIR SIN MODIFICAR              │");
+                        System.out.println("└───────────────────────────────────────────────┘");
+                        System.out.print(quitarAcentos("OPCION: ").toUpperCase());
+                        
+                        int opcionCampo = leerEntero();
+                        boolean modificacionExitosa = false;
+                        
+                        switch (opcionCampo)
+                        {
+                            case 1: // MODIFICAR TELEFONO
+                                modificacionExitosa = modificarTelefono(clienteMod);
+                                break;
+                                
+                            case 2: // MODIFICAR DIRECCION
+                                modificacionExitosa = modificarDireccion(clienteMod);
+                                break;
+                                
+                            case 3: // MODIFICAR LOCALIDAD
+                                modificacionExitosa = modificarLocalidad(clienteMod);
+                                break;
+                                
+                            case 4: // MODIFICAR PROVINCIA
+                                modificacionExitosa = modificarProvincia(clienteMod);
+                                break;
+                                
+                            case 5: // MODIFICAR TODO
+                                modificacionExitosa = modificarTodosLosCampos(clienteMod);
+                                break;
+                                
+                            case 0: // SALIR
+                                System.out.println(quitarAcentos("MODIFICACION CANCELADA.\n").toUpperCase());
+                                continuar = false;
+                                break;
+                                
+                            default:
+                                System.out.println(quitarAcentos("OPCION INVALIDA. INTENTE NUEVAMENTE.\n").toUpperCase());
+                                break;
+                        }
+                        
+                        if (modificacionExitosa)
+                        {
+                            System.out.println(quitarAcentos("CLIENTE MODIFICADO CORRECTAMENTE.\n").toUpperCase());
+                            continuar = false;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println(quitarAcentos("MODIFICACION CANCELADA.\n").toUpperCase());
+                }
+            }
             else
             {
-                System.out.println(quitarAcentos("NO SE PUDO MODIFICAR EL CLIENTE.").toUpperCase());
+                System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI.\n").toUpperCase());
             }
+        }
+        catch (Exception e)
+        {
+            System.out.println(quitarAcentos("ERROR AL MODIFICAR CLIENTE: " + e.getMessage()).toUpperCase());
+        }
+    }
+
+    // Método auxiliar para leer enteros con validación
+    private int leerEntero()
+    {
+        try
+        {
+            return Integer.parseInt(scanner.nextLine());
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println(quitarAcentos("ERROR: DEBE INGRESAR UN NUMERO VALIDO.").toUpperCase());
+            return -1;
+        }
+    }
+
+    // Métodos auxiliares para modificar cada campo
+    private boolean modificarTelefono(Cliente cliente)
+    {
+        try
+        {
+            System.out.print(quitarAcentos("NUEVO TELEFONO: ").toUpperCase());
+            String nuevoTelefono = scanner.nextLine();
+            Principal.Excepciones.validarTelefono(nuevoTelefono);
+            cliente.setTelefono(nuevoTelefono);
+            return ArchivosCliente.modificarCliente(cliente);
+        }
+        catch (Principal.Excepciones.TelefonoInvalidoException e)
+        {
+            System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarDireccion(Cliente cliente)
+    {
+        try
+        {
+            System.out.print(quitarAcentos("NUEVA DIRECCION: ").toUpperCase());
+            String nuevaDireccion = scanner.nextLine();
+            Principal.Excepciones.validarDireccion(nuevaDireccion);
+            cliente.setDireccion(quitarAcentos(nuevaDireccion).toUpperCase());
+            return ArchivosCliente.modificarCliente(cliente);
+        }
+        catch (Principal.Excepciones.DireccionInvalidaException e)
+        {
+            System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarLocalidad(Cliente cliente)
+    {
+        try
+        {
+            System.out.print(quitarAcentos("NUEVA LOCALIDAD: ").toUpperCase());
+            String nuevaLocalidad = scanner.nextLine();
+            Principal.Excepciones.validarLocalidad(nuevaLocalidad);
+            cliente.setLocalidad(quitarAcentos(nuevaLocalidad).toUpperCase());
+            return ArchivosCliente.modificarCliente(cliente);
+        }
+        catch (Principal.Excepciones.LocalidadInvalidaException e)
+        {
+            System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarProvincia(Cliente cliente)
+    {
+        try
+        {
+            Provincia nuevaProvincia = Provincia.seleccionarProvincia();
+            cliente.setProvincia(nuevaProvincia);
+            return ArchivosCliente.modificarCliente(cliente);
+        }
+        catch (Exception e)
+        {
+            System.out.println(quitarAcentos("ERROR AL MODIFICAR PROVINCIA: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarTodosLosCampos(Cliente cliente)
+    {
+        try
+        {
+            // Modificar teléfono
+            System.out.print(quitarAcentos("NUEVO TELEFONO: ").toUpperCase());
+            String nuevoTelefono = scanner.nextLine();
+            Principal.Excepciones.validarTelefono(nuevoTelefono);
+            cliente.setTelefono(nuevoTelefono);
+
+            // Modificar dirección
+            System.out.print(quitarAcentos("NUEVA DIRECCION: ").toUpperCase());
+            String nuevaDireccion = scanner.nextLine();
+            Principal.Excepciones.validarDireccion(nuevaDireccion);
+            cliente.setDireccion(quitarAcentos(nuevaDireccion).toUpperCase());
+
+            // Modificar localidad
+            System.out.print(quitarAcentos("NUEVA LOCALIDAD: ").toUpperCase());
+            String nuevaLocalidad = scanner.nextLine();
+            Principal.Excepciones.validarLocalidad(nuevaLocalidad);
+            cliente.setLocalidad(quitarAcentos(nuevaLocalidad).toUpperCase());
+
+            // Modificar provincia
+            Provincia nuevaProvincia = Provincia.seleccionarProvincia();
+            cliente.setProvincia(nuevaProvincia);
+
+            return ArchivosCliente.modificarCliente(cliente);
+        }
+        catch (Exception e)
+        {
+            System.out.println(quitarAcentos("ERROR AL MODIFICAR TODOS LOS CAMPOS: " + e.getMessage()).toUpperCase());
+            return false;
+        }
     }
 
     // Baja de cliente
@@ -319,23 +585,57 @@ public class Cliente extends Persona
     @Override
     public String toString() // Metodo para mostrar los datos del cliente de forma entendible
     {
-        return "CLIENTES:\n" +
-                "DNI = " + getDni() +
-                ", NOMBRE = '" + quitarAcentos(getNombres().toUpperCase()) + " " + quitarAcentos(getApellidos().toUpperCase()) + '\'' +
-                ", TELEFONO = '" + quitarAcentos(getTelefono().toUpperCase()) + '\'' +
-                ", DIRECCION = '" + quitarAcentos(getDireccion().toUpperCase()) + '\'' +
-                ", LOCALIDAD = '" + quitarAcentos(getLocalidad().toUpperCase()) + '\'' +
-                ", PROVINCIA = " + (getProvincia() != null ? getProvincia().toString().toUpperCase() : "") +
-                ", SEXO = " + (getSexo() != null ? getSexo().toString().toUpperCase() : "") +
-                ", FECHA DE NACIMIENTO = " + getFechaNacimiento() + "\n";
+        return String.format("│ %8s │ %25s │ %12s │ %25s │ %20s │ %15s │ %10s │ %12s │",
+                centrarTexto(String.valueOf(getDni()), 8),
+                centrarTexto(quitarAcentos(getNombres()).toUpperCase() + " " + quitarAcentos(getApellidos()).toUpperCase(), 25),
+                centrarTexto(getTelefono(), 12),
+                centrarTexto(quitarAcentos(getDireccion()).toUpperCase(), 25),
+                centrarTexto(quitarAcentos(getLocalidad()).toUpperCase(), 20),
+                centrarTexto(getProvincia() != null ? getProvincia().toString().toUpperCase() : "", 15),
+                centrarTexto(getSexo() != null ? getSexo().toString().toUpperCase() : "", 10),
+                centrarTexto(getFechaNacimiento().toString(), 12)
+        );
     }
 
-    // Metodo para quitar solo acentos (no modifica ñ/Ñ)
-    private String quitarAcentos(String texto)
+    // Método auxiliar para centrar texto en un ancho específico
+    private String centrarTexto(String texto, int ancho)
     {
-        if (texto == null) return null;
-        return texto
-            .replace("Á", "A").replace("É", "E").replace("Í", "I").replace("Ó", "O").replace("Ú", "U")
-            .replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u");
+        if (texto == null) texto = "";
+        if (texto.length() >= ancho) return texto.substring(0, ancho);
+        
+        int espacios = ancho - texto.length();
+        int espaciosIzquierda = espacios / 2;
+        int espaciosDerecha = espacios - espaciosIzquierda;
+        
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < espaciosIzquierda; i++) sb.append(" ");
+        sb.append(texto);
+        for (int i = 0; i < espaciosDerecha; i++) sb.append(" ");
+        
+        return sb.toString();
+    }
+
+    // Método para mostrar el encabezado de la tabla de clientes
+    public static void mostrarEncabezadoClientes()
+    {
+        System.out.println("┌──────────┬───────────────────────────┬──────────────┬───────────────────────────┬──────────────────────┬─────────────────┬────────────┬──────────────┐");
+        System.out.println("│   DNI    │           NOMBRE          │   TELEFONO   │         DIRECCION         │      LOCALIDAD       │    PROVINCIA    │    SEXO    │    FECHA     │");
+        System.out.println("├──────────┼───────────────────────────┼──────────────┼───────────────────────────┼──────────────────────┼─────────────────┼────────────┼──────────────┤");
+    }
+
+    // Método para mostrar el pie de la tabla
+    public static void mostrarPieClientes()
+    {
+        System.out.println("└──────────┴───────────────────────────┴──────────────┴───────────────────────────┴──────────────────────┴─────────────────┴────────────┴──────────────┘");
+    }
+
+    // Método para mostrar un cliente individual en formato tabla
+    public void mostrarClienteIndividual()
+    {
+        System.out.println(quitarAcentos("=== DATOS DEL CLIENTE ===\n").toUpperCase());
+        mostrarEncabezadoClientes();
+        System.out.println(this);
+        mostrarPieClientes();
+        System.out.println();
     }
 }

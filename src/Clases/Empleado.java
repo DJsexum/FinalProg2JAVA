@@ -130,18 +130,21 @@ public class Empleado extends Persona
     @Override
     public void listarPersona()
     {
-        System.out.println(quitarAcentos("=== LISTADO DE EMPLEADOS ===").toUpperCase());
+        System.out.println(quitarAcentos("=== LISTADO DE EMPLEADOS ===\n").toUpperCase());
         ArrayList<Empleado> empleados = Archivos.ArchivosEmpleado.leerEmpleados();
         if (empleados.isEmpty())
         {
-            System.out.println(quitarAcentos("NO HAY EMPLEADOS REGISTRADOS.").toUpperCase());
+            System.out.println(quitarAcentos("NO HAY EMPLEADOS REGISTRADOS.\n").toUpperCase());
         }
             else
             {
+                mostrarEncabezadoEmpleados();
                 for (Empleado e : empleados)
                 {
                     System.out.println(e);
                 }
+                mostrarPieEmpleados();
+                System.out.println();
             }
     }
 
@@ -151,12 +154,11 @@ public class Empleado extends Persona
         Empleado encontrado = Archivos.ArchivosEmpleado.buscarPorLegajo(legajo);
         if (encontrado != null)
         {
-            System.out.println(quitarAcentos("EMPLEADO ENCONTRADO:").toUpperCase());
-            System.out.println(encontrado);
+            encontrado.mostrarEmpleadoIndividual();
         }
             else
             {
-                System.out.println(quitarAcentos("NO SE ENCONTRO NINGUN EMPLEADO CON ESE LEGAJO.").toUpperCase());
+                System.out.println(quitarAcentos("NO SE ENCONTRO NINGUN EMPLEADO CON ESE LEGAJO.\n").toUpperCase());
             }
             return encontrado;
     }
@@ -164,32 +166,271 @@ public class Empleado extends Persona
     @Override
     public void modificarPersona()
     {
-        System.out.print(quitarAcentos("INGRESE LEGAJO DEL EMPLEADO A MODIFICAR: ").toUpperCase());
-        int legajo = Integer.parseInt(scanner.nextLine());
-        Empleado emp = Archivos.ArchivosEmpleado.buscarPorLegajo(legajo);
-        if (emp == null)
+        try
         {
-            System.out.println(quitarAcentos("NO SE ENCONTRO EMPLEADO CON ESE LEGAJO.").toUpperCase());
-            return;
-        }
-        System.out.print(quitarAcentos("NUEVO TELEFONO: ").toUpperCase());
-        emp.setTelefono(scanner.nextLine());
-        System.out.print(quitarAcentos("NUEVA DIRECCION: ").toUpperCase());
-        emp.setDireccion(scanner.nextLine());
-        System.out.print(quitarAcentos("NUEVA LOCALIDAD: ").toUpperCase());
-        emp.setLocalidad(scanner.nextLine());
-        System.out.print(quitarAcentos("NUEVO SALARIO: ").toUpperCase());
-        emp.setSalario(Double.parseDouble(scanner.nextLine()));
-
-        boolean modificado = Archivos.ArchivosEmpleado.modificarEmpleado(emp);
-        if (modificado)
-        {
-            System.out.println(quitarAcentos("DATOS MODIFICADOS CORRECTAMENTE.").toUpperCase());
-        }
+            // Primero mostrar todos los empleados disponibles
+            ArrayList<Empleado> lista = Archivos.ArchivosEmpleado.leerEmpleados();
+            if (lista.isEmpty())
+            {
+                System.out.println(quitarAcentos("NO HAY EMPLEADOS REGISTRADOS.\n").toUpperCase());
+                return;
+            }
+            
+            System.out.println(quitarAcentos("EMPLEADOS DISPONIBLES:").toUpperCase());
+            mostrarEncabezadoEmpleados();
+            for (Empleado e : lista)
+            {
+                System.out.println(e);
+            }
+            mostrarPieEmpleados();
+            
+            System.out.print(quitarAcentos("\nINGRESE LEGAJO DEL EMPLEADO A MODIFICAR (0 PARA CANCELAR): ").toUpperCase());
+            int legajo = leerEntero();
+            if (legajo == 0)
+            {
+                System.out.println(quitarAcentos("OPERACION CANCELADA.\n").toUpperCase());
+                return;
+            }
+            
+            Empleado empleadoMod = Archivos.ArchivosEmpleado.buscarPorLegajo(legajo);
+            if (empleadoMod != null)
+            {
+                System.out.println(quitarAcentos("\nEMPLEADO SELECCIONADO PARA MODIFICAR:").toUpperCase());
+                empleadoMod.mostrarEmpleadoIndividual();
+                
+                System.out.print(quitarAcentos("¿CONFIRMA MODIFICACION? (S/N): ").toUpperCase());
+                String confirmacion = scanner.nextLine().toUpperCase();
+                if (confirmacion.equals("S"))
+                {
+                    // MENU DE SELECCION DE CAMPO A MODIFICAR
+                    boolean continuar = true;
+                    while (continuar)
+                    {
+                        System.out.println("\n┌───────────────────────────────────────────────┐");
+                        System.out.println("│          SELECCIONE CAMPO A MODIFICAR:        │");
+                        System.out.println("├───────────────────────────────────────────────┤");
+                        System.out.println("│          [1] TELEFONO                         │");
+                        System.out.println("│          [2] DIRECCION                        │");
+                        System.out.println("│          [3] LOCALIDAD                        │");
+                        System.out.println("│          [4] PROVINCIA                        │");
+                        System.out.println("│          [5] SALARIO                          │");
+                        System.out.println("│          [6] MODIFICAR TODO                   │");
+                        System.out.println("│          [0] SALIR SIN MODIFICAR              │");
+                        System.out.println("└───────────────────────────────────────────────┘");
+                        System.out.print(quitarAcentos("OPCION: ").toUpperCase());
+                        
+                        int opcionCampo = leerEntero();
+                        boolean modificacionExitosa = false;
+                        
+                        switch (opcionCampo)
+                        {
+                            case 1: // MODIFICAR TELEFONO
+                                modificacionExitosa = modificarTelefonoEmpleado(empleadoMod);
+                                break;
+                                
+                            case 2: // MODIFICAR DIRECCION
+                                modificacionExitosa = modificarDireccionEmpleado(empleadoMod);
+                                break;
+                                
+                            case 3: // MODIFICAR LOCALIDAD
+                                modificacionExitosa = modificarLocalidadEmpleado(empleadoMod);
+                                break;
+                                
+                            case 4: // MODIFICAR PROVINCIA
+                                modificacionExitosa = modificarProvinciaEmpleado(empleadoMod);
+                                break;
+                                
+                            case 5: // MODIFICAR SALARIO
+                                modificacionExitosa = modificarSalarioEmpleado(empleadoMod);
+                                break;
+                                
+                            case 6: // MODIFICAR TODO
+                                modificacionExitosa = modificarTodosLosCamposEmpleado(empleadoMod);
+                                break;
+                                
+                            case 0: // SALIR
+                                System.out.println(quitarAcentos("MODIFICACION CANCELADA.\n").toUpperCase());
+                                continuar = false;
+                                break;
+                                
+                            default:
+                                System.out.println(quitarAcentos("OPCION INVALIDA. INTENTE NUEVAMENTE.\n").toUpperCase());
+                                break;
+                        }
+                        
+                        if (modificacionExitosa)
+                        {
+                            System.out.println(quitarAcentos("EMPLEADO MODIFICADO CORRECTAMENTE.\n").toUpperCase());
+                            continuar = false;
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println(quitarAcentos("MODIFICACION CANCELADA.\n").toUpperCase());
+                }
+            }
             else
             {
-                System.out.println(quitarAcentos("NO SE PUDO MODIFICAR EL EMPLEADO.").toUpperCase());
+                System.out.println(quitarAcentos("NO SE ENCONTRO EMPLEADO CON ESE LEGAJO.\n").toUpperCase());
             }
+        }
+        catch (Exception e)
+        {
+            System.out.println(quitarAcentos("ERROR AL MODIFICAR EMPLEADO: " + e.getMessage()).toUpperCase());
+        }
+    }
+
+    // Método auxiliar para leer enteros con validación
+    private int leerEntero()
+    {
+        try
+        {
+            return Integer.parseInt(scanner.nextLine());
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println(quitarAcentos("ERROR: DEBE INGRESAR UN NUMERO VALIDO.").toUpperCase());
+            return -1;
+        }
+    }
+
+    // Métodos auxiliares para modificar cada campo del empleado
+    private boolean modificarTelefonoEmpleado(Empleado empleado)
+    {
+        try
+        {
+            System.out.print(quitarAcentos("NUEVO TELEFONO: ").toUpperCase());
+            String nuevoTelefono = scanner.nextLine();
+            Principal.Excepciones.validarTelefono(nuevoTelefono);
+            empleado.setTelefono(nuevoTelefono);
+            return Archivos.ArchivosEmpleado.modificarEmpleado(empleado);
+        }
+        catch (Principal.Excepciones.TelefonoInvalidoException e)
+        {
+            System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarDireccionEmpleado(Empleado empleado)
+    {
+        try
+        {
+            System.out.print(quitarAcentos("NUEVA DIRECCION: ").toUpperCase());
+            String nuevaDireccion = scanner.nextLine();
+            Principal.Excepciones.validarDireccion(nuevaDireccion);
+            empleado.setDireccion(quitarAcentos(nuevaDireccion).toUpperCase());
+            return Archivos.ArchivosEmpleado.modificarEmpleado(empleado);
+        }
+        catch (Principal.Excepciones.DireccionInvalidaException e)
+        {
+            System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarLocalidadEmpleado(Empleado empleado)
+    {
+        try
+        {
+            System.out.print(quitarAcentos("NUEVA LOCALIDAD: ").toUpperCase());
+            String nuevaLocalidad = scanner.nextLine();
+            Principal.Excepciones.validarLocalidad(nuevaLocalidad);
+            empleado.setLocalidad(quitarAcentos(nuevaLocalidad).toUpperCase());
+            return Archivos.ArchivosEmpleado.modificarEmpleado(empleado);
+        }
+        catch (Principal.Excepciones.LocalidadInvalidaException e)
+        {
+            System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarProvinciaEmpleado(Empleado empleado)
+    {
+        try
+        {
+            Provincia nuevaProvincia = Provincia.seleccionarProvincia();
+            empleado.setProvincia(nuevaProvincia);
+            return Archivos.ArchivosEmpleado.modificarEmpleado(empleado);
+        }
+        catch (Exception e)
+        {
+            System.out.println(quitarAcentos("ERROR AL MODIFICAR PROVINCIA: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarSalarioEmpleado(Empleado empleado)
+    {
+        try
+        {
+            System.out.print(quitarAcentos("NUEVO SALARIO: ").toUpperCase());
+            double nuevoSalario = Double.parseDouble(scanner.nextLine());
+            if (nuevoSalario <= 0)
+            {
+                System.out.println(quitarAcentos("ERROR: EL SALARIO DEBE SER MAYOR A CERO.").toUpperCase());
+                return false;
+            }
+            empleado.setSalario(nuevoSalario);
+            return Archivos.ArchivosEmpleado.modificarEmpleado(empleado);
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println(quitarAcentos("ERROR: DEBE INGRESAR UN NUMERO VALIDO PARA EL SALARIO.").toUpperCase());
+            return false;
+        }
+        catch (Exception e)
+        {
+            System.out.println(quitarAcentos("ERROR AL MODIFICAR SALARIO: " + e.getMessage()).toUpperCase());
+            return false;
+        }
+    }
+
+    private boolean modificarTodosLosCamposEmpleado(Empleado empleado)
+    {
+        try
+        {
+            // Modificar teléfono
+            System.out.print(quitarAcentos("NUEVO TELEFONO: ").toUpperCase());
+            String nuevoTelefono = scanner.nextLine();
+            Principal.Excepciones.validarTelefono(nuevoTelefono);
+            empleado.setTelefono(nuevoTelefono);
+
+            // Modificar dirección
+            System.out.print(quitarAcentos("NUEVA DIRECCION: ").toUpperCase());
+            String nuevaDireccion = scanner.nextLine();
+            Principal.Excepciones.validarDireccion(nuevaDireccion);
+            empleado.setDireccion(quitarAcentos(nuevaDireccion).toUpperCase());
+
+            // Modificar localidad
+            System.out.print(quitarAcentos("NUEVA LOCALIDAD: ").toUpperCase());
+            String nuevaLocalidad = scanner.nextLine();
+            Principal.Excepciones.validarLocalidad(nuevaLocalidad);
+            empleado.setLocalidad(quitarAcentos(nuevaLocalidad).toUpperCase());
+
+            // Modificar provincia
+            Provincia nuevaProvincia = Provincia.seleccionarProvincia();
+            empleado.setProvincia(nuevaProvincia);
+
+            // Modificar salario
+            System.out.print(quitarAcentos("NUEVO SALARIO: ").toUpperCase());
+            double nuevoSalario = Double.parseDouble(scanner.nextLine());
+            if (nuevoSalario <= 0)
+            {
+                System.out.println(quitarAcentos("ERROR: EL SALARIO DEBE SER MAYOR A CERO.").toUpperCase());
+                return false;
+            }
+            empleado.setSalario(nuevoSalario);
+
+            return Archivos.ArchivosEmpleado.modificarEmpleado(empleado);
+        }
+        catch (Exception e)
+        {
+            System.out.println(quitarAcentos("ERROR AL MODIFICAR TODOS LOS CAMPOS: " + e.getMessage()).toUpperCase());
+            return false;
+        }
     }
 
     @Override
@@ -223,27 +464,60 @@ public class Empleado extends Persona
     @Override
     public String toString()
     {
-        return "EMPLEADOS:\n" +
-                "DNI = " + getDni() +
-                ", NOMBRE = '" + quitarAcentos(getNombres().toUpperCase()) + " " + quitarAcentos(getApellidos().toUpperCase()) + '\'' +
-                ", TELEFONO = '" + quitarAcentos(getTelefono().toUpperCase()) + '\'' +
-                ", DIRECCION = '" + quitarAcentos(getDireccion().toUpperCase()) + '\'' +
-                ", LOCALIDAD = '" + quitarAcentos(getLocalidad().toUpperCase()) + '\'' +
-                ", PROVINCIA = " + (getProvincia() != null ? getProvincia().toString().toUpperCase() : "") +
-                ", SEXO = " + (getSexo() != null ? getSexo().toString().toUpperCase() : "") +
-                ", FECHA DE NACIMIENTO = " + getFechaNacimiento() +
-                ", LEGAJO = " + getLegajo() +
-                ", FECHA INGRESO = " + getFechaIngreso() +
-                ", FECHA EGRESO = " + getFechaEgreso() +
-                ", SALARIO = " + getSalario() + "\n";
+        return String.format("│ %8s │ %25s │ %12s │ %25s │ %15s │ %10s │ %12s │ %6s │ %12s │ %12s │ %10s │",
+                centrarTexto(String.valueOf(getDni()), 8),
+                centrarTexto(quitarAcentos(getNombres()).toUpperCase() + " " + quitarAcentos(getApellidos()).toUpperCase(), 25),
+                centrarTexto(getTelefono(), 12),
+                centrarTexto(quitarAcentos(getDireccion()).toUpperCase(), 25),
+                centrarTexto(quitarAcentos(getLocalidad()).toUpperCase(), 15),
+                centrarTexto(getSexo() != null ? getSexo().toString().toUpperCase() : "", 10),
+                centrarTexto(getFechaNacimiento().toString(), 12),
+                centrarTexto(String.valueOf(getLegajo()), 6),
+                centrarTexto(getFechaIngreso() != null ? getFechaIngreso().toString() : "", 12),
+                centrarTexto(getFechaEgreso() != null ? getFechaEgreso().toString() : "ACTIVO", 12),
+                centrarTexto(String.format("%.2f", getSalario()), 10)
+        );
     }
 
-    // Método utilitario para quitar solo acentos (no modifica ñ/Ñ)
-    private String quitarAcentos(String texto)
+    // Método auxiliar para centrar texto en un ancho específico
+    private String centrarTexto(String texto, int ancho)
     {
-        if (texto == null) return null;
-        return texto
-            .replace("Á", "A").replace("É", "E").replace("Í", "I").replace("Ó", "O").replace("Ú", "U")
-            .replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u");
+        if (texto == null) texto = "";
+        if (texto.length() >= ancho) return texto.substring(0, ancho);
+        
+        int espacios = ancho - texto.length();
+        int espaciosIzquierda = espacios / 2;
+        int espaciosDerecha = espacios - espaciosIzquierda;
+        
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < espaciosIzquierda; i++) sb.append(" ");
+        sb.append(texto);
+        for (int i = 0; i < espaciosDerecha; i++) sb.append(" ");
+        
+        return sb.toString();
+    }
+
+    // Método para mostrar el encabezado de la tabla de empleados
+    public static void mostrarEncabezadoEmpleados()
+    {
+        System.out.println("┌──────────┬───────────────────────────┬──────────────┬───────────────────────────┬─────────────────┬────────────┬──────────────┬────────┬──────────────┬──────────────┬────────────┐");
+        System.out.println("│   DNI    │           NOMBRE          │   TELEFONO   │         DIRECCION         │    LOCALIDAD    │    SEXO    │ FECHA NACIM. │ LEGAJO │ FECHA INGRES │ FECHA EGRESO │   SALARIO  │");
+        System.out.println("├──────────┼───────────────────────────┼──────────────┼───────────────────────────┼─────────────────┼────────────┼──────────────┼────────┼──────────────┼──────────────┼────────────┤");
+    }
+
+    // Método para mostrar el pie de la tabla
+    public static void mostrarPieEmpleados()
+    {
+        System.out.println("└──────────┴───────────────────────────┴──────────────┴───────────────────────────┴─────────────────┴────────────┴──────────────┴────────┴──────────────┴──────────────┴────────────┘");
+    }
+
+    // Método para mostrar un empleado individual en formato tabla
+    public void mostrarEmpleadoIndividual()
+    {
+        System.out.println(quitarAcentos("=== DATOS DEL EMPLEADO ===\n").toUpperCase());
+        mostrarEncabezadoEmpleados();
+        System.out.println(this);
+        mostrarPieEmpleados();
+        System.out.println();
     }
 }
