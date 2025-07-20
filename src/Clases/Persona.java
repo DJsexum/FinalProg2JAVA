@@ -142,9 +142,32 @@ public abstract class Persona
     // SETTERS INTERACTIVOS (por consola)
     public void setDniInteractivo()
     {
-        System.out.print("DNI: ");
-        int dni = scanner.nextInt();
-        scanner.nextLine();
+        int dni = -1;
+        while (dni <= 0)
+        {
+            try 
+            {
+                System.out.print("DNI: ");
+                String input = scanner.nextLine();
+                dni = Integer.parseInt(input);
+                
+                if (dni <= 0)
+                {
+                    throw new Principal.Excepciones.DniInvalidoException("EL DNI DEBE SER UN NUMERO VALIDO");
+                }
+                break;
+            }
+                catch (NumberFormatException e)
+                {
+                    System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL DNI.");
+                    dni = -1; // Resetear para continuar el bucle
+                }
+                    catch (Principal.Excepciones.DniInvalidoException e)
+                    {
+                        System.out.println("ERROR: " + e.getMessage().toUpperCase());
+                        dni = -1; // Resetear para continuar el bucle
+                    }
+        }
         this.Dni = dni;
     }
 
@@ -198,37 +221,90 @@ public abstract class Persona
     public void setFechaNacimientoInteractivo()
     {
         int dia = -1, mes = -1, anio = -1;
-        LocalDate fechaValida = null;
-
-        while (fechaValida == null) 
+        
+        // Validar DIA individualmente
+        while (dia < 1 || dia > 31)
         {
             try 
             {
-                System.out.print("ANIO (YYYY): ");
-                anio = Integer.parseInt(scanner.nextLine());
-
-                System.out.print("MES (1-12): ");
-                mes = Integer.parseInt(scanner.nextLine());
-
-                System.out.print("DIA (1-31): ");
-                dia = Integer.parseInt(scanner.nextLine());
-
-                fechaValida = LocalDate.of(anio, mes, dia);
-            } 
+                System.out.print("FECHA (DD): ");
+                String inputDia = scanner.nextLine();
+                dia = Integer.parseInt(inputDia);
+                
+                if (dia < 1 || dia > 31) 
+                {
+                    System.out.println("ERROR: EL DIA DEBE ESTAR ENTRE 1 Y 31.");
+                }
+            }
                 catch (NumberFormatException e) 
                 {
-                    System.out.println("INGRESASTE UN NUMERO NO VALIDO. INTENTA DE NUEVO.");
-                } 
-                    catch (DateTimeException e) 
-                    {
-                        System.out.println("FECHA INVALIDA. VERIFICA SI EL DIA, MES O ANIO SON CORRECTOS.");
-                    }
+                    System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL DIA.");
+                    dia = -1; // Resetear para continuar el bucle
+                }
         }
-        this.FechaNacimiento = fechaValida;
+        
+        // Validar MES individualmente  
+        while (mes < 1 || mes > 12)
+        {
+            try 
+            {
+                System.out.print("MES (MM): ");
+                String inputMes = scanner.nextLine();
+                mes = Integer.parseInt(inputMes);
+                
+                if (mes < 1 || mes > 12) 
+                {
+                    System.out.println("ERROR: EL MES DEBE ESTAR ENTRE 1 Y 12.");
+                }
+            }
+                catch (NumberFormatException e) 
+                {
+                    System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL MES.");
+                    mes = -1; // Resetear para continuar el bucle
+                }
+        }
+        
+        // Validar ANIO individualmente
+        while (anio < 1900 || anio > 2024)
+        {
+            try 
+            {
+                System.out.print("AÑO (YYYY): ");
+                String inputAnio = scanner.nextLine();
+                anio = Integer.parseInt(inputAnio);
+                
+                if (anio < 1900 || anio > 2024) 
+                {
+                    System.out.println("ERROR: EL AÑO DEBE SER VALIDO.");
+                }
+            }
+                catch (NumberFormatException e) 
+                {
+                    System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL AÑO.");
+                    anio = -1; // Resetear para continuar el bucle
+                }
+        }
+        
+        // Validar que la fecha sea válida en el calendario
+        try 
+        {
+            LocalDate fechaValida = LocalDate.of(anio, mes, dia);
+            this.FechaNacimiento = fechaValida;
+        } 
+            catch (DateTimeException e) 
+            {
+                System.out.println("ERROR: LA FECHA " + dia + "/" + mes + "/" + anio + " NO EXISTE EN EL CALENDARIO.");
+                System.out.println("INTENTE NUEVAMENTE:");
+                setFechaNacimientoInteractivo(); // Llamada recursiva para reiniciar
+            }
     }
 }
 
 /*
+
+Correccion, ahora no se, por que cambie un monton de cosas, asi que a la hora de ver esto, puede ser que esten, como puede que no, todo depende de como haya hecho las cosas a estas alturas de la vida.
+Pero por las dudas dejo estos datitos:
+
 En esta clase hay dos tipos de setters:
 
 1. Setters simples:

@@ -34,6 +34,38 @@ public class Excepciones
         }
     }
 
+    public static class DatoInvalidoException extends RuntimeException
+    {
+        public DatoInvalidoException(String mensaje)
+        {
+            super(mensaje);
+        }
+    }
+
+    public static class FechaInvalidaException extends RuntimeException
+    {
+        public FechaInvalidaException(String mensaje)
+        {
+            super(mensaje);
+        }
+    }
+
+    public static class NumeroInvalidoException extends RuntimeException
+    {
+        public NumeroInvalidoException(String mensaje)
+        {
+            super(mensaje);
+        }
+    }
+
+    public static class DniInvalidoException extends RuntimeException
+    {
+        public DniInvalidoException(String mensaje)
+        {
+            super(mensaje);
+        }
+    }
+
     public static boolean verificarEntero (String numero)
     {
         try

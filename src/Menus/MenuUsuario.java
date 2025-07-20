@@ -16,13 +16,16 @@ public class MenuUsuario
 
         do
         {
-            System.out.println("===== MENU DE USUARIOS =====");
-            System.out.println("1. ALTA DE USUARIO");
-            System.out.println("2. LISTAR USUARIOS");
-            System.out.println("3. BUSCAR USUARIO POR NOMBRE DE USUARIO");
-            System.out.println("4. MODIFICAR USUARIO");
-            System.out.println("5. BAJA DE USUARIO");
-            System.out.println("0. VOLVER AL MENU PRINCIPAL");
+            System.out.println("\n┌───────────────────────────────────────────────┐");
+            System.out.println("│                MENU DE USUARIOS               │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│      [1] ALTA DE USUARIO                      │");
+            System.out.println("│      [2] LISTAR USUARIOS                      │");
+            System.out.println("│      [3] BUSCAR USUARIO POR NOMBRE USUARIO    │");
+            System.out.println("│      [4] MODIFICAR USUARIO                    │");
+            System.out.println("│      [5] BAJA DE USUARIO                      │");
+            System.out.println("│      [0] VOLVER AL MENU PRINCIPAL             │");
+            System.out.println("└───────────────────────────────────────────────┘");
             System.out.print("SELECCIONE UNA OPCION: ");
 
             // Validacion para que la opcion sea un numero
@@ -92,7 +95,9 @@ public class MenuUsuario
                 break;
 
                 case 0:
-                    System.out.println("VOLVIENDO AL MENU PRINCIPAL...");
+                    System.out.println("\n┌───────────────────────────────────────────────┐");
+                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
+                    System.out.println("└───────────────────────────────────────────────┘\n");
                 break;
 
                 default:

@@ -148,15 +148,38 @@ public class Cliente extends Persona
     public Persona altaPersona()
     {
         System.out.println(quitarAcentos("=== NUEVO CLIENTE ===\n").toUpperCase());
-        System.out.print(quitarAcentos("INGRESE DNI: ").toUpperCase());
-        int dni = scanner.nextInt();
-        scanner.nextLine();
-
-        // Verificar si ya existe un cliente con ese DNI en archivo
-        if (ArchivosCliente.buscarPorDni(dni) != null)
+        
+        int dni = -1;
+        while (dni <= 0)
         {
-            System.out.println(quitarAcentos("YA EXISTE UN CLIENTE CON ESE DNI\n").toUpperCase());
-            return null;
+            try 
+            {
+                System.out.print("INGRESE DNI: ");
+                String inputDni = scanner.nextLine();
+                dni = Integer.parseInt(inputDni);
+                if (dni <= 0)
+                {
+                    throw new Principal.Excepciones.DniInvalidoException("EL DNI DEBE SER UN NUMERO VALIDO");
+                }
+                
+                // Verificar si ya existe un cliente con ese DNI en archivo
+                if (ArchivosCliente.buscarPorDni(dni) != null)
+                {
+                    System.out.println(quitarAcentos("YA EXISTE UN CLIENTE CON ESE DNI\n").toUpperCase());
+                    return null;
+                }
+                break;
+            }
+                catch (NumberFormatException e)
+                {
+                    System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL DNI.");
+                    dni = -1; // Resetear para continuar el bucle
+                }
+                    catch (Principal.Excepciones.DniInvalidoException e)
+                    {
+                        System.out.println("ERROR: " + e.getMessage().toUpperCase());
+                        dni = -1; // Resetear para continuar el bucle
+                    }
         }
 
         System.out.print(quitarAcentos("\nINGRESE NOMBRES: ").toUpperCase());
@@ -177,9 +200,12 @@ public class Cliente extends Persona
         Provincia provincia = Provincia.seleccionarProvincia();
         Sexo sexo = Sexo.seleccionarSexo();
 
-        System.out.print(quitarAcentos("INGRESE FECHA DE NACIMIENTO (YYYY-MM-DD): ").toUpperCase());
-        String fechaStr = scanner.nextLine();
-        LocalDate fechaNacimiento = LocalDate.parse(fechaStr);
+        // Usar método interactivo para fecha de nacimiento con validación individual
+        System.out.println(quitarAcentos("INGRESE FECHA DE NACIMIENTO:").toUpperCase());
+        
+        Cliente temp = new Cliente();
+        temp.setFechaNacimientoInteractivo();
+        LocalDate fechaNacimiento = temp.getFechaNacimiento();
 
         Cliente nuevo = new Cliente(dni, true, nombres, apellidos, telefono, direccion, localidad, provincia, sexo, fechaNacimiento, null);
         ArchivosCliente.guardarCliente(nuevo);
@@ -236,7 +262,7 @@ public class Cliente extends Persona
         Cliente clienteMod = ArchivosCliente.buscarPorDni(dni);
         if (clienteMod == null)
         {
-            System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI.").toUpperCase());
+            System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI\n").toUpperCase());
             return;
         }
 

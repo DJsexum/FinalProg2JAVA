@@ -13,13 +13,16 @@ public class MenuProveedor
 
         do
         {
-            System.out.println("===== MENU DE PROVEEDORES =====");
-            System.out.println("1. ALTA DE PROVEEDOR");
-            System.out.println("2. LISTAR PROVEEDORES");
-            System.out.println("3. BUSCAR PROVEEDOR POR DNI");
-            System.out.println("4. MODIFICAR PROVEEDOR");
-            System.out.println("5. BAJA DE PROVEEDOR");
-            System.out.println("0. VOLVER AL MENU PRINCIPAL");
+            System.out.println("\n┌───────────────────────────────────────────────┐");
+            System.out.println("│              MENU DE PROVEEDORES              │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│          [1] ALTA DE PROVEEDOR                │");
+            System.out.println("│          [2] LISTAR PROVEEDORES               │");
+            System.out.println("│          [3] BUSCAR PROVEEDOR POR DNI         │");
+            System.out.println("│          [4] MODIFICAR PROVEEDOR              │");
+            System.out.println("│          [5] BAJA DE PROVEEDOR                │");
+            System.out.println("│          [0] VOLVER AL MENU PRINCIPAL         │");
+            System.out.println("└───────────────────────────────────────────────┘");
             System.out.print("SELECCIONE UNA OPCION: ");
 
             while (!scanner.hasNextInt())
@@ -70,7 +73,9 @@ public class MenuProveedor
                 break;
 
                 case 0:
-                    System.out.println("VOLVIENDO AL MENU PRINCIPAL...");
+                    System.out.println("\n┌───────────────────────────────────────────────┐");
+                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
+                    System.out.println("└───────────────────────────────────────────────┘\n");
                 break;
 
                 default:

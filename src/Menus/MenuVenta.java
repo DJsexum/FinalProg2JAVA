@@ -57,17 +57,20 @@ public class MenuVenta
 
         do
         {
-            System.out.println("===== MENU DE VENTAS =====");
-            System.out.println("1. ALTA DE VENTA");
-            System.out.println("2. LISTAR TODAS LAS VENTAS");
-            System.out.println("3. BUSCAR VENTA POR CODIGO");
-            System.out.println("4. MODIFICAR VENTA");
-            System.out.println("5. ELIMINAR VENTA");
-            System.out.println("6. FILTRAR VENTAS POR CLIENTE");
-            System.out.println("7. FILTRAR VENTAS POR FECHA");
-            System.out.println("8. FILTRAR VENTAS POR FORMA DE PAGO");
-            System.out.println("0. VOLVER AL MENU PRINCIPAL");
-            opcion = leerEntero("INGRESE UNA OPCION: ");
+            System.out.println("\n┌───────────────────────────────────────────────┐");
+            System.out.println("│                MENU DE VENTAS                 │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│       [1] ALTA DE VENTA                       │");
+            System.out.println("│       [2] LISTAR TODAS LAS VENTAS             │");
+            System.out.println("│       [3] BUSCAR VENTA POR CODIGO             │");
+            System.out.println("│       [4] MODIFICAR VENTA                     │");
+            System.out.println("│       [5] ELIMINAR VENTA                      │");
+            System.out.println("│       [6] FILTRAR VENTAS POR CLIENTE          │");
+            System.out.println("│       [7] FILTRAR VENTAS POR FECHA            │");
+            System.out.println("│       [8] FILTRAR VENTAS POR FORMA PAGO       │");
+            System.out.println("│       [0] VOLVER AL MENU PRINCIPAL            │");
+            System.out.println("└───────────────────────────────────────────────┘");
+            opcion = leerEntero("SELECCIONE UNA OPCION: ");
 
             switch (opcion)
             {
@@ -104,7 +107,9 @@ public class MenuVenta
                 break;
 
                 case 0:
-                    System.out.println("VOLVIENDO AL MENU PRINCIPAL...");
+                    System.out.println("\n┌───────────────────────────────────────────────┐");
+                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
+                    System.out.println("└───────────────────────────────────────────────┘\n");
                 break;
 
                 default:

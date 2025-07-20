@@ -18,15 +18,19 @@ public class MenuProducto
 
         do
         {
-            System.out.println("===== MENU DE PRODUCTOS =====");
-            System.out.println("1. ALTA DE PRODUCTO");
-            System.out.println("2. LISTAR PRODUCTOS");
-            System.out.println("3. BUSCAR PRODUCTO POR CODIGO");
-            System.out.println("4. MODIFICAR PRODUCTO");
-            System.out.println("5. BAJA DE PRODUCTO");
-            System.out.println("6. BUSCAR PRODUCTO POR NOMBRE/MARCA/CATEGORIA");
-            System.out.println("0. VOLVER AL MENU PRINCIPAL");
-            System.out.print("SELECCIONE UNA OPCION: ");
+            System.out.println("\n┌───────────────────────────────────────────────┐");
+            System.out.println("│                MENU DE PRODUCTOS              │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│     [1] ALTA DE PRODUCTO                      │");
+            System.out.println("│     [2] LISTAR PRODUCTOS                      │");
+            System.out.println("│     [3] BUSCAR PRODUCTO POR CODIGO            │");
+            System.out.println("│     [4] MODIFICAR PRODUCTO                    │");
+            System.out.println("│     [5] BAJA DE PRODUCTO                      │");
+            System.out.println("│     [6] BUSCAR POR NOMBRE/MARCA/CATEGORIA     │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│     [0] VOLVER AL MENU PRINCIPAL              │");
+            System.out.println("└───────────────────────────────────────────────┘");
+            System.out.print("\nSELECCIONE UNA OPCION: ");
 
             // Validacion para que la opcion sea un numero
             while (!scanner.hasNextInt())
@@ -190,19 +194,19 @@ public class MenuProducto
                             boolean continuar = true;
                             while (continuar)
                             {
-                                System.out.println("\n" + "=".repeat(50));
-                                System.out.println("SELECCIONE QUE CAMPO DESEA MODIFICAR:");
-                                System.out.println("=".repeat(50));
-                                System.out.println("1. DETALLE");
-                                System.out.println("2. TALLE");
-                                System.out.println("3. PRECIO");
-                                System.out.println("4. MARCA");
-                                System.out.println("5. MATERIAL");
-                                System.out.println("6. CATEGORIA");
-                                System.out.println("7. STOCK");
-                                System.out.println("8. MODIFICAR TODO EL PRODUCTO");
-                                System.out.println("0. SALIR SIN MODIFICAR");
-                                System.out.println("=".repeat(50));
+                                System.out.println("\n┌───────────────────────────────────────────────┐");
+                                System.out.println("│          SELECCIONE CAMPO A MODIFICAR:        │");
+                                System.out.println("├───────────────────────────────────────────────┤");
+                                System.out.println("│          [1] DETALLE                          │");
+                                System.out.println("│          [2] TALLE                            │");
+                                System.out.println("│          [3] PRECIO                           │");
+                                System.out.println("│          [4] MARCA                            │");
+                                System.out.println("│          [5] MATERIAL                         │");
+                                System.out.println("│          [6] CATEGORIA                        │");
+                                System.out.println("│          [7] STOCK                            │");
+                                System.out.println("│          [8] MODIFICAR TODO EL PRODUCTO       │");
+                                System.out.println("│          [0] SALIR SIN MODIFICAR              │");
+                                System.out.println("└───────────────────────────────────────────────┘");
                                 System.out.print("OPCION: ");
                                 
                                 int opcionCampo = leerEntero();
@@ -565,13 +569,15 @@ public class MenuProducto
 
                 case 0:
                 {
-                    System.out.println("VOLVIENDO AL MENU PRINCIPAL...");
+                    System.out.println("\n┌───────────────────────────────────────────────┐");
+                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
+                    System.out.println("└───────────────────────────────────────────────┘\n");
                 break;
                 }
 
                 default:
                 {
-                    System.out.println("OPCION NO VALIDA.");
+                    System.out.println("\nOPCION INVALIDA. INGRESE UNA OPCION VALIDA:\n");
                 }
             }
         }

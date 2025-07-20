@@ -16,19 +16,21 @@ public class MenuCliente
 
         do
         {
-            System.out.println(quitarAcentos("===== MENU DE CLIENTES =====").toUpperCase());
-            System.out.println(quitarAcentos("1. ALTA DE CLIENTE").toUpperCase());
-            System.out.println(quitarAcentos("2. LISTAR CLIENTES").toUpperCase());
-            System.out.println(quitarAcentos("3. BUSCAR CLIENTE POR DNI").toUpperCase());
-            System.out.println(quitarAcentos("4. MODIFICAR CLIENTE").toUpperCase());
-            System.out.println(quitarAcentos("5. BAJA DE CLIENTE").toUpperCase());
-            System.out.println(quitarAcentos("0. VOLVER AL MENU PRINCIPAL").toUpperCase());
-            System.out.print(quitarAcentos("SELECCIONE UNA OPCION: ").toUpperCase());
+            System.out.println("\n┌───────────────────────────────────────────────┐");
+            System.out.println("│                MENU DE CLIENTES               │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│           [1] ALTA DE CLIENTE                 │");
+            System.out.println("│           [2] LISTAR CLIENTES                 │");
+            System.out.println("│           [3] BUSCAR CLIENTE POR DNI          │");
+            System.out.println("│           [4] MODIFICAR CLIENTE               │");
+            System.out.println("│           [5] BAJA DE CLIENTE                 │");
+            System.out.println("│           [0] VOLVER AL MENU PRINCIPAL        │");
+            System.out.println("└───────────────────────────────────────────────┘");
+            System.out.print("SELECCIONE UNA OPCION: ");
 
-            // Manejo seguro de entrada de opción
             while (!scanner.hasNextInt()) 
             {
-                System.out.print(quitarAcentos("INGRESE UN NUMERO VALIDO: ").toUpperCase());
+                System.out.print("INGRESE UN NUMERO VALIDO: ");
                 scanner.next();
             }
             opcion = scanner.nextInt();
@@ -45,13 +47,13 @@ public class MenuCliente
                 break;
 
                 case 3:
-                    System.out.print(quitarAcentos("INGRESE DNI: ").toUpperCase());
+                    System.out.print("INGRESE DNI: ");
                     int dni = leerEntero(scanner);
                     new Cliente().buscaPersona(dni);
                 break;
 
                 case 4:
-                    System.out.print(quitarAcentos("INGRESE DNI DEL CLIENTE A MODIFICAR: ").toUpperCase());
+                    System.out.print("INGRESE DNI DEL CLIENTE A MODIFICAR: ");
                     int dniMod = leerEntero(scanner);
                     Cliente clienteMod = (Cliente) new Cliente().buscaPersona(dniMod);
                     if (clienteMod != null)
@@ -60,12 +62,12 @@ public class MenuCliente
                     }
                         else
                         {
-                            System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI.").toUpperCase());
+                            System.out.println("NO SE ENCONTRO CLIENTE CON ESE DNI.");
                         }
                 break;
 
                 case 5:
-                    System.out.print(quitarAcentos("INGRESE DNI DEL CLIENTE A DAR DE BAJA: ").toUpperCase());
+                    System.out.print("INGRESE DNI DEL CLIENTE A DAR DE BAJA: ");
                     int dniBaja = leerEntero(scanner);
                     Cliente clienteBaja = (Cliente) new Cliente().buscaPersona(dniBaja);
                     if (clienteBaja != null)
@@ -74,16 +76,18 @@ public class MenuCliente
                     }
                         else
                         {
-                            System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI.").toUpperCase());
+                            System.out.println("NO SE ENCONTRO CLIENTE CON ESE DNI.");
                         }
                 break;
 
                 case 0:
-                    System.out.println(quitarAcentos("VOLVIENDO AL MENU PRINCIPAL...").toUpperCase());
+                    System.out.println("\n┌───────────────────────────────────────────────┐");
+                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
+                    System.out.println("└───────────────────────────────────────────────┘\n");
                 break;
 
                 default:
-                    System.out.println(quitarAcentos("OPCION INVALIDA. INTENTE DE NUEVO.").toUpperCase());
+                    System.out.println("OPCION INVALIDA. INTENTE DE NUEVO.");
             }
         }
         while (opcion != 0);
@@ -94,20 +98,11 @@ public class MenuCliente
     {
         while (!scanner.hasNextInt()) 
         {
-            System.out.print(quitarAcentos("INGRESE UN NUMERO VALIDO: ").toUpperCase());
+            System.out.print("INGRESE UN NUMERO VALIDO: ");
             scanner.next();
         }
         int valor = scanner.nextInt();
         scanner.nextLine();
         return valor;
-    }
-
-    // Método utilitario para quitar solo acentos (no modifica ñ/Ñ)
-    private static String quitarAcentos(String texto)
-    {
-        if (texto == null) return null;
-        return texto
-            .replace("Á", "A").replace("É", "E").replace("Í", "I").replace("Ó", "O").replace("Ú", "U")
-            .replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u");
     }
 }

@@ -24,7 +24,6 @@ public enum Categoria
     // Se crea el metodo estático para la selección del usuario
     public static Categoria seleccionarCategoria()
     {
-        // Usar Scanner sin try-with-resources para evitar cerrar System.in (osea que no se cierre el scanner)
         Scanner scanner = new Scanner(System.in);
         while (true) // Bucle para reintentar si la opción es inválida
         {
@@ -54,7 +53,7 @@ public enum Categoria
                 else
                 {
                     System.out.println("\nENTRADA NO VALIDA. POR FAVOR, INGRESE UN NUMERO.\n");
-                    scanner.nextLine(); // Se limpia el scanner para evitar un bucle infinito
+                    scanner.nextLine(); // Limpia el buffer del scanner
                 }
         }
     }

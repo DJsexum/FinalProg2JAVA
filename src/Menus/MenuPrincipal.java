@@ -13,19 +13,24 @@ public class MenuPrincipal
 
         do
         {
-            System.out.println("\n===== MENU PRINCIPAL =====");
-            System.out.println("1. MENU DE CLIENTES");
-            System.out.println("2. MENU DE EMPLEADOS");
-            System.out.println("3. MENU DE USUARIOS");
-            System.out.println("4. MENU DE PRODUCTOS");
-            System.out.println("5. MENU DE VENTAS");
-            System.out.println("6. MENU DE MOVIMIENTOS");
-            System.out.println("0. SALIR");
-            System.out.print("SELECCIONE UNA OPCION: ");
+            // DISEÑO PROFESIONAL DEL MENU PRINCIPAL
+            System.out.println("\n┌───────────────────────────────────────────────┐");
+            System.out.println("│                MENU PRINCIPAL                 │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│            [1] GESTION DE CLIENTES            │");
+            System.out.println("│            [2] GESTION DE EMPLEADOS           │");
+            System.out.println("│            [3] GESTION DE USUARIOS            │");
+            System.out.println("│            [4] GESTION DE PRODUCTOS           │");
+            System.out.println("│            [5] GESTION DE VENTAS              │");
+            System.out.println("│            [6] GESTION DE MOVIMIENTOS         │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│            [0] SALIR DEL SISTEMA              │");
+            System.out.println("└───────────────────────────────────────────────┘");
+            System.out.print("\nSELECCIONE UNA OPCION: ");
 
             while (!scanner.hasNextInt())
             {
-                System.out.print("\nINGRESE UN NUMERO VALIDO: ");
+                System.out.println("\nINGRESE UNA OPCION VALIDA: ");
                 scanner.next();
             }
             opcion = scanner.nextInt();
@@ -58,11 +63,14 @@ public class MenuPrincipal
                 break;
 
                 case 0:
-                    System.out.println("\nGRACIAS POR USAR NUESTRO SISTEMA.\n");
+                    System.out.println("┌─────────────────────────────────────────────────┐");
+                    System.out.println("│           GRACIAS POR USAR EL SISTEMA           │");
+                    System.out.println("│                SESION TERMINADA                 │");
+                    System.out.println("└─────────────────────────────────────────────────┘\n");
                 break;
 
                 default:
-                    System.out.println("\nOPCION INVALIDA. INTENTE NUEVAMENTE.\n");
+                    System.out.println("\nOPCION INVALIDA INGRESE UNA OPCION VALIDA: \n");
             }
         }
         while (opcion != 0);
