@@ -223,20 +223,19 @@ public class Empleado extends Persona
     @Override
     public String toString()
     {
-        return "EMPLEADO {" +
-                "DNI=" + getDni() +
-                ", NOMBRE='" + quitarAcentos(getNombres().toUpperCase()) + " " + quitarAcentos(getApellidos().toUpperCase()) + '\'' +
-                ", TELEFONO='" + quitarAcentos(getTelefono().toUpperCase()) + '\'' +
-                ", DIRECCION='" + quitarAcentos(getDireccion().toUpperCase()) + '\'' +
-                ", LOCALIDAD='" + quitarAcentos(getLocalidad().toUpperCase()) + '\'' +
-                ", PROVINCIA=" + (getProvincia() != null ? getProvincia().toString().toUpperCase() : "") +
-                ", SEXO=" + (getSexo() != null ? getSexo().toString().toUpperCase() : "") +
-                ", FECHA DE NACIMIENTO=" + getFechaNacimiento() +
-                ", LEGAJO=" + getLegajo() +
-                ", FECHA INGRESO=" + getFechaIngreso() +
-                ", FECHA EGRESO=" + getFechaEgreso() +
-                ", SALARIO=" + getSalario() +
-                '}';
+        return "EMPLEADOS:\n" +
+                "DNI = " + getDni() +
+                ", NOMBRE = '" + quitarAcentos(getNombres().toUpperCase()) + " " + quitarAcentos(getApellidos().toUpperCase()) + '\'' +
+                ", TELEFONO = '" + quitarAcentos(getTelefono().toUpperCase()) + '\'' +
+                ", DIRECCION = '" + quitarAcentos(getDireccion().toUpperCase()) + '\'' +
+                ", LOCALIDAD = '" + quitarAcentos(getLocalidad().toUpperCase()) + '\'' +
+                ", PROVINCIA = " + (getProvincia() != null ? getProvincia().toString().toUpperCase() : "") +
+                ", SEXO = " + (getSexo() != null ? getSexo().toString().toUpperCase() : "") +
+                ", FECHA DE NACIMIENTO = " + getFechaNacimiento() +
+                ", LEGAJO = " + getLegajo() +
+                ", FECHA INGRESO = " + getFechaIngreso() +
+                ", FECHA EGRESO = " + getFechaEgreso() +
+                ", SALARIO = " + getSalario() + "\n";
     }
 
     // Método utilitario para quitar solo acentos (no modifica ñ/Ñ)

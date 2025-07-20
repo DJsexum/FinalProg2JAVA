@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public class ArchivosMovimiento
 {
-    private static final String ARCHIVO = "src/Datos/movimientos.csv";
+    private static final String ARCHIVO = "src/Datos/Movimientos.csv";
 
     /*
     Guarda un movimiento en el archivo CSV agregando una nueva línea al final.

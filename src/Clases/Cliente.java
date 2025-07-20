@@ -147,7 +147,7 @@ public class Cliente extends Persona
     @Override
     public Persona altaPersona()
     {
-        System.out.println(quitarAcentos("=== ALTA DE NUEVO CLIENTE ===").toUpperCase());
+        System.out.println(quitarAcentos("=== NUEVO CLIENTE ===\n").toUpperCase());
         System.out.print(quitarAcentos("INGRESE DNI: ").toUpperCase());
         int dni = scanner.nextInt();
         scanner.nextLine();
@@ -155,11 +155,11 @@ public class Cliente extends Persona
         // Verificar si ya existe un cliente con ese DNI en archivo
         if (ArchivosCliente.buscarPorDni(dni) != null)
         {
-            System.out.println(quitarAcentos("YA EXISTE UN CLIENTE CON ESE DNI.").toUpperCase());
+            System.out.println(quitarAcentos("YA EXISTE UN CLIENTE CON ESE DNI\n").toUpperCase());
             return null;
         }
 
-        System.out.print(quitarAcentos("INGRESE NOMBRES: ").toUpperCase());
+        System.out.print(quitarAcentos("\nINGRESE NOMBRES: ").toUpperCase());
         String nombres = scanner.nextLine();
 
         System.out.print(quitarAcentos("INGRESE APELLIDOS: ").toUpperCase());
@@ -184,7 +184,7 @@ public class Cliente extends Persona
         Cliente nuevo = new Cliente(dni, true, nombres, apellidos, telefono, direccion, localidad, provincia, sexo, fechaNacimiento, null);
         ArchivosCliente.guardarCliente(nuevo);
 
-        System.out.println(quitarAcentos("CLIENTE DADO DE ALTA CORRECTAMENTE.").toUpperCase());
+        System.out.println(quitarAcentos("CLIENTE CREADO CORRECTAMENTE\n").toUpperCase());
         return nuevo;
     }
 
@@ -192,11 +192,11 @@ public class Cliente extends Persona
     @Override
     public void listarPersona()
     {
-        System.out.println(quitarAcentos("=== LISTADO DE CLIENTES ===").toUpperCase());
+        System.out.println(quitarAcentos("=== LISTADO DE CLIENTES ===\n").toUpperCase());
         ArrayList<Cliente> clientes = ArchivosCliente.leerClientes();
         if (clientes.isEmpty())
         {
-            System.out.println(quitarAcentos("NO HAY CLIENTES REGISTRADOS.").toUpperCase());
+            System.out.println(quitarAcentos("NO HAY CLIENTES REGISTRADOS\n").toUpperCase());
         }
             else
             {
@@ -214,12 +214,12 @@ public class Cliente extends Persona
         Cliente encontrado = ArchivosCliente.buscarPorDni(dni);
         if (encontrado != null)
         {
-            System.out.println(quitarAcentos("CLIENTE ENCONTRADO:").toUpperCase());
+            System.out.println(quitarAcentos("\nCLIENTE ENCONTRADO:").toUpperCase());
             System.out.println(encontrado);
         }
             else
             {
-                System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI.").toUpperCase());
+                System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON ESE DNI").toUpperCase());
             }
             return encontrado;
     }
@@ -228,7 +228,7 @@ public class Cliente extends Persona
     @Override
     public void modificarPersona()
     {
-        System.out.println(quitarAcentos("=== MODIFICAR DATOS DEL CLIENTE ===").toUpperCase());
+        System.out.println(quitarAcentos("=== MODIFICAR DATOS DEL CLIENTE ===\n").toUpperCase());
         System.out.print(quitarAcentos("INGRESE DNI DEL CLIENTE A MODIFICAR: ").toUpperCase());
         int dni = scanner.nextInt();
         scanner.nextLine();
@@ -248,8 +248,6 @@ public class Cliente extends Persona
 
         System.out.print(quitarAcentos("NUEVA LOCALIDAD: ").toUpperCase());
         clienteMod.setLocalidad(scanner.nextLine());
-
-        // Puedes agregar más campos si lo deseas
 
         boolean modificado = ArchivosCliente.modificarCliente(clienteMod);
         if (modificado)
@@ -292,23 +290,21 @@ public class Cliente extends Persona
         System.out.println(this);
     }
 
-    // Sobrescribe toString para mostrar los datos del cliente
     @Override
-    public String toString()
+    public String toString() // Metodo para mostrar los datos del cliente de forma entendible
     {
-        return "CLIENTE{" +
-                "DNI=" + getDni() +
-                ", NOMBRE='" + quitarAcentos(getNombres().toUpperCase()) + " " + quitarAcentos(getApellidos().toUpperCase()) + '\'' +
-                ", TELEFONO='" + quitarAcentos(getTelefono().toUpperCase()) + '\'' +
-                ", DIRECCION='" + quitarAcentos(getDireccion().toUpperCase()) + '\'' +
-                ", LOCALIDAD='" + quitarAcentos(getLocalidad().toUpperCase()) + '\'' +
-                ", PROVINCIA=" + (getProvincia() != null ? getProvincia().toString().toUpperCase() : "") +
-                ", SEXO=" + (getSexo() != null ? getSexo().toString().toUpperCase() : "") +
-                ", FECHA DE NACIMIENTO=" + getFechaNacimiento() +
-                '}';
+        return "CLIENTES:\n" +
+                "DNI = " + getDni() +
+                ", NOMBRE = '" + quitarAcentos(getNombres().toUpperCase()) + " " + quitarAcentos(getApellidos().toUpperCase()) + '\'' +
+                ", TELEFONO = '" + quitarAcentos(getTelefono().toUpperCase()) + '\'' +
+                ", DIRECCION = '" + quitarAcentos(getDireccion().toUpperCase()) + '\'' +
+                ", LOCALIDAD = '" + quitarAcentos(getLocalidad().toUpperCase()) + '\'' +
+                ", PROVINCIA = " + (getProvincia() != null ? getProvincia().toString().toUpperCase() : "") +
+                ", SEXO = " + (getSexo() != null ? getSexo().toString().toUpperCase() : "") +
+                ", FECHA DE NACIMIENTO = " + getFechaNacimiento() + "\n";
     }
 
-    // Método utilitario para quitar solo acentos (no modifica ñ/Ñ)
+    // Metodo para quitar solo acentos (no modifica ñ/Ñ)
     private String quitarAcentos(String texto)
     {
         if (texto == null) return null;

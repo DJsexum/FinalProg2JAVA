@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class ArchivosVenta
 {
-    private static final String ARCHIVO = "src/Datos/ventas.csv";
+    private static final String ARCHIVO = "src/Datos/Ventas.csv";
 
     // Guarda una venta en el archivo CSV (agrega al final)
     // Recibe una venta y la escribe como una línea en el archivo ventas.csv

@@ -13,7 +13,7 @@ Ahora usa excepciones personalizadas para manejo de errores.
 public class ArchivosProducto
 {
     // Nombre del archivo donde se guardan los productos
-    private static final String ARCHIVO = "src/Datos/productos.csv";
+    private static final String ARCHIVO = "src/Datos/Productos.csv";
 
     /*
     Guarda un producto en el archivo CSV (agrega al final).
@@ -157,7 +157,7 @@ public class ArchivosProducto
         }
             catch (IOException e)
             {
-                throw new ProductoArchivoException("Error al escribir productos: " + e.getMessage());
+                throw new ProductoArchivoException("ERROR AL ESCRIBIR PRODUCTOS: " + e.getMessage());
             }
     }
 }

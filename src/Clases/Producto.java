@@ -34,11 +34,11 @@ public class Producto implements Comparable<Producto>
     public Producto(int codigo, String detalle, String talle, double precio, String marca, String material, Categoria categoria, int stock)
     {
         if (codigo <= 0)
-            throw new Excepciones.ProductoInvalidoException("EL CÓDIGO DEL PRODUCTO DEBE SER UN NÚMERO POSITIVO.");
+            throw new Excepciones.ProductoInvalidoException("EL CODIGO DEL PRODUCTO DEBE SER UN NUMERO POSITIVO.");
         if (detalle == null || detalle.trim().isEmpty())
-            throw new Excepciones.ProductoInvalidoException("EL DETALLE DEL PRODUCTO NO PUEDE ESTAR VACÍO.");
+            throw new Excepciones.ProductoInvalidoException("EL DETALLE DEL PRODUCTO NO PUEDE ESTAR VACIO.");
         if (precio < 0)
-            throw new Excepciones.ProductoInvalidoException("EL PRECIO DEL PRODUCTO DEBE SER UN NÚMERO POSITIVO.");
+            throw new Excepciones.ProductoInvalidoException("EL PRECIO DEL PRODUCTO DEBE SER UN NUMERO POSITIVO.");
         if (stock < 0)
             throw new Excepciones.ProductoInvalidoException("EL STOCK DEL PRODUCTO NO PUEDE SER NEGATIVO.");
 
@@ -120,7 +120,7 @@ public class Producto implements Comparable<Producto>
     // Alta de producto: pide datos por consola y guarda en archivo
     public void altaProducto()
     {
-        System.out.print("CÓDIGO: ");
+        System.out.print("CODIGO: ");
         this.codigo = scanner.nextInt(); scanner.nextLine();
         System.out.print("DETALLE: ");
         this.detalle = scanner.nextLine();
@@ -132,8 +132,8 @@ public class Producto implements Comparable<Producto>
         this.marca = scanner.nextLine();
         System.out.print("MATERIAL: ");
         this.material = scanner.nextLine();
-        System.out.print("CATEGORÍA (COMO TEXTO): ");
-        this.categoria = Categoria.valueOf(scanner.nextLine().toUpperCase());
+        System.out.print("CATEGORIA: ");
+        this.categoria = Categoria.seleccionarCategoria();
         System.out.print("STOCK: ");
         this.stock = scanner.nextInt(); scanner.nextLine();
 
@@ -157,7 +157,7 @@ public class Producto implements Comparable<Producto>
             if (eliminado)
                 System.out.println("PRODUCTO ELIMINADO CORRECTAMENTE.");
                 else
-                    System.out.println("NO SE ENCONTRÓ EL PRODUCTO.");
+                    System.out.println("NO SE ENCONTRO EL PRODUCTO.");
         } 
             catch (Excepciones.ProductoArchivoException e) 
             {
@@ -178,8 +178,8 @@ public class Producto implements Comparable<Producto>
         this.marca = scanner.nextLine();
         System.out.print("NUEVO MATERIAL: ");
         this.material = scanner.nextLine();
-        System.out.print("NUEVA CATEGORÍA (COMO TEXTO): ");
-        this.categoria = Categoria.valueOf(scanner.nextLine().toUpperCase());
+        System.out.print("NUEVA CATEGORIA: ");
+        this.categoria = Categoria.seleccionarCategoria();
         System.out.print("NUEVO STOCK: ");
         this.stock = scanner.nextInt(); scanner.nextLine();
 
@@ -222,10 +222,12 @@ public class Producto implements Comparable<Producto>
         {
             Producto encontrado = ArchivosProducto.buscarPorCodigo(codigo);
             if (encontrado != null)
-                System.out.println("PRODUCTO ENCONTRADO:\n" + encontrado);
+                return encontrado;
                 else
-                    System.out.println("NO SE ENCONTRÓ PRODUCTO CON ESE CÓDIGO.");
-                    return encontrado;
+                {
+                    System.out.println("NO SE ENCONTRO PRODUCTO CON ESE CODIGO.");
+                    return null;
+                }
         }
             catch (Excepciones.ProductoArchivoException e) 
             {
@@ -237,14 +239,139 @@ public class Producto implements Comparable<Producto>
     // Ver detalle de un producto (muestra todos los datos)
     public void verDetalleProducto()
     {
-        System.out.println("CÓDIGO: " + this.codigo);
+        System.out.println("CODIGO: " + this.codigo);
         System.out.println("DETALLE: " + this.detalle);
         System.out.println("TALLE: " + this.talle);
         System.out.println("PRECIO: " + this.precio);
         System.out.println("MARCA: " + this.marca);
         System.out.println("MATERIAL: " + this.material);
-        System.out.println("CATEGORÍA: " + this.categoria);
+        System.out.println("CATEGORIA: " + this.categoria);
         System.out.println("STOCK: " + this.stock);
+    }
+
+    // Mostrar un producto individual con formato de tabla profesional
+    public static void mostrarProductoEnTabla(Producto producto)
+    {
+        if (producto == null)
+        {
+            System.out.println("NO SE ENCONTRO PRODUCTO CON ESE CODIGO.");
+            return;
+        }
+
+        System.out.println("┌────────┬──────────────┬─────────────────┬──────────────────┬──────────────────────┬────────┬──────────────┬────────┐");
+        System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
+            centrarTexto("CODIGO", 8), centrarTexto("CATEGORIA", 14), centrarTexto("MARCA", 17), 
+            centrarTexto("MATERIAL", 18), centrarTexto("DETALLE", 22), centrarTexto("TALLE", 8), 
+            centrarTexto("PRECIO", 14), centrarTexto("STOCK", 8));
+        System.out.println("├────────┼──────────────┼─────────────────┼──────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
+        
+        // Aplicar mayúsculas y quitar acentos
+        String detalle = quitarAcentos(producto.getDetalle().toUpperCase());
+        String talle = quitarAcentos(producto.getTalle().toUpperCase());
+        String marca = quitarAcentos(producto.getMarca().toUpperCase());
+        String material = quitarAcentos(producto.getMaterial().toUpperCase());
+        
+        // Truncar texto si es muy largo
+        detalle = detalle.length() > 22 ? detalle.substring(0, 19) + "..." : detalle;
+        marca = marca.length() > 17 ? marca.substring(0, 14) + "..." : marca;
+        material = material.length() > 18 ? material.substring(0, 15) + "..." : material;
+        String categoria = producto.getCategoria().toString().length() > 14 ? producto.getCategoria().toString().substring(0, 11) + "..." : producto.getCategoria().toString();
+        
+        // Mostrar la fila del producto
+        System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
+            centrarTexto(String.valueOf(producto.getCodigo()), 8), 
+            centrarTexto(categoria, 14), 
+            centrarTexto(marca, 17), 
+            centrarTexto(material, 18),
+            centrarTexto(detalle, 22),
+            centrarTexto(talle, 8), 
+            centrarTexto(String.format("%.2f", producto.getPrecio()), 14),
+            centrarTexto(String.valueOf(producto.getStock()), 8));
+            
+        System.out.println("└────────┴──────────────┴─────────────────┴──────────────────┴──────────────────────┴────────┴──────────────┴────────┘");
+    }
+
+    // Mostrar lista de productos con formato de tabla profesional
+    public static void mostrarListaProductosEnTabla(ArrayList<Producto> lista)
+    {
+        if (lista == null || lista.isEmpty())
+        {
+            System.out.println("NO HAY PRODUCTOS REGISTRADOS.\n");
+            return;
+        }
+
+        System.out.println("┌────────┬──────────────┬─────────────────┬──────────────────┬──────────────────────┬────────┬──────────────┬────────┐");
+        System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
+            centrarTexto("CODIGO", 8), centrarTexto("CATEGORIA", 14), centrarTexto("MARCA", 17), 
+            centrarTexto("MATERIAL", 18), centrarTexto("DETALLE", 22), centrarTexto("TALLE", 8), 
+            centrarTexto("PRECIO", 14), centrarTexto("STOCK", 8));
+        System.out.println("├────────┼──────────────┼─────────────────┼──────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
+        
+        // Filas de productos con separadores entre cada uno
+        for (int i = 0; i < lista.size(); i++)
+        {
+            Producto p = lista.get(i);
+            // Aplicar mayúsculas y quitar acentos
+            String detalle = quitarAcentos(p.getDetalle().toUpperCase());
+            String talle = quitarAcentos(p.getTalle().toUpperCase());
+            String marca = quitarAcentos(p.getMarca().toUpperCase());
+            String material = quitarAcentos(p.getMaterial().toUpperCase());
+            
+            // Truncar texto si es muy largo
+            detalle = detalle.length() > 22 ? detalle.substring(0, 19) + "..." : detalle;
+            marca = marca.length() > 17 ? marca.substring(0, 14) + "..." : marca;
+            material = material.length() > 18 ? material.substring(0, 15) + "..." : material;
+            String categoria = p.getCategoria().toString().length() > 14 ? p.getCategoria().toString().substring(0, 11) + "..." : p.getCategoria().toString();
+            
+            // Mostrar la fila del producto
+            System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
+                centrarTexto(String.valueOf(p.getCodigo()), 8), 
+                centrarTexto(categoria, 14), 
+                centrarTexto(marca, 17), 
+                centrarTexto(material, 18),
+                centrarTexto(detalle, 22),
+                centrarTexto(talle, 8), 
+                centrarTexto(String.format("%.2f", p.getPrecio()), 14),
+                centrarTexto(String.valueOf(p.getStock()), 8));
+                
+            // Agregar línea separadora entre productos (excepto después del último)
+            if (i < lista.size() - 1)
+            {
+                System.out.println("├────────┼──────────────┼─────────────────┼──────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
+            }
+        }
+        System.out.println("└────────┴──────────────┴─────────────────┴──────────────────┴──────────────────────┴────────┴──────────────┴────────┘");
+    }
+
+    // Método auxiliar para centrar texto en un ancho específico
+    private static String centrarTexto(String texto, int ancho)
+    {
+        if (texto.length() >= ancho)
+        {
+            return texto.substring(0, ancho);
+        }
+        int espaciosTotal = ancho - texto.length();
+        int espaciosIzquierda = espaciosTotal / 2;
+        int espaciosDerecha = espaciosTotal - espaciosIzquierda;
+        
+        StringBuilder resultado = new StringBuilder();
+        for (int i = 0; i < espaciosIzquierda; i++) {
+            resultado.append(" ");
+        }
+        resultado.append(texto);
+        for (int i = 0; i < espaciosDerecha; i++) {
+            resultado.append(" ");
+        }
+        return resultado.toString();
+    }
+    
+    // Método auxiliar para quitar acentos del texto
+    private static String quitarAcentos(String texto)
+    {
+        if (texto == null) return null;
+        return texto
+            .replace("Á", "A").replace("É", "E").replace("Í", "I").replace("Ó", "O").replace("Ú", "U")
+            .replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u");
     }
 
     // Actualizar stock del producto
@@ -259,17 +386,16 @@ public class Producto implements Comparable<Producto>
     @Override
     public String toString()
     {
-        return "CLASES.PRODUCTO\n" +
-                "{\n" +
-                "CÓDIGO = " + codigo + ",\n" +
-                "DETALLE = '" + detalle + "',\n" +
-                "TALLE = '" + talle + "',\n" +
-                "PRECIO = " + precio + ",\n" +
-                "MARCA = '" + marca + "',\n" +
-                "MATERIAL ='" + material + "',\n" +
-                "CATEGORÍA =" + categoria + ",\n" +
-                "STOCK=" + stock + "\n" +
-                "}";
+        return "PRODUCTO:\n" +
+                "\n" +
+                "CODIGO = " + codigo + "\n" +
+                "DETALLE = " + detalle + "\n" +
+                "TALLE = " + talle + "\n" +
+                "PRECIO = " + precio + "\n" +
+                "MARCA = " + marca + "\n" +
+                "MATERIAL = " + material + "\n" +
+                "CATEGORIA = " + categoria + "\n" +
+                "STOCK = " + stock + "\n";
     }
 
     // Permite ordenar productos por código

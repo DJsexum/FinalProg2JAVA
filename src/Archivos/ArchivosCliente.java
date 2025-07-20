@@ -13,7 +13,7 @@ Permite guardar, leer, buscar, modificar y eliminar clientes.
 public class ArchivosCliente
 {
     // Nombre del archivo donde se guardarán los clientes
-    private static final String ARCHIVO = "src/Datos/clientes.csv";
+    private static final String ARCHIVO = "src/Datos/Clientes.csv";
 
     /*
     Guarda un cliente en el archivo CSV.

@@ -10,7 +10,7 @@ Clase utilitaria para gestionar la persistencia de usuarios en un archivo CSV.
 public class ArchivosUsuario
 {
     // Nombre del archivo donde se guardan los usuarios
-    private static final String ARCHIVO = "src/Datos/usuarios.csv";
+    private static final String ARCHIVO = "src/Datos/Usuarios.csv";
 
     /*
     Guarda un usuario en el archivo CSV (agrega al final).

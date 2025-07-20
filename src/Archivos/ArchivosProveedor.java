@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class ArchivosProveedor
 {
 
-    private static final String ARCHIVO = "src/Datos/proveedores.csv";
+    private static final String ARCHIVO = "src/Datos/Proveedores.csv";
 
     /*
     Guarda un proveedor en el archivo CSV agregando una nueva línea al final.
