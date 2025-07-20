@@ -297,9 +297,14 @@ public class Cliente extends Persona
             else
             {
                 mostrarEncabezadoClientes();
-                for (Cliente c : clientes)
+                for (int i = 0; i < clientes.size(); i++)
                 {
-                    System.out.println(c);
+                    System.out.println(clientes.get(i));
+                    // Agregar línea separadora entre clientes, excepto después del último
+                    if (i < clientes.size() - 1)
+                    {
+                        mostrarLineaSeparadora();
+                    }
                 }
                 mostrarPieClientes();
                 System.out.println();
@@ -338,9 +343,12 @@ public class Cliente extends Persona
             
             System.out.println(quitarAcentos("CLIENTES DISPONIBLES:").toUpperCase());
             mostrarEncabezadoClientes();
-            for (Cliente c : lista)
+            for (int i = 0; i < lista.size(); i++)
             {
-                System.out.println(c);
+                if (i > 0) {
+                    mostrarLineaSeparadora();
+                }
+                System.out.println(lista.get(i));
             }
             mostrarPieClientes();
             
@@ -356,7 +364,9 @@ public class Cliente extends Persona
             if (clienteMod != null)
             {
                 System.out.println(quitarAcentos("\nCLIENTE SELECCIONADO PARA MODIFICAR:").toUpperCase());
-                clienteMod.mostrarClienteIndividual();
+                mostrarEncabezadoClientes();
+                System.out.println(clienteMod);
+                mostrarPieClientes();
                 
                 System.out.print(quitarAcentos("¿CONFIRMA MODIFICACION? (S/N): ").toUpperCase());
                 String confirmacion = scanner.nextLine().toUpperCase();
@@ -585,15 +595,21 @@ public class Cliente extends Persona
     @Override
     public String toString() // Metodo para mostrar los datos del cliente de forma entendible
     {
-        return String.format("│ %8s │ %25s │ %12s │ %25s │ %20s │ %15s │ %10s │ %12s │",
+        // Formatear fecha como dd-mm-yyyy
+        String fechaFormateada = String.format("%02d-%02d-%04d", 
+                                getFechaNacimiento().getDayOfMonth(),
+                                getFechaNacimiento().getMonthValue(),
+                                getFechaNacimiento().getYear());
+        
+        return String.format("│ %8s │ %25s │ %10s │ %18s │ %15s │ %15s │ %15s │ %12s │",
                 centrarTexto(String.valueOf(getDni()), 8),
                 centrarTexto(quitarAcentos(getNombres()).toUpperCase() + " " + quitarAcentos(getApellidos()).toUpperCase(), 25),
-                centrarTexto(getTelefono(), 12),
-                centrarTexto(quitarAcentos(getDireccion()).toUpperCase(), 25),
-                centrarTexto(quitarAcentos(getLocalidad()).toUpperCase(), 20),
-                centrarTexto(getProvincia() != null ? getProvincia().toString().toUpperCase() : "", 15),
                 centrarTexto(getSexo() != null ? getSexo().toString().toUpperCase() : "", 10),
-                centrarTexto(getFechaNacimiento().toString(), 12)
+                centrarTexto(quitarAcentos(getDireccion()).toUpperCase(), 18),
+                centrarTexto(quitarAcentos(getLocalidad()).toUpperCase(), 15),
+                centrarTexto(getProvincia() != null ? getProvincia().toString().toUpperCase() : "", 15),
+                centrarTexto(fechaFormateada, 15),
+                centrarTexto(getTelefono(), 12)
         );
     }
 
@@ -618,15 +634,21 @@ public class Cliente extends Persona
     // Método para mostrar el encabezado de la tabla de clientes
     public static void mostrarEncabezadoClientes()
     {
-        System.out.println("┌──────────┬───────────────────────────┬──────────────┬───────────────────────────┬──────────────────────┬─────────────────┬────────────┬──────────────┐");
-        System.out.println("│   DNI    │           NOMBRE          │   TELEFONO   │         DIRECCION         │      LOCALIDAD       │    PROVINCIA    │    SEXO    │    FECHA     │");
-        System.out.println("├──────────┼───────────────────────────┼──────────────┼───────────────────────────┼──────────────────────┼─────────────────┼────────────┼──────────────┤");
+        System.out.println("┌──────────┬───────────────────────────┬────────────┬────────────────────┬─────────────────┬─────────────────┬─────────────────┬──────────────┐");
+        System.out.println("│   DNI    │       NOMBRE/APELLIDO     │    SEXO    │     DIRECCION      │    LOCALIDAD    │    PROVINCIA    │   NACIMIENTO    │   TELEFONO   │");
+        System.out.println("├──────────┼───────────────────────────┼────────────┼────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────┤");
+    }
+
+    // Método para mostrar línea separadora entre clientes
+    public static void mostrarLineaSeparadora()
+    {
+        System.out.println("├──────────┼───────────────────────────┼────────────┼────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────┤");
     }
 
     // Método para mostrar el pie de la tabla
     public static void mostrarPieClientes()
     {
-        System.out.println("└──────────┴───────────────────────────┴──────────────┴───────────────────────────┴──────────────────────┴─────────────────┴────────────┴──────────────┘");
+        System.out.println("└──────────┴───────────────────────────┴────────────┴────────────────────┴─────────────────┴─────────────────┴─────────────────┴──────────────┘");
     }
 
     // Método para mostrar un cliente individual en formato tabla
