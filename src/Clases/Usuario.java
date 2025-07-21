@@ -73,24 +73,28 @@ public class Usuario
         String nombreUsuario;
         
         // Validar nombre de usuario
-        do {
+        do 
+        {
             System.out.print("INGRESE NOMBRE DE USUARIO (SOLO LETRAS): ");
             nombreUsuario = scanner.nextLine().trim();
             
-            if (!esNombreValido(nombreUsuario)) {
+            if (!esNombreValido(nombreUsuario)) 
+            {
                 System.out.println("ERROR: EL NOMBRE SOLO PUEDE CONTENER LETRAS Y ESPACIOS.");
                 continue;
             }
             
             // Verificar que no exista
-            if (buscarUsuario(nombreUsuario) != null) {
+            if (buscarUsuario(nombreUsuario) != null) 
+            {
                 System.out.println("YA EXISTE UN USUARIO CON ESE NOMBRE.");
                 continue;
             }
             
             break;
             
-        } while (true);
+        }
+        while (true);
         
         this.usuario = nombreUsuario;
         
@@ -98,7 +102,8 @@ public class Usuario
         System.out.print("INGRESE CLAVE: ");
         this.clave = scanner.nextLine();
         
-        if (this.clave.trim().isEmpty()) {
+        if (this.clave.trim().isEmpty()) 
+        {
             System.out.println("ERROR: LA CLAVE NO PUEDE ESTAR VACIA.");
             return null;
         }
@@ -116,12 +121,12 @@ public class Usuario
         boolean eliminado = ArchivosUsuario.eliminarUsuario(usuario.getUsuario());
         if (eliminado)
             System.out.println("USUARIO ELIMINADO CORRECTAMENTE.");
-        else
-            System.out.println("NO SE ENCONTRO EL USUARIO PARA ELIMINAR.");
+            else
+                System.out.println("NO SE ENCONTRO EL USUARIO PARA ELIMINAR.");
     }
 
     /*
-    Modificar usuario
+    Modificar datos del usuario actual con verificación de clave
     */
     public void modificarPersona()
     {
@@ -129,27 +134,160 @@ public class Usuario
         String nombreMod = scanner.nextLine();
         Usuario usuarioMod = buscarUsuario(nombreMod);
         
-        if (usuarioMod != null)
-        {
-            System.out.print("NUEVA CLAVE: ");
-            String nuevaClave = scanner.nextLine();
-            
-            if (nuevaClave.trim().isEmpty()) {
-                System.out.println("ERROR: LA CLAVE NO PUEDE ESTAR VACIA.");
-                return;
-            }
-            
-            usuarioMod.setClave(nuevaClave);
-            
-            boolean modificado = ArchivosUsuario.modificarUsuario(usuarioMod);
-            if (modificado)
-                System.out.println("USUARIO MODIFICADO CORRECTAMENTE.");
-            else
-                System.out.println("NO SE PUDO MODIFICAR EL USUARIO.");
-        }
-        else
+        if (usuarioMod == null)
         {
             System.out.println("NO SE ENCONTRO USUARIO CON ESE NOMBRE.");
+            return;
+        }
+
+        // Mostrar menú de opciones de modificación
+        System.out.println("\n┌───────────────────────────────────────────────┐");
+        System.out.println("│            QUE DESEA MODIFICAR?               │");
+        System.out.println("├───────────────────────────────────────────────┤");
+        System.out.println("│         [1] NOMBRE DE USUARIO                 │");
+        System.out.println("│         [2] CLAVE                             │");
+        System.out.println("│         [3] TODO (NOMBRE Y CLAVE)             │");
+        System.out.println("│         [0] CANCELAR                          │");
+        System.out.println("└───────────────────────────────────────────────┘");
+        System.out.print("SELECCIONE UNA OPCION: ");
+
+        int opcion;
+        try 
+        {
+            opcion = Integer.parseInt(scanner.nextLine());
+        } 
+            catch (NumberFormatException e) 
+            {
+                System.out.println("OPCION INVALIDA.");
+                return;
+            }
+
+        if (opcion == 0) 
+        {
+            System.out.println("OPERACION CANCELADA.");
+            return;
+        }
+
+        // Verificar clave actual antes de permitir modificaciones
+        System.out.print("INGRESE SU CLAVE ACTUAL PARA CONFIRMAR: ");
+        String claveActual = scanner.nextLine();
+        
+        if (!usuarioMod.getClave().equals(claveActual)) 
+        {
+            System.out.println("ERROR: LA CLAVE ACTUAL ES INCORRECTA.");
+            return;
+        }
+
+        // Realizar la modificación según la opción elegida
+        boolean modificado = false;
+        
+        switch (opcion) 
+        {
+            case 1:
+                // Modificar nombre de usuario
+                String nuevoNombre;
+                do 
+                {
+                    System.out.print("NUEVO NOMBRE DE USUARIO (SOLO LETRAS): ");
+                    nuevoNombre = scanner.nextLine().trim();
+                    
+                    if (!esNombreValido(nuevoNombre)) 
+                    {
+                        System.out.println("ERROR: EL NOMBRE SOLO PUEDE CONTENER LETRAS Y ESPACIOS.");
+                        continue;
+                    }
+                    
+                    // Verificar que no exista otro usuario con ese nombre
+                    if (!nuevoNombre.equals(usuarioMod.getUsuario()) && buscarUsuario(nuevoNombre) != null) 
+                    {
+                        System.out.println("ERROR: YA EXISTE UN USUARIO CON ESE NOMBRE.");
+                        continue;
+                    }
+                    
+                    break;
+                    
+                } 
+                while (true);
+                
+                usuarioMod.setUsuario(nuevoNombre);
+                modificado = ArchivosUsuario.modificarUsuario(usuarioMod);
+                if (modificado) 
+                {
+                    System.out.println("NOMBRE DE USUARIO MODIFICADO CORRECTAMENTE.");
+                }
+            break;
+                
+            case 2:
+                // Modificar clave
+                System.out.print("NUEVA CLAVE: ");
+                String nuevaClave = scanner.nextLine();
+                
+                if (nuevaClave.trim().isEmpty()) 
+                {
+                    System.out.println("ERROR: LA CLAVE NO PUEDE ESTAR VACIA.");
+                    return;
+                }
+                
+                usuarioMod.setClave(nuevaClave);
+                modificado = ArchivosUsuario.modificarUsuario(usuarioMod);
+                if (modificado) 
+                {
+                    System.out.println("CLAVE MODIFICADA CORRECTAMENTE.");
+                }
+            break;
+                
+            case 3:
+                // Modificar todo
+                String nuevoNombreCompleto;
+                do 
+                {
+                    System.out.print("NUEVO NOMBRE DE USUARIO (SOLO LETRAS): ");
+                    nuevoNombreCompleto = scanner.nextLine().trim();
+                    
+                    if (!esNombreValido(nuevoNombreCompleto)) 
+                    {
+                        System.out.println("ERROR: EL NOMBRE SOLO PUEDE CONTENER LETRAS Y ESPACIOS.");
+                        continue;
+                    }
+                    
+                    // Verificar que no exista otro usuario con ese nombre
+                    if (!nuevoNombreCompleto.equals(usuarioMod.getUsuario()) && buscarUsuario(nuevoNombreCompleto) != null) 
+                    {
+                        System.out.println("ERROR: YA EXISTE UN USUARIO CON ESE NOMBRE.");
+                        continue;
+                    }
+                    
+                    break;
+                    
+                } 
+                while (true);
+                
+                System.out.print("NUEVA CLAVE: ");
+                String nuevaClaveCompleta = scanner.nextLine();
+                
+                if (nuevaClaveCompleta.trim().isEmpty()) 
+                {
+                    System.out.println("ERROR: LA CLAVE NO PUEDE ESTAR VACIA.");
+                    return;
+                }
+                
+                usuarioMod.setUsuario(nuevoNombreCompleto);
+                usuarioMod.setClave(nuevaClaveCompleta);
+                modificado = ArchivosUsuario.modificarUsuario(usuarioMod);
+                if (modificado) 
+                {
+                    System.out.println("USUARIO MODIFICADO COMPLETAMENTE.");
+                }
+            break;
+                
+            default:
+                System.out.println("OPCION INVALIDA.");
+            return;
+        }
+        
+        if (!modificado) 
+        {
+            System.out.println("NO SE PUDO MODIFICAR EL USUARIO.");
         }
     }
 
@@ -171,12 +309,12 @@ public class Usuario
         {
             encontrado.mostrarDatos();
         }
-        else
-        {
-            System.out.println("NO SE ENCONTRO USUARIO CON ESE NOMBRE.");
+            else
+            {
+                System.out.println("NO SE ENCONTRO USUARIO CON ESE NOMBRE.");
+            }
+            return encontrado;
         }
-        return encontrado;
-    }
 
     /*
     Listar usuarios
@@ -188,22 +326,22 @@ public class Usuario
         {
             System.out.println("NO HAY USUARIOS REGISTRADOS.");
         }
-        else
-        {
-            System.out.println("\n┌──────────────────────────────────────────────────────────────┐");
-            System.out.println("│                       LISTA DE USUARIOS                      │");
-            System.out.println("├─────────────────────────┬────────────────────────────────────┤");
-            System.out.println("│       USUARIO           │              CLAVE                 │");
-            System.out.println("├─────────────────────────┼────────────────────────────────────┤");
-            
-            for (Usuario u : lista)
+            else
             {
-                String claveOculta = "*".repeat(u.getClave().length());
-                System.out.printf("│ %-23s │ %-34s │\n", u.getUsuario(), claveOculta);
+                System.out.println("\n┌──────────────────────────────────────────────────────────────┐");
+                System.out.println("│                       LISTA DE USUARIOS                      │");
+                System.out.println("├─────────────────────────┬────────────────────────────────────┤");
+                System.out.println("│       USUARIO           │              CLAVE                 │");
+                System.out.println("├─────────────────────────┼────────────────────────────────────┤");
+                
+                for (Usuario u : lista)
+                {
+                    String claveOculta = "*".repeat(u.getClave().length());
+                    System.out.printf("│ %-23s │ %-34s │\n", u.getUsuario(), claveOculta);
+                }
+                
+                System.out.println("└─────────────────────────┴────────────────────────────────────┘");
             }
-            
-            System.out.println("└─────────────────────────┴────────────────────────────────────┘");
-        }
     }
 
     /*
@@ -213,6 +351,14 @@ public class Usuario
     {
         ArrayList<Usuario> usuarios = ArchivosUsuario.leerUsuarios();
         return !usuarios.isEmpty();
+    }
+
+    /*
+    Verificar si existe un usuario con ese nombre
+    */
+    public static boolean existeUsuario(String nombreUsuario)
+    {
+        return buscarUsuario(nombreUsuario) != null;
     }
 
     /*

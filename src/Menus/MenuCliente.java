@@ -2,6 +2,7 @@ package Menus;
 
 import java.util.Scanner;
 import Clases.Cliente;
+import Enumerados.Provincia;
 
 public class MenuCliente
 {
@@ -22,8 +23,9 @@ public class MenuCliente
             System.out.println("│           [1] ALTA DE CLIENTE                 │");
             System.out.println("│           [2] LISTAR CLIENTES                 │");
             System.out.println("│           [3] BUSCAR CLIENTE POR DNI          │");
-            System.out.println("│           [4] MODIFICAR CLIENTE               │");
-            System.out.println("│           [5] BAJA DE CLIENTE                 │");
+            System.out.println("│           [4] BUSCAR CLIENTES POR PROVINCIA   │");
+            System.out.println("│           [5] MODIFICAR CLIENTE               │");
+            System.out.println("│           [6] BAJA DE CLIENTE                 │");
             System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│           [0] VOLVER AL MENU PRINCIPAL        │");
             System.out.println("└───────────────────────────────────────────────┘");
@@ -54,10 +56,14 @@ public class MenuCliente
                 break;
 
                 case 4:
-                    new Cliente().modificarPersona();
+                    buscarClientesPorProvincia(scanner);
                 break;
 
                 case 5:
+                    new Cliente().modificarPersona();
+                break;
+
+                case 6:
                     new Cliente().bajaPersona();
                 break;
 
@@ -83,5 +89,44 @@ public class MenuCliente
         int valor = scanner.nextInt();
         scanner.nextLine();
         return valor;
+    }
+
+    // Método para buscar clientes por provincia
+    private static void buscarClientesPorProvincia(Scanner scanner)
+    {
+        System.out.println("\n    === SELECCIONAR PROVINCIA ===");
+        System.out.println("┌─────┬──────────────────────────────┐");
+        System.out.println("│ COD │           PROVINCIA          │");
+        System.out.println("├─────┼──────────────────────────────┤");
+        
+        // Mostrar todas las provincias
+        for (Provincia provincia : Provincia.values()) 
+        {
+            System.out.printf("│ %2d  │ %-28s │%n", provincia.getCodigo(), provincia.getNombre());
+        }
+        System.out.println("└─────┴──────────────────────────────┘");
+        
+        System.out.print("INGRESE EL CODIGO DE LA PROVINCIA: ");
+        int codigoProvincia = leerEntero(scanner);
+        
+        // Buscar la provincia por código
+        Provincia provinciaSeleccionada = null;
+        for (Provincia provincia : Provincia.values()) 
+        {
+            if (provincia.getCodigo() == codigoProvincia) 
+            {
+                provinciaSeleccionada = provincia;
+                break;
+            }
+        }
+        
+        if (provinciaSeleccionada != null) 
+        {
+            Cliente.buscarClientesPorProvincia(provinciaSeleccionada);
+        } 
+            else 
+            {
+                System.out.println("CODIGO DE PROVINCIA INVALIDO.");
+            }
     }
 }

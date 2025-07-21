@@ -813,4 +813,45 @@ public class Empleado extends Persona
         mostrarPieEmpleados();
         System.out.println();
     }
+
+    /*
+    Busca y muestra empleados por provincia
+    @param provincia La provincia a buscar
+    */
+    public static void buscarEmpleadosPorProvincia(Provincia provincia) 
+    {
+        ArrayList<Empleado> empleados = Archivos.ArchivosEmpleado.leerEmpleados();
+        ArrayList<Empleado> empleadosProvincia = new ArrayList<>();
+        
+        // Filtrar empleados por provincia
+        for (Empleado empleado : empleados) 
+        {
+            if (empleado.getProvincia() == provincia) 
+            {
+                empleadosProvincia.add(empleado);
+            }
+        }
+        
+        // Mostrar resultados
+        if (empleadosProvincia.isEmpty()) 
+        {
+            System.out.println("\nNo se encontraron empleados en la provincia: " + provincia.getNombre());
+        } 
+            else 
+            {
+                System.out.println("\n=== EMPLEADOS DE " + provincia.getNombre().toUpperCase() + " ===");
+                System.out.println("Se encontraron " + empleadosProvincia.size() + " empleado(s):");
+                mostrarEncabezadoEmpleados();
+                for (int i = 0; i < empleadosProvincia.size(); i++) 
+                {
+                    System.out.println(empleadosProvincia.get(i));
+                    // Agregar línea separadora entre empleados (excepto el último)
+                    if (i < empleadosProvincia.size() - 1) 
+                    {
+                        System.out.println("├─────────┼───────────────────────────┼────────────┼────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────┼──────────────┼──────────────┼──────────────┤");
+                    }
+                }
+                mostrarPieEmpleados();
+            }
+    }
 }

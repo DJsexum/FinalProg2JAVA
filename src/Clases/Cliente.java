@@ -783,4 +783,45 @@ public class Cliente extends Persona
         mostrarPieClientes();
         System.out.println();
     }
+
+    /*
+    Busca y muestra clientes por provincia
+    @param provincia La provincia a buscar
+     */
+    public static void buscarClientesPorProvincia(Provincia provincia) 
+    {
+        ArrayList<Cliente> clientes = ArchivosCliente.leerClientes();
+        ArrayList<Cliente> clientesProvincia = new ArrayList<>();
+        
+        // Filtrar clientes por provincia
+        for (Cliente cliente : clientes) 
+        {
+            if (cliente.getProvincia() == provincia) 
+            {
+                clientesProvincia.add(cliente);
+            }
+        }
+        
+        // Mostrar resultados
+        if (clientesProvincia.isEmpty()) 
+        {
+            System.out.println("\nNo se encontraron clientes en la provincia: " + provincia.getNombre());
+        }
+            else 
+            {
+                System.out.println("\n=== CLIENTES DE " + provincia.getNombre().toUpperCase() + " ===");
+                System.out.println("Se encontraron " + clientesProvincia.size() + " cliente(s):");
+                mostrarEncabezadoClientes();
+                for (int i = 0; i < clientesProvincia.size(); i++) 
+                {
+                    System.out.println(clientesProvincia.get(i));
+                    // Agregar línea separadora entre clientes (excepto el último)
+                    if (i < clientesProvincia.size() - 1) 
+                    {
+                        System.out.println("├──────────┼───────────────────────────┼────────────┼────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────┤");
+                    }
+                }
+                mostrarPieClientes();
+            }
+    }
 }

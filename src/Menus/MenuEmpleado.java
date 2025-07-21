@@ -1,6 +1,7 @@
 package Menus;
 
 import Clases.Empleado;
+import Enumerados.Provincia;
 import java.util.Scanner;
 
 public class MenuEmpleado
@@ -24,8 +25,9 @@ public class MenuEmpleado
             System.out.println("│         [1] ALTA DE EMPLEADO                  │");
             System.out.println("│         [2] LISTAR EMPLEADOS                  │");
             System.out.println("│         [3] BUSCAR EMPLEADO POR LEGAJO        │");
-            System.out.println("│         [4] MODIFICAR EMPLEADO                │");
-            System.out.println("│         [5] BAJA DE EMPLEADO                  │");
+            System.out.println("│         [4] BUSCAR EMPLEADOS POR PROVINCIA    │");
+            System.out.println("│         [5] MODIFICAR EMPLEADO                │");
+            System.out.println("│         [6] BAJA DE EMPLEADO                  │");
             System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│         [0] VOLVER AL MENU PRINCIPAL          │");
             System.out.println("└───────────────────────────────────────────────┘");
@@ -47,10 +49,14 @@ public class MenuEmpleado
                 break;
 
                 case 4:
-                    modificarEmpleado();
+                    buscarEmpleadosPorProvincia();
                 break;
 
                 case 5:
+                    modificarEmpleado();
+                break;
+
+                case 6:
                     bajaEmpleado();
                 break;
 
@@ -106,10 +112,10 @@ public class MenuEmpleado
         {
             empleado.bajaPersona(encontrado);
         }
-        else
-        {
-            System.out.println("NO SE ENCONTRO EMPLEADO CON ESE LEGAJO.");
-        }
+            else
+            {
+                System.out.println("NO SE ENCONTRO EMPLEADO CON ESE LEGAJO.");
+            }
     }
 
     // Método auxiliar para leer enteros de forma segura
@@ -126,5 +132,44 @@ public class MenuEmpleado
                     System.out.print("INGRESE UN NUMERO VALIDO: ");
                 }
         }
+    }
+
+    // Opción 4: Buscar empleados por provincia
+    private static void buscarEmpleadosPorProvincia()
+    {
+        System.out.println("\n    === SELECCIONAR PROVINCIA ===");
+        System.out.println("┌─────┬──────────────────────────────┐");
+        System.out.println("│ COD │           PROVINCIA          │");
+        System.out.println("├─────┼──────────────────────────────┤");
+        
+        // Mostrar todas las provincias
+        for (Provincia provincia : Provincia.values()) 
+        {
+            System.out.printf("│ %2d  │ %-28s │%n", provincia.getCodigo(), provincia.getNombre());
+        }
+        System.out.println("└─────┴──────────────────────────────┘");
+        
+        System.out.print("INGRESE EL CODIGO DE LA PROVINCIA: ");
+        int codigoProvincia = leerEntero();
+        
+        // Buscar la provincia por código
+        Provincia provinciaSeleccionada = null;
+        for (Provincia provincia : Provincia.values()) 
+        {
+            if (provincia.getCodigo() == codigoProvincia) 
+            {
+                provinciaSeleccionada = provincia;
+                break;
+            }
+        }
+        
+        if (provinciaSeleccionada != null) 
+        {
+            Empleado.buscarEmpleadosPorProvincia(provinciaSeleccionada);
+        }
+            else 
+            {
+                System.out.println("CODIGO DE PROVINCIA INVALIDO.");
+            }
     }
 }

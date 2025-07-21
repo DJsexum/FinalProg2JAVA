@@ -296,12 +296,12 @@ public class Producto implements Comparable<Producto>
             return;
         }
 
-        System.out.println("┌────────┬──────────────┬─────────────────┬──────────────────┬──────────────────────┬────────┬──────────────┬────────┐");
-        System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
+        System.out.println("┌────────┬──────────────┬─────────────────┬─────────────────────────┬──────────────────────┬────────┬──────────────┬────────┐");
+        System.out.printf("│%8s│%14s│%17s│%25s│%22s│%8s│%14s│%8s│\n",
             centrarTexto("CODIGO", 8), centrarTexto("CATEGORIA", 14), centrarTexto("MARCA", 17), 
-            centrarTexto("MATERIAL", 18), centrarTexto("DETALLE", 22), centrarTexto("TALLE", 8), 
+            centrarTexto("MATERIAL", 25), centrarTexto("DETALLE", 22), centrarTexto("TALLE", 8), 
             centrarTexto("PRECIO", 14), centrarTexto("STOCK", 8));
-        System.out.println("├────────┼──────────────┼─────────────────┼──────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
+        System.out.println("├────────┼──────────────┼─────────────────┼─────────────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
         
         // Aplicar mayúsculas y quitar acentos
         String detalle = quitarAcentos(producto.getDetalle().toUpperCase());
@@ -312,24 +312,24 @@ public class Producto implements Comparable<Producto>
         // Truncar texto si es muy largo
         detalle = detalle.length() > 22 ? detalle.substring(0, 19) + "..." : detalle;
         marca = marca.length() > 17 ? marca.substring(0, 14) + "..." : marca;
-        material = material.length() > 18 ? material.substring(0, 15) + "..." : material;
+        material = material.length() > 25 ? material.substring(0, 22) + "..." : material;
         String categoria = producto.getCategoria().toString().length() > 14 ? producto.getCategoria().toString().substring(0, 11) + "..." : producto.getCategoria().toString();
         
         // Formatear precio: mostrar "GRATIS" si es 0, sino el precio con 2 decimales
         String precioTexto = (producto.getPrecio() == 0) ? "GRATIS" : String.format("%.2f", producto.getPrecio());
         
         // Mostrar la fila del producto
-        System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
+        System.out.printf("│%8s│%14s│%17s│%25s│%22s│%8s│%14s│%8s│\n",
             centrarTexto(String.valueOf(producto.getCodigo()), 8), 
             centrarTexto(categoria, 14), 
             centrarTexto(marca, 17), 
-            centrarTexto(material, 18),
+            centrarTexto(material, 25),
             centrarTexto(detalle, 22),
             centrarTexto(talle, 8), 
             centrarTexto(precioTexto, 14),
             centrarTexto(String.valueOf(producto.getStock()), 8));
             
-        System.out.println("└────────┴──────────────┴─────────────────┴──────────────────┴──────────────────────┴────────┴──────────────┴────────┘");
+        System.out.println("└────────┴──────────────┴─────────────────┴─────────────────────────┴──────────────────────┴────────┴──────────────┴────────┘");
     }
 
     // Mostrar lista de productos con formato de tabla profesional
@@ -341,12 +341,12 @@ public class Producto implements Comparable<Producto>
             return;
         }
 
-        System.out.println("┌────────┬──────────────┬─────────────────┬──────────────────┬──────────────────────┬────────┬──────────────┬────────┐");
-        System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
+        System.out.println("┌────────┬──────────────┬─────────────────┬─────────────────────────┬──────────────────────┬────────┬──────────────┬────────┐");
+        System.out.printf("│%8s│%14s│%17s│%25s│%22s│%8s│%14s│%8s│\n",
             centrarTexto("CODIGO", 8), centrarTexto("CATEGORIA", 14), centrarTexto("MARCA", 17), 
-            centrarTexto("MATERIAL", 18), centrarTexto("DETALLE", 22), centrarTexto("TALLE", 8), 
+            centrarTexto("MATERIAL", 25), centrarTexto("DETALLE", 22), centrarTexto("TALLE", 8), 
             centrarTexto("PRECIO", 14), centrarTexto("STOCK", 8));
-        System.out.println("├────────┼──────────────┼─────────────────┼──────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
+        System.out.println("├────────┼──────────────┼─────────────────┼─────────────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
         
         // Filas de productos con separadores entre cada uno
         for (int i = 0; i < lista.size(); i++)
@@ -361,18 +361,18 @@ public class Producto implements Comparable<Producto>
             // Truncar texto si es muy largo
             detalle = detalle.length() > 22 ? detalle.substring(0, 19) + "..." : detalle;
             marca = marca.length() > 17 ? marca.substring(0, 14) + "..." : marca;
-            material = material.length() > 18 ? material.substring(0, 15) + "..." : material;
+            material = material.length() > 25 ? material.substring(0, 22) + "..." : material;
             String categoria = p.getCategoria().toString().length() > 14 ? p.getCategoria().toString().substring(0, 11) + "..." : p.getCategoria().toString();
             
             // Formatear precio: mostrar "GRATIS" si es 0, sino el precio con 2 decimales
             String precioTexto = (p.getPrecio() == 0) ? "GRATIS" : String.format("%.2f", p.getPrecio());
             
             // Mostrar la fila del producto
-            System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
+            System.out.printf("│%8s│%14s│%17s│%25s│%22s│%8s│%14s│%8s│\n",
                 centrarTexto(String.valueOf(p.getCodigo()), 8), 
                 centrarTexto(categoria, 14), 
                 centrarTexto(marca, 17), 
-                centrarTexto(material, 18),
+                centrarTexto(material, 25),
                 centrarTexto(detalle, 22),
                 centrarTexto(talle, 8), 
                 centrarTexto(precioTexto, 14),
@@ -381,10 +381,10 @@ public class Producto implements Comparable<Producto>
             // Agregar línea separadora entre productos (excepto después del último)
             if (i < lista.size() - 1)
             {
-                System.out.println("├────────┼──────────────┼─────────────────┼──────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
+                System.out.println("├────────┼──────────────┼─────────────────┼─────────────────────────┼──────────────────────┼────────┼──────────────┼────────┤");
             }
         }
-        System.out.println("└────────┴──────────────┴─────────────────┴──────────────────┴──────────────────────┴────────┴──────────────┴────────┘");
+        System.out.println("└────────┴──────────────┴─────────────────┴─────────────────────────┴──────────────────────┴────────┴──────────────┴────────┘");
     }
 
     // Método auxiliar para centrar texto en un ancho específico

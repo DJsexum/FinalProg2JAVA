@@ -31,30 +31,69 @@ public class MenuPrincipal
     }
 
     /*
-    Solicita credenciales de usuario al inicio del programa (me pase con esto, o no?)
+    Solicita credenciales de usuario al inicio del programa con control detallado de errores (god no?)
     */
     private static boolean autenticarUsuario()
     {
-        System.out.println("┌──────────────────────────────────────────────────────────────┐");
-        System.out.println("│                    AUTENTICACION REQUERIDA                   │");
-        System.out.println("└──────────────────────────────────────────────────────────────┘");
-        
-        System.out.print("INGRESE NOMBRE DE USUARIO: ");
-        String usuario = scanner.nextLine();
-        
-        System.out.print("INGRESE CLAVE: ");
-        String clave = scanner.nextLine();
-        
-        if (Usuario.verificarCredenciales(usuario, clave))
+        while (true)
         {
-            System.out.println("AUTENTICACION EXITOSA. BIENVENIDO " + usuario.toUpperCase() + "!");
-            return true;
-        }
-            else
+            System.out.println("┌──────────────────────────────────────────────────────────────┐");
+            System.out.println("│                    AUTENTICACION REQUERIDA                   │");
+            System.out.println("└──────────────────────────────────────────────────────────────┘");
+            
+            System.out.print("INGRESE NOMBRE DE USUARIO (0 PARA SALIR): ");
+            String usuario = scanner.nextLine();
+            
+            // Opción para salir
+            if (usuario.equals("0"))
             {
-                System.out.println("ERROR: CREDENCIALES INCORRECTAS.");
+                System.out.println("SALIENDO DEL PROGRAMA...");
                 return false;
             }
+            
+            // Verificar si el usuario existe
+            if (!Usuario.existeUsuario(usuario))
+            {
+                System.out.println("ERROR: EL USUARIO '" + usuario + "' NO EXISTE.");
+                System.out.print("¿DESEA INTENTAR DE NUEVO? (S/N): ");
+                String respuesta = scanner.nextLine().toUpperCase();
+                if (!respuesta.equals("S"))
+                {
+                    System.out.println("SALIENDO DEL PROGRAMA...");
+                    return false;
+                }
+                continue;
+            }
+            
+            System.out.print("INGRESE CLAVE (0 PARA SALIR): ");
+            String clave = scanner.nextLine();
+            
+            // Opción para salir
+            if (clave.equals("0"))
+            {
+                System.out.println("SALIENDO DEL PROGRAMA...");
+                return false;
+            }
+            
+            // Verificar credenciales completas
+            if (Usuario.verificarCredenciales(usuario, clave))
+            {
+                System.out.println("AUTENTICACION EXITOSA. BIENVENIDO " + usuario.toUpperCase() + "!");
+                return true;
+            }
+            else
+            {
+                // Si llegamos aquí, el usuario existe pero la clave es incorrecta
+                System.out.println("ERROR: LA CLAVE ES INCORRECTA.");
+                System.out.print("¿DESEA INTENTAR DE NUEVO? (S/N): ");
+                String respuesta = scanner.nextLine().toUpperCase();
+                if (!respuesta.equals("S"))
+                {
+                    System.out.println("SALIENDO DEL PROGRAMA...");
+                    return false;
+                }
+            }
+        }
     }
 
     /*
