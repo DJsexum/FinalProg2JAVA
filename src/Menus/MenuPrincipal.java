@@ -1,5 +1,6 @@
 package Menus;
 
+import Clases.Usuario;
 import java.util.Scanner;
 
 public class MenuPrincipal
@@ -8,6 +9,58 @@ public class MenuPrincipal
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void mostrarMenu()
+    {
+        // Verificar autenticación al inicio
+        if (Usuario.hayUsuarios())
+        {
+            // Si hay usuarios, solicitar autenticación
+            if (!autenticarUsuario())
+            {
+                System.out.println("ACCESO DENEGADO. CERRANDO PROGRAMA.");
+                return;
+            }
+        }
+        else
+        {
+            // Si no hay usuarios, acceso libre
+            System.out.println("NO HAY USUARIOS REGISTRADOS. ACCESO LIBRE.");
+        }
+
+        // Continuar con el menú normal
+        mostrarMenuPrincipal();
+    }
+
+    /*
+    Solicita credenciales de usuario al inicio del programa
+    */
+    private static boolean autenticarUsuario()
+    {
+        System.out.println("┌──────────────────────────────────────────────────────────────┐");
+        System.out.println("│                    AUTENTICACION REQUERIDA                   │");
+        System.out.println("└──────────────────────────────────────────────────────────────┘");
+        
+        System.out.print("INGRESE NOMBRE DE USUARIO: ");
+        String usuario = scanner.nextLine();
+        
+        System.out.print("INGRESE CLAVE: ");
+        String clave = scanner.nextLine();
+        
+        if (Usuario.verificarCredenciales(usuario, clave))
+        {
+            System.out.println("AUTENTICACION EXITOSA. BIENVENIDO " + usuario.toUpperCase() + "!");
+            return true;
+        }
+        else
+        {
+            System.out.println("ERROR: CREDENCIALES INCORRECTAS.");
+            return false;
+        }
+    }
+
+    /*
+    Muestra el menú principal una vez autenticado
+    */
+    private static void mostrarMenuPrincipal()
     {
         int opcion;
 

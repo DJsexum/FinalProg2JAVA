@@ -114,6 +114,22 @@ public class ArchivosEmpleado
     }
 
     /*
+    Busca un empleado por DNI en el archivo.
+    Lee todos los empleados y retorna el que tenga el DNI buscado, o null si no existe.
+    */
+    public static Empleado buscarPorDni(int dni)
+    {
+        for (Empleado e : leerEmpleados())
+        {
+            if (e.getDni() == dni)
+            {
+                return e;
+            }
+        }
+        return null; // Si no se encuentra, retorna null
+    }
+
+    /*
     Modifica los datos de un empleado existente en el archivo.
     Busca el empleado por legajo, lo reemplaza por el nuevo objeto y reescribe todo el archivo.
     */

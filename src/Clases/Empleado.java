@@ -2,6 +2,7 @@ package Clases;
 
 import Enumerados.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -69,34 +70,211 @@ public class Empleado extends Persona
     // Setters interactivos para carga por consola
     public void setFechaIngresoInteractivo()
     {
-        System.out.print(quitarAcentos("FECHA DE INGRESO (YYYY-MM-DD): ").toUpperCase());
-        this.FechaIngreso = LocalDate.parse(scanner.nextLine());
+        // Establecer automáticamente la fecha actual como fecha de ingreso
+        this.FechaIngreso = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String fechaFormateada = this.FechaIngreso.format(formatter);
+        System.out.println(quitarAcentos("FECHA DE INGRESO ESTABLECIDA AUTOMATICAMENTE: " + fechaFormateada).toUpperCase());
     }
 
     public void setFechaEgresoInteractivo()
     {
-        System.out.print(quitarAcentos("FECHA DE EGRESO (YYYY-MM-DD, ENTER SI SIGUE ACTIVO): ").toUpperCase());
-        String input = scanner.nextLine();
-        if (input.isEmpty()) 
+        System.out.print(quitarAcentos("¿DAR DE BAJA AL EMPLEADO? (S/N): ").toUpperCase());
+        String respuesta = scanner.nextLine().trim().toUpperCase();
+        
+        if (respuesta.equals("S") || respuesta.equals("SI"))
         {
-            this.FechaEgreso = null;
+            // Asignar fecha actual como fecha de baja
+            this.FechaEgreso = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            String fechaFormateada = this.FechaEgreso.format(formatter);
+            System.out.println(quitarAcentos("FECHA DE BAJA ESTABLECIDA: " + fechaFormateada + " - ESTADO: INACTIVO").toUpperCase());
         }
-            else 
+            else
             {
-                this.FechaEgreso = LocalDate.parse(input);
+                // No dar de baja, empleado sigue activo
+                this.FechaEgreso = null;
+                System.out.println(quitarAcentos("EMPLEADO MANTIENE ESTADO: ACTIVO").toUpperCase());
             }
+    }
+
+    // Método para generar un legajo automático único
+    private int generarLegajoAutomatico()
+    {
+        ArrayList<Empleado> empleados = Archivos.ArchivosEmpleado.leerEmpleados();
+        int legajoMaximo = 1000; // Número base para legajos
+        
+        for (Empleado emp : empleados)
+        {
+            if (emp.getLegajo() > legajoMaximo)
+            {
+                legajoMaximo = emp.getLegajo();
+            }
+        }
+        
+        return legajoMaximo + 1;
+    }
+
+    // Método para verificar si un legajo ya existe
+    private boolean legajoExiste(int legajo)
+    {
+        ArrayList<Empleado> empleados = Archivos.ArchivosEmpleado.leerEmpleados();
+        for (Empleado emp : empleados)
+        {
+            if (emp.getLegajo() == legajo)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Método para verificar si un DNI ya existe en el sistema (reutiliza métodos existentes)
+    private boolean dniYaExiste(int dni)
+    {
+        // Usar métodos existentes de los archivos
+        return Archivos.ArchivosEmpleado.buscarPorDni(dni) != null || 
+               Archivos.ArchivosCliente.buscarPorDni(dni) != null;
+    }
+
+    // Sobrescribir setDniInteractivo para validar DNI duplicados
+    @Override
+    public void setDniInteractivo()
+    {
+        int dni = -1;
+        while (dni <= 0)
+        {
+            try 
+            {
+                System.out.print("DNI: ");
+                String input = scanner.nextLine();
+                dni = Integer.parseInt(input);
+                
+                if (dni <= 0)
+                {
+                    throw new Principal.Excepciones.DatoInvalidoException("EL DNI DEBE SER UN NUMERO VALIDO");
+                }
+                
+                // Verificar si el DNI ya existe (solo si es diferente del DNI actual)
+                if (dni != this.getDni() && dniYaExiste(dni))
+                {
+                    throw new Principal.Excepciones.DniDuplicadoException("DNI YA INGRESADO");
+                }
+                
+                break;
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL DNI");
+                dni = -1;
+            }
+            catch (Principal.Excepciones.DatoInvalidoException e)
+            {
+                System.out.println("ERROR: " + e.getMessage().toUpperCase());
+                dni = -1;
+            }
+            catch (Principal.Excepciones.DniDuplicadoException e)
+            {
+                System.out.println("ERROR: " + e.getMessage().toUpperCase());
+                dni = -1;
+            }
+        }
+        this.setDni(dni);
+    }
+
+    // Método para asignar legajo automáticamente (usado en alta)
+    public void setLegajoAutomatico()
+    {
+        int legajoAutomatico = generarLegajoAutomatico();
+        this.Legajo = legajoAutomatico;
+        System.out.println(quitarAcentos("LEGAJO ASIGNADO AUTOMATICAMENTE: " + legajoAutomatico).toUpperCase());
     }
 
     public void setLegajoInteractivo()
     {
-        System.out.print(quitarAcentos("LEGAJO: ").toUpperCase());
-        this.Legajo = Integer.parseInt(scanner.nextLine());
+        boolean legajoValido = false;
+        while (!legajoValido)
+        {
+            try
+            {
+                System.out.print(quitarAcentos("LEGAJO: ").toUpperCase());
+                String input = scanner.nextLine().trim();
+                
+                if (input.isEmpty())
+                {
+                    throw new Principal.Excepciones.LegajoInvalidoException("EL LEGAJO NO PUEDE ESTAR VACIO");
+                }
+                
+                int legajo = Integer.parseInt(input);
+                
+                if (legajo <= 0)
+                {
+                    throw new Principal.Excepciones.LegajoInvalidoException("EL LEGAJO DEBE SER UN NUMERO POSITIVO");
+                }
+                
+                // Verifica si el legajo ya existe
+                if (legajo != this.Legajo && legajoExiste(legajo))
+                {
+                    throw new Principal.Excepciones.LegajoDuplicadoException("YA EXISTE UN EMPLEADO CON ESE LEGAJO");
+                }
+                
+                this.Legajo = legajo;
+                legajoValido = true;
+                }
+                catch (NumberFormatException e)
+                {
+                    System.out.println(quitarAcentos("ERROR: EL LEGAJO NO ES VALIDO").toUpperCase());
+                }
+                    catch (Principal.Excepciones.LegajoInvalidoException e)
+                    {
+                        System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+                    }
+                        catch (Principal.Excepciones.LegajoDuplicadoException e)
+                        {
+                            System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+                        }
+        }
     }
 
     public void setSalarioInteractivo()
     {
-        System.out.print(quitarAcentos("SALARIO: ").toUpperCase());
-        this.Salario = Double.parseDouble(scanner.nextLine());
+        boolean salarioValido = false;
+        while (!salarioValido)
+        {
+            try
+            {
+                System.out.print(quitarAcentos("SALARIO: ").toUpperCase());
+                String input = scanner.nextLine().trim();
+                
+                if (input.isEmpty())
+                {
+                    throw new Principal.Excepciones.SalarioInvalidoException("EL SALARIO NO PUEDE ESTAR VACIO");
+                }
+                
+                double salario = Double.parseDouble(input);
+                
+                if (salario < 0)
+                {
+                    throw new Principal.Excepciones.SalarioInvalidoException("EL SALARIO NO PUEDE SER NEGATIVO");
+                }
+                
+                if (salario == 0)
+                {
+                    System.out.println(quitarAcentos("SALARIO ESTABLECIDO COMO: SIN PAGA").toUpperCase());
+                }
+                
+                this.Salario = salario;
+                salarioValido = true;
+            }
+                catch (NumberFormatException e)
+                {
+                    System.out.println(quitarAcentos("ERROR: DEBE INGRESAR UN VALOR NUMERICO REAL").toUpperCase());
+                }
+                    catch (Principal.Excepciones.SalarioInvalidoException e)
+                    {
+                        System.out.println(quitarAcentos("ERROR: " + e.getMessage()).toUpperCase());
+                    }
+        }
     }
 
     // Métodos obligatorios de Persona
@@ -116,7 +294,7 @@ public class Empleado extends Persona
         setFechaNacimientoInteractivo();
         setFechaIngresoInteractivo();
         setFechaEgresoInteractivo();
-        setLegajoInteractivo();
+        setLegajoAutomatico();
         setSalarioInteractivo();
 
         Empleado nuevo = new Empleado(getDni(), true, getNombres(), getApellidos(), getTelefono(), getDireccion(), getLocalidad(), getProvincia(), getSexo(), getFechaNacimiento(), getFechaIngreso(), getFechaEgreso(), getLegajo(), getSalario());
@@ -136,19 +314,20 @@ public class Empleado extends Persona
         {
             System.out.println(quitarAcentos("NO HAY EMPLEADOS REGISTRADOS.\n").toUpperCase());
         }
-        else
-        {
-            mostrarEncabezadoEmpleados();
-            for (int i = 0; i < empleados.size(); i++)
+            else
             {
-                if (i > 0) {
-                    mostrarLineaSeparadoraEmpleados();
+                mostrarEncabezadoEmpleados();
+                for (int i = 0; i < empleados.size(); i++)
+                {
+                    if (i > 0) 
+                    {
+                        mostrarLineaSeparadoraEmpleados();
+                    }
+                    System.out.println(empleados.get(i));
                 }
-                System.out.println(empleados.get(i));
+                mostrarPieEmpleados();
+                System.out.println();
             }
-            mostrarPieEmpleados();
-            System.out.println();
-        }
     }
 
     @Override
@@ -183,7 +362,8 @@ public class Empleado extends Persona
             mostrarEncabezadoEmpleados();
             for (int i = 0; i < lista.size(); i++)
             {
-                if (i > 0) {
+                if (i > 0) 
+                {
                     mostrarLineaSeparadoraEmpleados();
                 }
                 System.out.println(lista.get(i));
@@ -234,36 +414,36 @@ public class Empleado extends Persona
                         {
                             case 1: // MODIFICAR TELEFONO
                                 modificacionExitosa = modificarTelefonoEmpleado(empleadoMod);
-                                break;
+                            break;
                                 
                             case 2: // MODIFICAR DIRECCION
                                 modificacionExitosa = modificarDireccionEmpleado(empleadoMod);
-                                break;
+                            break;
                                 
                             case 3: // MODIFICAR LOCALIDAD
                                 modificacionExitosa = modificarLocalidadEmpleado(empleadoMod);
-                                break;
+                            break;
                                 
                             case 4: // MODIFICAR PROVINCIA
                                 modificacionExitosa = modificarProvinciaEmpleado(empleadoMod);
-                                break;
+                            break;
                                 
                             case 5: // MODIFICAR SALARIO
                                 modificacionExitosa = modificarSalarioEmpleado(empleadoMod);
-                                break;
+                            break;
                                 
-                            case 6: // MODIFICAR TODO
+                            case 6: // MODIFICAR TODITO
                                 modificacionExitosa = modificarTodosLosCamposEmpleado(empleadoMod);
-                                break;
+                            break;
                                 
                             case 0: // SALIR
                                 System.out.println(quitarAcentos("MODIFICACION CANCELADA.\n").toUpperCase());
                                 continuar = false;
-                                break;
+                            break;
                                 
                             default:
                                 System.out.println(quitarAcentos("OPCION INVALIDA. INTENTE NUEVAMENTE.\n").toUpperCase());
-                                break;
+                            break;
                         }
                         if (modificacionExitosa)
                         {
@@ -457,7 +637,8 @@ public class Empleado extends Persona
             mostrarEncabezadoEmpleados();
             for (int i = 0; i < lista.size(); i++)
             {
-                if (i > 0) {
+                if (i > 0) 
+                {
                     mostrarLineaSeparadoraEmpleados();
                 }
                 System.out.println(lista.get(i));
@@ -543,29 +724,33 @@ public class Empleado extends Persona
     public String toString()
     {
         // Formatear fecha de nacimiento como dd-mm-yyyy
-        String fechaNacimientoFormateada = String.format("%02d-%02d-%04d", 
-                                          getFechaNacimiento().getDayOfMonth(),
-                                          getFechaNacimiento().getMonthValue(),
-                                          getFechaNacimiento().getYear());
+        String fechaNacimientoFormateada = String.format
+                                        ("%02d-%02d-%04d", 
+                                            getFechaNacimiento().getDayOfMonth(),
+                                            getFechaNacimiento().getMonthValue(),
+                                            getFechaNacimiento().getYear()
+                                        );
         
         // Formatear fecha de ingreso como dd-mm-yyyy
         String fechaIngresoFormateada = getFechaIngreso() != null ? 
-                                       String.format("%02d-%02d-%04d", 
-                                                    getFechaIngreso().getDayOfMonth(),
-                                                    getFechaIngreso().getMonthValue(),
-                                                    getFechaIngreso().getYear()) : "";
+                                       String.format
+                                        ("%02d-%02d-%04d", 
+                                            getFechaIngreso().getDayOfMonth(),
+                                            getFechaIngreso().getMonthValue(),
+                                            getFechaIngreso().getYear()
+                                        ) : "";
         
-        // Formatear fecha de egreso como dd-mm-yyyy o "ACTIVO"
+        // Formatear fecha de baja como dd-mm-yyyy o "ACTIVO"
         String fechaEgresoFormateada = getFechaEgreso() != null ? 
                                       String.format
-                                                ("%02d-%02d-%04d", 
-                                                    getFechaEgreso().getDayOfMonth(),
-                                                    getFechaEgreso().getMonthValue(),
-                                                    getFechaEgreso().getYear()
-                                                ) : "ACTIVO";
+                                        ("%02d-%02d-%04d", 
+                                            getFechaEgreso().getDayOfMonth(),
+                                            getFechaEgreso().getMonthValue(),
+                                            getFechaEgreso().getYear()
+                                        ) : "ACTIVO";
         
         return String.format
-        ("│ %8s │ %6s │ %25s │ %10s │ %18s │ %15s │ %15s │ %15s │ %12s │ %15s │ %15s │ %10s │",
+        ("│ %8s │ %6s │ %25s │ %10s │ %18s │ %15s │ %15s │ %15s │ %12s │ %15s │ %15s │ %16s │",
                 centrarTexto(String.valueOf(getDni()), 8),
                 centrarTexto(String.valueOf(getLegajo()), 6),
                 centrarTexto(quitarAcentos(getNombres()).toUpperCase() + " " + quitarAcentos(getApellidos()).toUpperCase(), 25),
@@ -577,7 +762,7 @@ public class Empleado extends Persona
                 centrarTexto(getTelefono(), 12),
                 centrarTexto(fechaIngresoFormateada, 15),
                 centrarTexto(fechaEgresoFormateada, 15),
-                centrarTexto(String.format("%.2f", getSalario()), 10)
+                centrarTexto(getSalario() == 0 ? "SIN PAGA" : String.format("$%.2f", getSalario()), 16)
         );
     }
 
@@ -602,21 +787,21 @@ public class Empleado extends Persona
     // Método para mostrar el encabezado de la tabla de empleados
     public static void mostrarEncabezadoEmpleados()
     {
-        System.out.println("┌──────────┬────────┬───────────────────────────┬────────────┬────────────────────┬─────────────────┬─────────────────┬─────────────────┬──────────────┬─────────────────┬─────────────────┬────────────┐");
-        System.out.println("│   DNI    │ LEGAJO │       NOMBRE/APELLIDO     │    SEXO    │     DIRECCION      │    LOCALIDAD    │    PROVINCIA    │   NACIMIENTO    │   TELEFONO   │     INGRESO     │     EGRESO      │   SALARIO  │");
-        System.out.println("├──────────┼────────┼───────────────────────────┼────────────┼────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────┼─────────────────┼─────────────────┼────────────┤");
+        System.out.println("┌──────────┬────────┬───────────────────────────┬────────────┬────────────────────┬─────────────────┬─────────────────┬─────────────────┬──────────────┬─────────────────┬─────────────────┬──────────────────┐");
+        System.out.println("│   DNI    │ LEGAJO │       NOMBRE/APELLIDO     │    SEXO    │     DIRECCION      │    LOCALIDAD    │    PROVINCIA    │   NACIMIENTO    │   TELEFONO   │     INGRESO     │     EGRESO      │     SALARIO      │");
+        System.out.println("├──────────┼────────┼───────────────────────────┼────────────┼────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────┼─────────────────┼─────────────────┼──────────────────┤");
     }
 
     // Método para mostrar línea separadora entre empleados
     public static void mostrarLineaSeparadoraEmpleados()
     {
-        System.out.println("├──────────┼────────┼───────────────────────────┼────────────┼────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────┼─────────────────┼─────────────────┼────────────┤");
+        System.out.println("├──────────┼────────┼───────────────────────────┼────────────┼────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────┼─────────────────┼─────────────────┼──────────────────┤");
     }
 
     // Método para mostrar el pie de la tabla
     public static void mostrarPieEmpleados()
     {
-        System.out.println("└──────────┴────────┴───────────────────────────┴────────────┴────────────────────┴─────────────────┴─────────────────┴─────────────────┴──────────────┴─────────────────┴─────────────────┴────────────┘");
+        System.out.println("└──────────┴────────┴───────────────────────────┴────────────┴────────────────────┴─────────────────┴─────────────────┴─────────────────┴──────────────┴─────────────────┴─────────────────┴──────────────────┘");
     }
 
     // Método para mostrar un empleado individual en formato tabla

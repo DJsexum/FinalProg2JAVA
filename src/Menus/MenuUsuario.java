@@ -41,7 +41,6 @@ public class MenuUsuario
             switch (opcion)
             {
                 case 1:
-                    // Alta de usuario
                     new Usuario().altaPersona();
                 break;
 
@@ -66,18 +65,7 @@ public class MenuUsuario
                 break;
 
                 case 4:
-                    // Modificar usuario
-                    System.out.print("INGRESE NOMBRE DE USUARIO A MODIFICAR: ");
-                    String nombreMod = scanner.nextLine();
-                    Usuario usuarioMod = Usuario.buscarUsuario(nombreMod);
-                    if (usuarioMod != null)
-                    {
-                        usuarioMod.modificarPersona();
-                    }
-                        else
-                        {
-                            System.out.println("NO SE ENCONTRO USUARIO CON ESE NOMBRE.");
-                        }
+                    new Usuario().modificarPersona();
                 break;
 
                 case 5:

@@ -1,139 +1,160 @@
 package Clases;
 
-import Enumerados.*;
 import Archivos.ArchivosUsuario;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 /*
-Hereda de Persona y agrega los atributos usuario, clave y propietario. 
+Clase Usuario simple con solo nombre de usuario y contraseña.
 */
-public class Usuario extends Persona
+public class Usuario
 {
-    // Atributos propios de Usuario
-    private String usuario; // Nombre de usuario para iniciar sesion
-    private String clave; // Clave de acceso del usuario
-    private Persona propietario; // Persona asociada a este usuario (puede ser null)
+    // Atributos
+    private String usuario; // Nombre de usuario (solo letras)
+    private String clave; // Clave de acceso (cualquier caracter, case-sensitive)
 
-    // Scanner unico y estatico para toda la clase para evitar fugas de recursos
+    // Scanner unico y estatico para toda la clase
     private static final Scanner scanner = new Scanner(System.in);
 
     /*
-    Constructor vacio: necesario para poder crear instancias sin argumentos.
+    Constructor vacio
     */
     public Usuario() 
     {
-        super(0, false, "", "", "", "", "", null, null, null);
         this.usuario = "";
         this.clave = "";
-        this.propietario = null;
     }
 
     /*
-    Constructor completo: para crear un usuario con todos los datos de Persona y los propios.
-    */
-    public Usuario(int dni, boolean activo, String nombres, String apellidos, String telefono, String direccion, String localidad, Provincia provincia, Sexo sexo, LocalDate fechaNacimiento, String usuario, String clave, Persona propietario)
-    {
-        super(dni, activo, nombres, apellidos, telefono, direccion, localidad, provincia, sexo, fechaNacimiento);
-        this.usuario = usuario;
-        this.clave = clave;
-        this.propietario = propietario;
-    }
-
-    /*
-    Constructor simple: para persistencia, solo usuario y clave.
-    El resto de los datos de Persona se inicializan vacios o en null.
+    Constructor con parametros
     */
     public Usuario(String usuario, String clave)
     {
-        super(0, false, "", "", "", "", "", null, null, null);
         this.usuario = usuario;
         this.clave = clave;
-        this.propietario = null;
     }
 
     // Getters y setters
-
-    /* Devuelve el nombre de usuario. */
     public String getUsuario() {
         return usuario;
     }
 
-    /* Asigna el nombre de usuario. */
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
 
-    /* Devuelve la clave del usuario. */
     public String getClave() {
         return clave;
     }
 
-    /* Asigna la clave del usuario. */
     public void setClave(String clave) {
         this.clave = clave;
     }
 
-    /* Devuelve la persona propietaria asociada. */
-    public Persona getPropietario() {
-        return propietario;
-    }
-
-    /* Asigna la persona propietaria asociada. */
-    public void setPropietario(Persona propietario) {
-        this.propietario = propietario;
+    /*
+    Valida que el nombre de usuario solo contenga letras y espacios (aca hice trampita jiji)
+    */
+    private static boolean esNombreValido(String nombre)
+    {
+        if (nombre == null || nombre.trim().isEmpty()) 
+        {
+            return false;
+        }
+        
+        // Solo permite letras, espacios y acentos
+        return nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$");
     }
 
     /*
-    Alta de usuario: pide datos por consola y guarda el usuario en el archivo.
+    Alta de usuario: pide datos por consola y guarda el usuario
     */
-    public Usuario altaUsuario()
+    public Usuario altaPersona()
     {
-        System.out.print("INGRESE NOMBRE DE USUARIO: ");
-        this.usuario = scanner.nextLine();
+        String nombreUsuario;
+        
+        // Validar nombre de usuario
+        do {
+            System.out.print("INGRESE NOMBRE DE USUARIO (SOLO LETRAS): ");
+            nombreUsuario = scanner.nextLine().trim();
+            
+            if (!esNombreValido(nombreUsuario)) {
+                System.out.println("ERROR: EL NOMBRE SOLO PUEDE CONTENER LETRAS Y ESPACIOS.");
+                continue;
+            }
+            
+            // Verificar que no exista
+            if (buscarUsuario(nombreUsuario) != null) {
+                System.out.println("YA EXISTE UN USUARIO CON ESE NOMBRE.");
+                continue;
+            }
+            
+            break;
+            
+        } while (true);
+        
+        this.usuario = nombreUsuario;
+        
+        // Solicitar clave
         System.out.print("INGRESE CLAVE: ");
         this.clave = scanner.nextLine();
-        // Si quieres pedir propietario, puedes agregarlo aqui
+        
+        if (this.clave.trim().isEmpty()) {
+            System.out.println("ERROR: LA CLAVE NO PUEDE ESTAR VACIA.");
+            return null;
+        }
 
-        ArchivosUsuario.guardarUsuario(this); // Guarda el usuario en el archivo
-        System.out.println("USUARIO DADO DE ALTA CORRECTAMENTE.");
+        ArchivosUsuario.guardarUsuario(this);
+        System.out.println("USUARIO CREADO CORRECTAMENTE.");
         return this;
     }
 
     /*
-    Baja de usuario: elimina el usuario del archivo por su nombre de usuario.
+    Baja de usuario
     */
-    public boolean bajaUsuario()
+    public void bajaPersona(Usuario usuario)
     {
-        boolean eliminado = ArchivosUsuario.eliminarUsuario(this.usuario);
+        boolean eliminado = ArchivosUsuario.eliminarUsuario(usuario.getUsuario());
         if (eliminado)
             System.out.println("USUARIO ELIMINADO CORRECTAMENTE.");
-            else
-                System.out.println("NO SE ENCONTRO EL USUARIO PARA ELIMINAR.");
-            return eliminado;
+        else
+            System.out.println("NO SE ENCONTRO EL USUARIO PARA ELIMINAR.");
     }
 
     /*
-    Modificar usuario: permite cambiar la clave y guarda el cambio en el archivo.
+    Modificar usuario
     */
-    public boolean modificarUsuario()
+    public void modificarPersona()
     {
-        System.out.print("NUEVA CLAVE: ");
-        this.clave = scanner.nextLine();
-        // Puedes agregar mas campos a modificar si lo deseas
-
-        boolean modificado = ArchivosUsuario.modificarUsuario(this);
-        if (modificado)
-            System.out.println("USUARIO MODIFICADO CORRECTAMENTE.");
+        System.out.print("INGRESE NOMBRE DE USUARIO A MODIFICAR: ");
+        String nombreMod = scanner.nextLine();
+        Usuario usuarioMod = buscarUsuario(nombreMod);
+        
+        if (usuarioMod != null)
+        {
+            System.out.print("NUEVA CLAVE: ");
+            String nuevaClave = scanner.nextLine();
+            
+            if (nuevaClave.trim().isEmpty()) {
+                System.out.println("ERROR: LA CLAVE NO PUEDE ESTAR VACIA.");
+                return;
+            }
+            
+            usuarioMod.setClave(nuevaClave);
+            
+            boolean modificado = ArchivosUsuario.modificarUsuario(usuarioMod);
+            if (modificado)
+                System.out.println("USUARIO MODIFICADO CORRECTAMENTE.");
             else
                 System.out.println("NO SE PUDO MODIFICAR EL USUARIO.");
-            return modificado;
+        }
+        else
+        {
+            System.out.println("NO SE ENCONTRO USUARIO CON ESE NOMBRE.");
+        }
     }
 
     /*
-    Buscar usuario por nombre de usuario (estatico).
-    Solo retorna el usuario, no imprime mensajes.
+    Buscar usuario por nombre
     */
     public static Usuario buscarUsuario(String usuario)
     {
@@ -141,95 +162,89 @@ public class Usuario extends Persona
     }
 
     /*
-    Listar todos los usuarios registrados (estatico).
+    Buscar usuario con mensaje
     */
-    public static ArrayList<Usuario> listarUsuarios()
+    public Usuario buscaPersona(String nombreUsuario)
+    {
+        Usuario encontrado = buscarUsuario(nombreUsuario);
+        if (encontrado != null)
+        {
+            encontrado.mostrarDatos();
+        }
+        else
+        {
+            System.out.println("NO SE ENCONTRO USUARIO CON ESE NOMBRE.");
+        }
+        return encontrado;
+    }
+
+    /*
+    Listar usuarios
+    */
+    public void listarPersona()
     {
         ArrayList<Usuario> lista = ArchivosUsuario.leerUsuarios();
         if (lista.isEmpty())
+        {
             System.out.println("NO HAY USUARIOS REGISTRADOS.");
-                else
-                    for (Usuario u : lista)
-                        System.out.println(u);
-                return lista;
-    }
-
-    @Override
-    public Persona buscaPersona(int dni)
-    {
-        System.out.println("BUSCAR USUARIO POR DNI NO IMPLEMENTADO.");
-        return null;
+        }
+        else
+        {
+            System.out.println("\n┌──────────────────────────────────────────────────────────────┐");
+            System.out.println("│                       LISTA DE USUARIOS                      │");
+            System.out.println("├─────────────────────────┬────────────────────────────────────┤");
+            System.out.println("│       USUARIO           │              CLAVE                 │");
+            System.out.println("├─────────────────────────┼────────────────────────────────────┤");
+            
+            for (Usuario u : lista)
+            {
+                String claveOculta = "*".repeat(u.getClave().length());
+                System.out.printf("│ %-23s │ %-34s │\n", u.getUsuario(), claveOculta);
+            }
+            
+            System.out.println("└─────────────────────────┴────────────────────────────────────┘");
+        }
     }
 
     /*
-    Muestra los datos del usuario.
+    Verificar si hay usuarios registrados
     */
-    @Override
-    public void datosPersona()
+    public static boolean hayUsuarios()
     {
-        System.out.println(this);
+        ArrayList<Usuario> usuarios = ArchivosUsuario.leerUsuarios();
+        return !usuarios.isEmpty();
     }
 
     /*
-    Lista todos los usuarios.
+    Verificar credenciales de usuario
     */
-    @Override
-    public void listarPersona()
+    public static boolean verificarCredenciales(String nombreUsuario, String clave)
     {
-        listarUsuarios();
+        Usuario usuario = buscarUsuario(nombreUsuario);
+        if (usuario != null)
+        {
+            // Comparacion case-sensitive exacta
+            return usuario.getClave().equals(clave);
+        }
+        return false;
     }
 
     /*
-    Alta de usuario (llama a altaUsuario).
-    */
-    @Override
-    public Persona altaPersona()
-    {
-        return altaUsuario();
-    }
-
-    /*
-    Baja de usuario (llama a bajaUsuario).
-    */
-    @Override
-    public void bajaPersona(Persona persona)
-    {
-        if (persona instanceof Usuario)
-            ((Usuario) persona).bajaUsuario();
-    }
-
-    /*
-    Modificar usuario (llama a modificarUsuario).
-    */
-    @Override
-    public void modificarPersona()
-    {
-        modificarUsuario();
-    }
-
-    /*
-    Devuelve una representacion en texto del usuario.
-    */
-    @Override
-    public String toString()
-    {
-        return "USUARIO: " + usuario +
-               "\nNOMBRE: " + getNombres() +
-               "\nAPELLIDO: " + getApellidos() +
-               "\nDNI: " + getDni() +
-               "\nTELEFONO: " + getTelefono() +
-               "\nDIRECCION: " + getDireccion() +
-               "\nLOCALIDAD: " + getLocalidad() +
-               "\nPROVINCIA: " + getProvincia() +
-               "\nSEXO: " + getSexo() +
-               "\nFECHA NACIMIENTO: " + getFechaNacimiento();
-    }
-
-    /*
-    Muestra los datos completos del usuario (para el menu).
+    Mostrar datos del usuario
     */
     public void mostrarDatos()
     {
-        System.out.println(this);
+        System.out.println("\n┌──────────────────────────────────────────────────────────────┐");
+        System.out.println("│                     DATOS DEL USUARIO                        │");
+        System.out.println("├──────────────────────────────────────────────────────────────┤");
+        System.out.printf("│ USUARIO: %-47s │\n", this.usuario);
+        System.out.printf("│ CLAVE: %-49s │\n", "*".repeat(this.clave.length()));
+        System.out.println("└──────────────────────────────────────────────────────────────┘");
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Usuario: " + usuario + " | Clave: " + "*".repeat(clave.length());
     }
 }

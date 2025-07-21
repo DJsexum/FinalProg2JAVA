@@ -98,8 +98,18 @@ public class MenuEmpleado
     // Opción 5: Baja de empleado
     private static void bajaEmpleado()
     {
+        System.out.print("INGRESE LEGAJO DEL EMPLEADO A DAR DE BAJA: ");
+        int legajo = leerEntero();
         Empleado empleado = new Empleado();
-        empleado.bajaPersona();
+        Empleado encontrado = Archivos.ArchivosEmpleado.buscarPorLegajo(legajo);
+        if (encontrado != null)
+        {
+            empleado.bajaPersona(encontrado);
+        }
+        else
+        {
+            System.out.println("NO SE ENCONTRO EMPLEADO CON ESE LEGAJO.");
+        }
     }
 
     // Método auxiliar para leer enteros de forma segura

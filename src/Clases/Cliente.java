@@ -33,6 +33,59 @@ public class Cliente extends Persona
         return this.codigo;
     }
 
+    // Método para verificar si un DNI ya existe en el sistema (reutiliza métodos existentes)
+    private boolean dniYaExiste(int dni)
+    {
+        // Usar métodos existentes de los archivos
+        return Archivos.ArchivosEmpleado.buscarPorDni(dni) != null || 
+               Archivos.ArchivosCliente.buscarPorDni(dni) != null;
+    }
+
+    // Sobrescribir setDniInteractivo para validar DNI duplicados
+    @Override
+    public void setDniInteractivo()
+    {
+        int dni = -1;
+        while (dni <= 0)
+        {
+            try 
+            {
+                System.out.print("DNI: ");
+                String input = scanner.nextLine();
+                dni = Integer.parseInt(input);
+                
+                if (dni <= 0)
+                {
+                    throw new Principal.Excepciones.DatoInvalidoException("EL DNI DEBE SER UN NUMERO VALIDO");
+                }
+                
+                // Verificar si el DNI ya existe (solo si es diferente del DNI actual)
+                if (dni != this.getDni() && dniYaExiste(dni))
+                {
+                    throw new Principal.Excepciones.DniDuplicadoException("DNI YA INGRESADO");
+                }
+                
+                break;
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL DNI");
+                dni = -1;
+            }
+            catch (Principal.Excepciones.DatoInvalidoException e)
+            {
+                System.out.println("ERROR: " + e.getMessage().toUpperCase());
+                dni = -1;
+            }
+            catch (Principal.Excepciones.DniDuplicadoException e)
+            {
+                System.out.println("ERROR: " + e.getMessage().toUpperCase());
+                dni = -1;
+            }
+        }
+        this.setDni(dni);
+    }
+
     // Métodos de cuenta corriente
     public void verCtaCte()
     {

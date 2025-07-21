@@ -37,7 +37,6 @@ public class MenuProveedor
             switch (opcion)
             {
                 case 1:
-                    // Alta de proveedor
                     new Proveedor().altaPersona();
                 break;
 
@@ -54,7 +53,6 @@ public class MenuProveedor
                 break;
 
                 case 4:
-                    // Modificar proveedor
                     new Proveedor().modificarPersona();
                 break;
 

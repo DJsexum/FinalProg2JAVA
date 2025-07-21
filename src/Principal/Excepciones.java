@@ -50,6 +50,38 @@ public class Excepciones
         }
     }
 
+    public static class SalarioInvalidoException extends RuntimeException
+    {
+        public SalarioInvalidoException(String mensaje)
+        {
+            super(mensaje);
+        }
+    }
+
+    public static class LegajoInvalidoException extends RuntimeException
+    {
+        public LegajoInvalidoException(String mensaje)
+        {
+            super(mensaje);
+        }
+    }
+
+    public static class LegajoDuplicadoException extends RuntimeException
+    {
+        public LegajoDuplicadoException(String mensaje)
+        {
+            super(mensaje);
+        }
+    }
+
+    public static class DniDuplicadoException extends RuntimeException
+    {
+        public DniDuplicadoException(String mensaje)
+        {
+            super(mensaje);
+        }
+    }
+
     public static class NumeroInvalidoException extends RuntimeException
     {
         public NumeroInvalidoException(String mensaje)
@@ -141,7 +173,7 @@ public class Excepciones
         }
     }
 
-    public static void validarLocalidad(String localidad) throws LocalidadInvalidaException
+    public static void validarLocalidad(String localidad) throws LocalidadInvalidaException // (aca tambien hice trampita jiji)
     {
         if (localidad == null || localidad.trim().isEmpty())
         {

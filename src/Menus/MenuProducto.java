@@ -58,52 +58,53 @@ public class MenuProducto
                             System.out.println("YA EXISTE UN PRODUCTO CON ESE CODIGO.\n");
                             break;
                         }
-                    // Validar campos obligatorios y permite cancelar en cualquier momento
-                    String detalle = leerCampoObligatorio("DETALLE: ");
-                    String talle = leerCampoObligatorio("TALLE: ");
-                    Double precio = leerDoubleObligatorio("PRECIO: ");
-                    String marca = leerCampoObligatorio("MARCA: ");
-                    String material = leerCampoObligatorio("MATERIAL: ");
-                    Categoria categoria = Categoria.seleccionarCategoria();
-                    Integer stock = leerEnteroObligatorio("STOCK: ");
+                        // Validar campos obligatorios y permite cancelar en cualquier momento
+                        String detalle = leerCampoObligatorio("DETALLE: ");
+                        String talle = leerCampoObligatorio("TALLE: ");
+                        Double precio = leerDoubleObligatorio("PRECIO: ");
+                        String marca = leerCampoObligatorio("MARCA: ");
+                        String material = leerCampoObligatorio("MATERIAL: ");
+                        Categoria categoria = Categoria.seleccionarCategoria();
+                        Integer stock = leerEnteroObligatorio("STOCK: ");
 
-                    System.out.println("\nRESUMEN DEL PRODUCTO CREADO:");
-                    System.out.println("CODIGO: " + codigoAlta);
-                    System.out.println("DETALLE: " + detalle);
-                    System.out.println("TALLE: " + talle);
-                    System.out.println("PRECIO: " + precio);
-                    System.out.println("MARCA: " + marca);
-                    System.out.println("MATERIAL: " + material);
-                    System.out.println("CATEGORIA: " + categoria);
-                    System.out.println("STOCK: " + stock);
-                    System.out.print("\n¿CONFIRMA CREACION DEL PRODUCTO? (S/N): ");
-                    String confAlta = scanner.nextLine().toUpperCase();
-                    if (!confAlta.equals("S"))
-                    {
-                        System.out.println("\nOPERACION CANCELADA.\n");
-                        break;
-                    }
-                        try
+                        System.out.println("\nRESUMEN DEL PRODUCTO CREADO:");
+                        System.out.println("CODIGO: " + codigoAlta);
+                        System.out.println("DETALLE: " + detalle);
+                        System.out.println("TALLE: " + talle);
+                        System.out.println("PRECIO: " + precio);
+                        System.out.println("MARCA: " + marca);
+                        System.out.println("MATERIAL: " + material);
+                        System.out.println("CATEGORIA: " + categoria);
+                        System.out.println("STOCK: " + stock);
+                        System.out.print("\n¿CONFIRMA CREACION DEL PRODUCTO? (S/N): ");
+                        String confAlta = scanner.nextLine().toUpperCase();
+
+                        if (!confAlta.equals("S"))
                         {
-                            Producto nuevoProducto = new Producto
-                            (
-                                codigoAlta,
-                                detalle,
-                                talle,
-                                precio,
-                                marca,
-                                material,
-                                categoria,
-                                stock
-                            );
-                            // Guardar producto usando el metodo de la clase Producto
-                            ArchivosProducto.guardarProducto(nuevoProducto);
-                            System.out.println("PRODUCTO GUARDADO CORRECTAMENTE.\n");
+                            System.out.println("\nOPERACION CANCELADA.\n");
+                            break;
                         }
-                            catch (Exception e)
+                            try
                             {
-                                System.out.println("\nERROR AL GUARDAR EL PRODUCTO: " + e.getMessage().toUpperCase());
+                                Producto nuevoProducto = new Producto
+                                (
+                                    codigoAlta,
+                                    detalle,
+                                    talle,
+                                    precio,
+                                    marca,
+                                    material,
+                                    categoria,
+                                    stock
+                                );
+                                // Guardar producto usando el metodo de la clase Producto
+                                ArchivosProducto.guardarProducto(nuevoProducto);
+                                System.out.println("PRODUCTO GUARDADO CORRECTAMENTE.\n");
                             }
+                                catch (Exception e)
+                                {
+                                    System.out.println("\nERROR AL GUARDAR EL PRODUCTO: " + e.getMessage().toUpperCase());
+                                }
                 break;
                 }
 
