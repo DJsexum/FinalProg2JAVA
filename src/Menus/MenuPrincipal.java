@@ -13,7 +13,7 @@ public class MenuPrincipal
         // Verificar autenticación al inicio
         if (Usuario.hayUsuarios())
         {
-            // Si hay usuarios, solicitar autenticación
+            // Si hay usuarios, solicitar autenticacion
             if (!autenticarUsuario())
             {
                 System.out.println("ACCESO DENEGADO. CERRANDO PROGRAMA.");
@@ -31,7 +31,7 @@ public class MenuPrincipal
     }
 
     /*
-    Solicita credenciales de usuario al inicio del programa
+    Solicita credenciales de usuario al inicio del programa (me pase con esto, o no?)
     */
     private static boolean autenticarUsuario()
     {
@@ -50,11 +50,11 @@ public class MenuPrincipal
             System.out.println("AUTENTICACION EXITOSA. BIENVENIDO " + usuario.toUpperCase() + "!");
             return true;
         }
-        else
-        {
-            System.out.println("ERROR: CREDENCIALES INCORRECTAS.");
-            return false;
-        }
+            else
+            {
+                System.out.println("ERROR: CREDENCIALES INCORRECTAS.");
+                return false;
+            }
     }
 
     /*
