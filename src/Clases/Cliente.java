@@ -103,24 +103,45 @@ public class Cliente extends Persona
 
     public void depositarEnCtaCte(double monto, String descripcion)
     {
+        // Validar parámetros
+        if (monto <= 0)
+        {
+            System.out.println("EL MONTO DEBE SER MAYOR A CERO.");
+            return;
+        }
+        
+        if (descripcion == null || descripcion.trim().isEmpty())
+        {
+            System.out.println("LA DESCRIPCION NO PUEDE ESTAR VACIA.");
+            return;
+        }
+        
         // Primero se verifica si el cliente tiene una cuenta corriente asociada
         if (ctaCte != null)
         {
-            // Crea un nuevo movimiento de tipo HABER (deposito)
-            Movimiento movimiento = new Movimiento
-            (
-                1, // Codigo del movimiento
-                "HABER", // Tipo de movimiento: HABER indica ingreso (aca no lo entendi, pero me djieron que lo deje asi)
-                descripcion, // Detalle o descripción del deposito
-                0.0, // Monto debe
-                monto, // Monto haber (el valor depositado)
-                ctaCte.getSaldo() + monto, // Saldo resultante despues del deposito (resultante?? quien so)
-                LocalDate.now() // Fecha actual del movimiento
-            );
-            // Agrega el movimiento a la cuenta corriente del cliente
-            ctaCte.agregarMovimiento(movimiento);
-            // Muestra mensaje de confirmación del deposito
-            System.out.println(quitarAcentos("DEPOSITO REALIZADO: ").toUpperCase() + monto + " (" + quitarAcentos(descripcion).toUpperCase() + ")");
+            try
+            {
+                // Crea un nuevo movimiento de tipo HABER (deposito)
+                Movimiento movimiento = new Movimiento
+                (
+                    generarCodigoUnicoMovimiento(), // Código único del movimiento
+                    "HABER", // Tipo de movimiento: HABER indica ingreso
+                    descripcion.trim(), // Detalle o descripción del deposito
+                    0.0, // Monto debe
+                    monto, // Monto haber (el valor depositado)
+                    ctaCte.getSaldo() + monto, // Saldo resultante despues del deposito
+                    LocalDate.now() // Fecha actual del movimiento
+                );
+                // Agrega el movimiento a la cuenta corriente del cliente
+                ctaCte.agregarMovimiento(movimiento);
+                // Muestra mensaje de confirmación del deposito
+                System.out.println(quitarAcentos("DEPOSITO REALIZADO: $").toUpperCase() + String.format("%.2f", monto) + " (" + quitarAcentos(descripcion).toUpperCase() + ")");
+                System.out.println(quitarAcentos("SALDO ACTUAL: $").toUpperCase() + String.format("%.2f", ctaCte.getSaldo()));
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR AL PROCESAR EL DEPOSITO: " + e.getMessage());
+            }
         }
             else
             {
@@ -131,32 +152,54 @@ public class Cliente extends Persona
 
     public void retirarDeCtaCte(double monto, String descripcion)
     {
+        // Validar parámetros
+        if (monto <= 0)
+        {
+            System.out.println("EL MONTO DEBE SER MAYOR A CERO.");
+            return;
+        }
+        
+        if (descripcion == null || descripcion.trim().isEmpty())
+        {
+            System.out.println("LA DESCRIPCION NO PUEDE ESTAR VACIA.");
+            return;
+        }
+        
         // Verifica si el cliente tiene una cuenta corriente asociada
         if (ctaCte != null)
         {
             // Verifica si el saldo es suficiente para realizar el retiro
             if (ctaCte.getSaldo() >= monto)
             {
-                // Crea un nuevo movimiento de tipo DEBE (retiro) (lo mismo de lo de arriba, no me explicaron como funciona, asi que dios sabra)
-                Movimiento movimiento = new Movimiento
-                (
-                    2, // Código del movimiento
-                    "DEBE", // Tipo de movimiento: DEBE indica egreso
-                    descripcion, // Detalle o descripción del retiro
-                    monto, // Monto debe (el valor retirado)
-                    0.0, // Monto haber (no se usa en un retiro)
-                    ctaCte.getSaldo() - monto, // Saldo resultante después del retiro
-                    LocalDate.now() // Fecha actual del movimiento
-                );
-                // Agrega el movimiento a la cuenta corriente del cliente
-                ctaCte.agregarMovimiento(movimiento);
-                // Muestra mensaje de confirmación del retiro
-                System.out.println(quitarAcentos("RETIRO REALIZADO: ").toUpperCase() + monto + " (" + quitarAcentos(descripcion).toUpperCase() + ")");
+                try
+                {
+                    // Crea un nuevo movimiento de tipo DEBE (retiro)
+                    Movimiento movimiento = new Movimiento
+                    (
+                        generarCodigoUnicoMovimiento(), // Código único del movimiento
+                        "DEBE", // Tipo de movimiento: DEBE indica egreso
+                        descripcion.trim(), // Detalle o descripción del retiro
+                        monto, // Monto debe (el valor retirado)
+                        0.0, // Monto haber (no se usa en un retiro)
+                        ctaCte.getSaldo() - monto, // Saldo resultante después del retiro
+                        LocalDate.now() // Fecha actual del movimiento
+                    );
+                    // Agrega el movimiento a la cuenta corriente del cliente
+                    ctaCte.agregarMovimiento(movimiento);
+                    // Muestra mensaje de confirmación del retiro
+                    System.out.println(quitarAcentos("RETIRO REALIZADO: $").toUpperCase() + String.format("%.2f", monto) + " (" + quitarAcentos(descripcion).toUpperCase() + ")");
+                    System.out.println(quitarAcentos("SALDO ACTUAL: $").toUpperCase() + String.format("%.2f", ctaCte.getSaldo()));
+                }
+                catch (Exception e)
+                {
+                    System.out.println("ERROR AL PROCESAR EL RETIRO: " + e.getMessage());
+                }
             }
                 else
                 {
                     // Si el saldo es insuficiente, muestra mensajito de advertencia
                     System.out.println(quitarAcentos("SALDO INSUFICIENTE PARA REALIZAR EL RETIRO.").toUpperCase());
+                    System.out.println(quitarAcentos("SALDO DISPONIBLE: $").toUpperCase() + String.format("%.2f", ctaCte.getSaldo()));
                 }
         }
             else
@@ -823,5 +866,24 @@ public class Cliente extends Persona
                 }
                 mostrarPieClientes();
             }
+    }
+
+    // Método auxiliar para generar código único de movimiento
+    private int generarCodigoUnicoMovimiento()
+    {
+        if (ctaCte == null || ctaCte.getMovimientos().isEmpty())
+        {
+            return 1;
+        }
+        
+        int maxCodigo = 0;
+        for (Movimiento mov : ctaCte.getMovimientos())
+        {
+            if (mov.getCodigo() > maxCodigo)
+            {
+                maxCodigo = mov.getCodigo();
+            }
+        }
+        return maxCodigo + 1;
     }
 }

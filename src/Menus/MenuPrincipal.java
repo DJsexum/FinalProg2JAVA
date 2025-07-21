@@ -78,26 +78,26 @@ public class MenuPrincipal
             // Verificar credenciales completas
             if (Usuario.verificarCredenciales(usuario, clave))
             {
-                System.out.println("AUTENTICACION EXITOSA. BIENVENIDO " + usuario.toUpperCase() + "!");
+                System.out.println("BIENVENIDO " + usuario.toUpperCase() + "!");
                 return true;
             }
-            else
-            {
-                // Si llegamos aquí, el usuario existe pero la clave es incorrecta
-                System.out.println("ERROR: LA CLAVE ES INCORRECTA.");
-                System.out.print("¿DESEA INTENTAR DE NUEVO? (S/N): ");
-                String respuesta = scanner.nextLine().toUpperCase();
-                if (!respuesta.equals("S"))
+                else
                 {
-                    System.out.println("SALIENDO DEL PROGRAMA...");
-                    return false;
+                    // Si llegamos aca, el usuario existe pero la clave es incorrecta
+                    System.out.println("ERROR: LA CLAVE ES INCORRECTA.");
+                    System.out.print("¿DESEA INTENTAR DE NUEVO? (S/N): ");
+                    String respuesta = scanner.nextLine().toUpperCase();
+                    if (!respuesta.equals("S"))
+                    {
+                        System.out.println("SALIENDO DEL PROGRAMA...");
+                        return false;
+                    }
                 }
-            }
         }
     }
 
     /*
-    Muestra el menú principal una vez autenticado
+    Muestra el menú principal una vez iniciada la sesion
     */
     private static void mostrarMenuPrincipal()
     {
@@ -105,7 +105,7 @@ public class MenuPrincipal
 
         do
         {
-            // DISEÑO PROFESIONAL DEL MENU PRINCIPAL
+            // DISEÑO DEL MENU PRINCIPAL
             System.out.println("\n┌───────────────────────────────────────────────┐");
             System.out.println("│                 MENU PRINCIPAL                │");
             System.out.println("├───────────────────────────────────────────────┤");

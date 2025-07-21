@@ -1,7 +1,7 @@
 package Menus;
 
 import Clases.*;
-import Archivos.ArchivosVenta;
+import Archivos.*;
 import Enumerados.FormaPago;
 import Principal.Excepciones.ProductoArchivoException;
 import java.time.LocalDate;
@@ -123,43 +123,57 @@ public class MenuVenta
     {
         try
         {
-            System.out.println("=== ALTA DE VENTA ===");
-            int codigo = leerEntero("INGRESE CODIGO DE VENTA (0 para cancelar): ");
-            if (codigo == 0) return;
-
-            if (ArchivosVenta.existeCodigoVenta(codigo))
-            {
-                System.out.println("YA EXISTE UNA VENTA CON ESE CODIGO.");
-                return;
-            }
-
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                                 NUEVA VENTA                                    ║");
+            System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+            
+            // Generar código de venta automáticamente
+            int codigo = generarCodigoVenta();
             LocalDate fecha = LocalDate.now();
+            
+            System.out.println();
+            System.out.printf("CODIGO DE VENTA GENERADO: %d%n", codigo);
+            System.out.printf("FECHA: %s%n", fecha);
 
-            int codCliente = leerEntero("INGRESE CODIGO DE CLIENTE (0 para cancelar): ");
-            if (codCliente == 0) return;
-            Cliente cliente = Cliente.buscarClientePorCodigo(codCliente);
-            if (cliente == null)
+            // PASO 1: Mostrar productos disponibles primero
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                           PRODUCTOS DISPONIBLES                                ║");
+            System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+            
+            if (!mostrarProductosDisponiblesConStock())
             {
-                System.out.println("CLIENTE NO ENCONTRADO.");
-                return;
+                return; // No hay productos disponibles
             }
-            System.out.println("CLIENTE: " + cliente);
 
+            // PASO 2: Seleccionar productos y cantidades
             Producto[] productos = new Producto[10];
             int[] cantidades = new int[10];
             int productosAgregados = 0;
             double total = 0;
 
-            // Permite agregar hasta 10 productos, sin repetir y con cantidad válida
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                           SELECCIONAR PRODUCTOS                                ║");
+            System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+
+            // Permite agregar hasta 10 productos, sin repetir y con validación de stock
             while (productosAgregados < 10)
             {
-                System.out.print("AGREGAR PRODUCTO? (S/N, 0 para cancelar): ");
-                String resp = scanner.nextLine().toUpperCase();
-                if (resp.equals("0")) return;
-                if (!resp.equals("S")) break;
-
-                int codProd = leerEntero("INGRESE CODIGO DE PRODUCTO: ");
+                if (productosAgregados > 0)
+                {
+                    System.out.println();
+                    System.out.print("¿AGREGAR MÁS PRODUCTOS? (S/N, 0 para cancelar): ");
+                    String resp = scanner.nextLine().toUpperCase();
+                    if (resp.equals("0")) return;
+                    if (!resp.equals("S")) break;
+                }
+                
+                int codProd = leerEntero("INGRESE CODIGO DE PRODUCTO (0 para cancelar): ");
                 if (codProd == 0) return;
+                
+                // Verificar si ya fue agregado
                 boolean repetido = false;
                 for (int i = 0; i < productosAgregados; i++)
                 {
@@ -171,39 +185,192 @@ public class MenuVenta
                 }
                 if (repetido)
                 {
-                    System.out.println("YA AGREGASTE ESE PRODUCTO.");
+                    System.out.println();
+                    System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                    System.out.println("║                        YA AGREGASTE ESE PRODUCTO                               ║");
+                    System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
                     continue;
                 }
+                
+                // Buscar el producto
                 Producto prod = Producto.buscarProducto(codProd);
                 if (prod == null)
                 {
-                    System.out.println("PRODUCTO NO ENCONTRADO.");
+                    System.out.println();
+                    System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                    System.out.println("║                          PRODUCTO NO ENCONTRADO                                ║");
+                    System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
                     continue;
                 }
-                System.out.println("PRODUCTO: " + prod);
 
-                int cant = leerEntero("INGRESE CANTIDAD: ");
-                if (cant <= 0)
+                // Mostrar información del producto y stock disponible
+                System.out.println();
+                System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                          PRODUCTO SELECCIONADO                                 ║");
+                System.out.println("╠════════════════════════════════════════════════════════════════════════════════╣");
+                System.out.printf("║ CODIGO:   %-68d ║%n", prod.getCodigo());
+                System.out.printf("║ PRODUCTO: %-68s ║%n", prod.getDetalle());
+                System.out.printf("║ MARCA:    %-68s ║%n", prod.getMarca());
+                System.out.printf("║ PRECIO:   $%-67.2f ║%n", prod.getPrecio());
+                System.out.printf("║ STOCK:    %-68d ║%n", prod.getStock());
+                System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+
+                // Verificar stock disponible
+                if (prod.getStock() <= 0)
                 {
-                    System.out.println("LA CANTIDAD DEBE SER MAYOR A CERO.");
+                    System.out.println();
+                    System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                    System.out.println("║                      PRODUCTO SIN STOCK DISPONIBLE                             ║");
+                    System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
                     continue;
                 }
+
+                // Pedir cantidad con validación de stock
+                int cant = 0;
+                while (cant <= 0 || cant > prod.getStock())
+                {
+                    cant = leerEntero("INGRESE CANTIDAD (disponible: " + prod.getStock() + "): ");
+                    if (cant == 0) break; // Cancelar
+                    
+                    if (cant <= 0)
+                    {
+                        System.out.println("LA CANTIDAD DEBE SER MAYOR A CERO.");
+                        continue;
+                    }
+                    
+                    if (cant > prod.getStock())
+                    {
+                        System.out.println();
+                        System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                        System.out.println("║                          STOCK INSUFICIENTE                                    ║");
+                        System.out.printf("║ CANTIDAD SOLICITADA: %-52d ║%n", cant);
+                        System.out.printf("║ STOCK DISPONIBLE:    %-52d ║%n", prod.getStock());
+                        System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+                        continue;
+                    }
+                }
+                
+                if (cant == 0) continue; // Si canceló la cantidad, volver a seleccionar producto
+                
+                // Agregar producto al carrito temporal
                 productos[productosAgregados] = prod;
                 cantidades[productosAgregados] = cant;
-                total += prod.getPrecio() * cant;
+                double subtotal = prod.getPrecio() * cant;
+                total += subtotal;
                 productosAgregados++;
+                
+                // Mostrar confirmación de producto agregado
+                System.out.println();
+                System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                         PRODUCTO AGREGADO AL CARRITO                           ║");
+                System.out.println("╠════════════════════════════════════════════════════════════════════════════════╣");
+                System.out.printf("║ CANTIDAD:           %-58d ║%n", cant);
+                System.out.printf("║ PRECIO UNITARIO:    $%-57.2f ║%n", prod.getPrecio());
+                System.out.printf("║ SUBTOTAL:           $%-57.2f ║%n", subtotal);
+                System.out.printf("║ STOCK RESTANTE:     %-58d ║%n", prod.getStock() - cant);
+                System.out.printf("║ TOTAL ACUMULADO:    $%-57.2f ║%n", total);
+                System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+            }
+            
+            // Verificar que se haya agregado al menos un producto
+            if (productosAgregados == 0)
+            {
+                System.out.println();
+                System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                    NO SE AGREGARON PRODUCTOS A LA VENTA                        ║");
+                System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+                return;
             }
 
+            // PASO 2: Seleccionar cliente (después de los productos)
+            Cliente cliente = seleccionarTipoCliente();
+            if (cliente == null)
+            {
+                System.out.println("OPERACION CANCELADA.");
+                return;
+            }
+            
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                            CLIENTE SELECCIONADO                                ║");
+            System.out.println("╠════════════════════════════════════════════════════════════════════════════════╣");
+            System.out.printf("║ %-78s ║%n", cliente.getNombres() + " " + cliente.getApellidos());
+            System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+
+            // PASO 3: Seleccionar forma de pago
             FormaPago pago = FormaPago.escogerFormaPago();
 
-            Venta venta = new Venta(codigo, fecha, cliente, productos, cantidades, total, pago);
-            ArchivosVenta.guardarVenta(venta);
-            System.out.println("VENTA GUARDADA CORRECTAMENTE.");
-        }
+            // PASO 4: Mostrar resumen y confirmar venta
+            mostrarResumenVenta(codigo, fecha, cliente, productos, cantidades, productosAgregados, total, pago);
+            
+            System.out.print("¿CONFIRMAR VENTA? (S/N): ");
+            String confirmacion = scanner.nextLine().toUpperCase();
+            
+            if (!confirmacion.equals("S"))
+            {
+                System.out.println("VENTA CANCELADA.");
+                return;
+            }
+            
+            // PASO 5: Actualizar stock de productos y crear venta
+            for (int i = 0; i < productosAgregados; i++)
+            {
+                Producto prod = productos[i];
+                int cantVendida = cantidades[i];
+                prod.setStock(prod.getStock() - cantVendida);
+                
+                // Actualizar el producto en el archivo
+                try
+                {
+                    ArchivosProducto.modificarProducto(prod);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("ERROR AL ACTUALIZAR STOCK DEL PRODUCTO " + prod.getCodigo() + ": " + e.getMessage());
+                }
+            }
+
+            // Crear y guardar la venta
+            Venta nuevaVenta = new Venta(codigo, fecha, cliente, productos, cantidades, total, pago);
+            
+            try
+            {
+                ArchivosVenta.guardarVenta(nuevaVenta);
+                
+                System.out.println();
+                System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                          VENTA REALIZADA EXITOSAMENTE                          ║");
+                System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+                
+                // Mostrar stock actualizado
+                mostrarStockActualizado(productos, cantidades, productosAgregados);
+            }
             catch (Exception e)
             {
-                System.out.println("ERROR AL DAR DE ALTA LA VENTA: " + e.getMessage());
+                System.out.println("ERROR AL GUARDAR LA VENTA: " + e.getMessage());
+                
+                // Revertir el stock si falló la venta
+                for (int i = 0; i < productosAgregados; i++)
+                {
+                    Producto prod = productos[i];
+                    int cantVendida = cantidades[i];
+                    prod.setStock(prod.getStock() + cantVendida); // Revertir
+                    
+                    try
+                    {
+                        ArchivosProducto.modificarProducto(prod);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.out.println("ERROR AL REVERTIR STOCK: " + ex.getMessage());
+                    }
+                }
             }
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR AL DAR DE ALTA LA VENTA: " + e.getMessage());
+        }
     }
 
     // Lista todas las ventas guardadas en el archivo
@@ -275,15 +442,13 @@ public class MenuVenta
                 return;
             }
 
-            int codCliente = leerEntero("INGRESE NUEVO CODIGO DE CLIENTE (0 para cancelar): ");
-            if (codCliente == 0) return;
-            Cliente cliente = Cliente.buscarClientePorCodigo(codCliente);
+            Cliente cliente = seleccionarCliente();
             if (cliente == null)
             {
-                System.out.println("CLIENTE NO ENCONTRADO.");
+                System.out.println("OPERACION CANCELADA.");
                 return;
             }
-            System.out.println("CLIENTE: " + cliente);
+            System.out.println("CLIENTE SELECCIONADO: " + cliente.getNombres() + " " + cliente.getApellidos());
 
             Producto[] productos = new Producto[10];
             int[] cantidades = new int[10];
@@ -464,5 +629,443 @@ public class MenuVenta
             {
                 System.out.println("ERROR AL FILTRAR VENTAS POR FORMA DE PAGO: " + e.getMessage());
             }
+    }
+
+    // Método para seleccionar un cliente con interfaz visual organizada
+    private static Cliente seleccionarCliente()
+    {
+        try
+        {
+            while (true)
+            {
+                // Mostrar menú de selección
+                System.out.println();
+                System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                            SELECCIONAR CLIENTE                                 ║");
+                System.out.println("╠════════════════════════════════════════════════════════════════════════════════╣");
+                System.out.println("║ [1] VER TODOS LOS CLIENTES                                                     ║");
+                System.out.println("║ [2] BUSCAR POR NOMBRE                                                          ║");
+                System.out.println("║ [3] BUSCAR POR APELLIDO                                                        ║");
+                System.out.println("║ [4] BUSCAR POR DNI                                                             ║");
+                System.out.println("║ [5] BUSCAR POR TELEFONO                                                        ║");
+                System.out.println("║ [0] CANCELAR                                                                   ║");
+                System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+                
+                int opcion = leerEntero("SELECCIONE UNA OPCION: ");
+                
+                ArrayList<Cliente> clientesEncontrados = new ArrayList<>();
+                
+                switch (opcion)
+                {
+                    case 0:
+                        return null;
+                    case 1:
+                        clientesEncontrados = ArchivosCliente.leerClientes();
+                    break;
+
+                    case 2:
+                        System.out.print("INGRESE NOMBRE A BUSCAR: ");
+                        String nombre = scanner.nextLine().toUpperCase();
+                        if (nombre.trim().isEmpty()) continue;
+                        for (Cliente c : ArchivosCliente.leerClientes())
+                        {
+                            if (c.getNombres().toUpperCase().contains(nombre))
+                            {
+                                clientesEncontrados.add(c);
+                            }
+                        }
+                    break;
+
+                    case 3:
+                        System.out.print("INGRESE APELLIDO A BUSCAR: ");
+                        String apellido = scanner.nextLine().toUpperCase();
+                        if (apellido.trim().isEmpty()) continue;
+                        for (Cliente c : ArchivosCliente.leerClientes())
+                        {
+                            if (c.getApellidos().toUpperCase().contains(apellido))
+                            {
+                                clientesEncontrados.add(c);
+                            }
+                        }
+                    break;
+
+                    case 4:
+                        int dniBuscar = leerEntero("INGRESE DNI A BUSCAR (0 para volver): ");
+                        if (dniBuscar == 0) continue;
+                        Cliente clienteDni = ArchivosCliente.buscarPorDni(dniBuscar);
+                        if (clienteDni != null)
+                        {
+                            clientesEncontrados.add(clienteDni);
+                        }
+                    break;
+
+                    case 5:
+                        System.out.print("INGRESE TELEFONO A BUSCAR: ");
+                        String telefono = scanner.nextLine();
+                        if (telefono.trim().isEmpty()) continue;
+                        for (Cliente c : ArchivosCliente.leerClientes())
+                        {
+                            if (c.getTelefono().contains(telefono))
+                            {
+                                clientesEncontrados.add(c);
+                            }
+                        }
+                    break;
+
+                    default:
+                        System.out.println("OPCION INVALIDA.");
+                        continue;
+                }
+                
+                if (clientesEncontrados.isEmpty())
+                {
+                    System.out.println();
+                    System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                    System.out.println("║                          NO SE ENCONTRARON CLIENTES                            ║");
+                    System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+                    System.out.print("PRESIONE ENTER PARA CONTINUAR...");
+                    scanner.nextLine();
+                    continue;
+                }
+                
+                // Mostrar clientes encontrados en tabla organizada
+                Cliente clienteSeleccionado = mostrarYSeleccionarCliente(clientesEncontrados);
+                if (clienteSeleccionado != null)
+                {
+                    return clienteSeleccionado;
+                }
+                // Si no seleccionó ninguno, vuelve al menú
+            }
+        }
+            catch (Exception e)
+            {
+                System.out.println("ERROR AL SELECCIONAR CLIENTE: " + e.getMessage());
+                return null;
+            }
+    }
+    
+    // Método auxiliar para mostrar la tabla de clientes y permitir selección
+    private static Cliente mostrarYSeleccionarCliente(ArrayList<Cliente> clientes)
+    {
+        try
+        {
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                             CLIENTES ENCONTRADOS                               ║");
+            System.out.println("╠═══╦═════════╦══════════════════════════════════════════════════════════════════╣");
+            System.out.println("║ # ║   DNI   ║                    NOMBRE COMPLETO                               ║");
+            System.out.println("╠═══╬═════════╬══════════════════════════════════════════════════════════════════╣");
+            
+            for (int i = 0; i < clientes.size(); i++)
+            {
+                Cliente c = clientes.get(i);
+                String nombreCompleto = c.getNombres() + " " + c.getApellidos();
+                // Truncar si es muy largo para mantener formato
+                if (nombreCompleto.length() > 59)
+                {
+                    nombreCompleto = nombreCompleto.substring(0, 56) + "...";
+                }
+                System.out.printf("║%2d ║%8d ║ %-59s ║%n", 
+                    i + 1, c.getDni(), nombreCompleto);
+            }
+            
+            System.out.println("╚═══╩═════════╩══════════════════════════════════════════════════════════════════╝");
+            
+            // Mostrar información adicional en tabla separada
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                            INFORMACIÓN ADICIONAL                               ║");
+            System.out.println("╠═══╦══════════════╦═════════════════════════════════════════════════════════════╣");
+            System.out.println("║ # ║   TELEFONO   ║                    DIRECCION                                ║");
+            System.out.println("╠═══╬══════════════╬═════════════════════════════════════════════════════════════╣");
+            
+            for (int i = 0; i < clientes.size(); i++)
+            {
+                Cliente c = clientes.get(i);
+                String direccionCompleta = c.getDireccion() + ", " + c.getLocalidad() + ", " + c.getProvincia();
+                // Truncar si es muy largo
+                if (direccionCompleta.length() > 53)
+                {
+                    direccionCompleta = direccionCompleta.substring(0, 50) + "...";
+                }
+                System.out.printf("║%2d ║%-13s ║ %-53s ║%n", 
+                    i + 1, c.getTelefono(), direccionCompleta);
+            }
+            
+            System.out.println("╚═══╩══════════════╩═════════════════════════════════════════════════════════════╝");
+            
+            while (true)
+            {
+                int seleccion = leerEntero("SELECCIONE UN CLIENTE (1-" + clientes.size() + ") o 0 para volver: ");
+                
+                if (seleccion == 0)
+                {
+                    return null;
+                }
+                
+                if (seleccion >= 1 && seleccion <= clientes.size())
+                {
+                    Cliente clienteSeleccionado = clientes.get(seleccion - 1);
+                    
+                    // Mostrar confirmación
+                    System.out.println();
+                    System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                    System.out.println("║                           CLIENTE SELECCIONADO                                 ║");
+                    System.out.println("╠════════════════════════════════════════════════════════════════════════════════╣");
+                    System.out.printf("║ DNI:      %-68s ║%n", clienteSeleccionado.getDni());
+                    System.out.printf("║ NOMBRE:   %-68s ║%n", clienteSeleccionado.getNombres());
+                    System.out.printf("║ APELLIDO: %-68s ║%n", clienteSeleccionado.getApellidos());
+                    System.out.printf("║ TELEFONO: %-68s ║%n", clienteSeleccionado.getTelefono());
+                    System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+                    
+                    System.out.print("¿CONFIRMA LA SELECCION? (S/N): ");
+                    String confirmacion = scanner.nextLine().toUpperCase();
+                    
+                    if (confirmacion.equals("S"))
+                    {
+                        return clienteSeleccionado;
+                    }
+                        else
+                        {
+                            return null; // Vuelve al menú anterior
+                        }
+                }
+                    else
+                    {
+                        System.out.println("NUMERO INVALIDO. INTENTE NUEVAMENTE.");
+                    }
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR AL MOSTRAR CLIENTES: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Método para seleccionar tipo de cliente (nuevo o existente)
+    private static Cliente seleccionarTipoCliente()
+    {
+        try
+        {
+            while (true)
+            {
+                System.out.println();
+                System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                             SELECCIONAR CLIENTE                                ║");
+                System.out.println("╠════════════════════════════════════════════════════════════════════════════════╣");
+                System.out.println("║ [1] CLIENTE EXISTENTE                                                          ║");
+                System.out.println("║ [2] NUEVO CLIENTE                                                              ║");
+                System.out.println("║ [0] CANCELAR                                                                   ║");
+                System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+                
+                int opcion = leerEntero("SELECCIONE UNA OPCION: ");
+                
+                switch (opcion)
+                {
+                    case 0:
+                        return null;
+                    case 1:
+                        return seleccionarCliente();
+                    case 2:
+                        return crearNuevoCliente();
+                    default:
+                        System.out.println("OPCION INVALIDA.");
+                        continue;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR AL SELECCIONAR TIPO DE CLIENTE: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Método para crear un nuevo cliente
+    private static Cliente crearNuevoCliente()
+    {
+        try
+        {
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                               NUEVO CLIENTE                                    ║");
+            System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+            
+            Cliente nuevoCliente = new Cliente();
+            
+            // Usar los métodos interactivos de la clase Cliente
+            nuevoCliente.setDniInteractivo();
+            nuevoCliente.setNombresInteractivo();
+            nuevoCliente.setApellidosInteractivo();
+            nuevoCliente.setTelefonoInteractivo();
+            nuevoCliente.setDireccionInteractivo();
+            nuevoCliente.setLocalidadInteractivo();
+            nuevoCliente.setProvinciaInteractivo();
+            nuevoCliente.setSexoInteractivo();
+            nuevoCliente.setFechaNacimientoInteractivo();
+            nuevoCliente.setActivo(true);
+            
+            // Guardar el cliente
+            ArchivosCliente.guardarCliente(nuevoCliente);
+            
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                          CLIENTE CREADO EXITOSAMENTE                           ║");
+            System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+            
+            return nuevoCliente;
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR AL CREAR NUEVO CLIENTE: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Método para mostrar el resumen de la venta antes de confirmar
+    private static void mostrarResumenVenta(int codigo, LocalDate fecha, Cliente cliente, 
+                                          Producto[] productos, int[] cantidades, int productosAgregados, 
+                                          double total, FormaPago pago)
+    {
+        System.out.println();
+        System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                              RESUMEN DE VENTA                                  ║");
+        System.out.println("╠════════════════════════════════════════════════════════════════════════════════╣");
+        System.out.printf("║ CODIGO VENTA: %-63d ║%n", codigo);
+        System.out.printf("║ FECHA:        %-63s ║%n", fecha);
+        System.out.printf("║ CLIENTE:      %-63s ║%n", cliente.getNombres() + " " + cliente.getApellidos());
+        System.out.printf("║ FORMA PAGO:   %-63s ║%n", pago);
+        System.out.println("╠════════════════════════════════════════════════════════════════════════════════╣");
+        System.out.println("║                               PRODUCTOS                                        ║");
+        System.out.println("╠════════╦═══════════════════════════════════════════════════════════════════════╣");
+        System.out.println("║  CANT  ║                        PRODUCTO                                       ║");
+        System.out.println("╠════════╬═══════════════════════════════════════════════════════════════════════╣");
+        
+        for (int i = 0; i < productosAgregados; i++)
+        {
+            Producto p = productos[i];
+            int cant = cantidades[i];
+            String descripcion = p.getDetalle() + " - $" + p.getPrecio() + " c/u";
+            if (descripcion.length() > 67)
+            {
+                descripcion = descripcion.substring(0, 64) + "...";
+            }
+            System.out.printf("║%7d ║ %-67s ║%n", cant, descripcion);
+        }
+        
+        System.out.println("╠════════╩═══════════════════════════════════════════════════════════════════════╣");
+        System.out.printf("║ TOTAL:        $%-63.2f ║%n", total);
+        System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+    }
+
+    // Método para mostrar el stock actualizado después de la venta
+    private static void mostrarStockActualizado(Producto[] productos, int[] cantidades, int productosAgregados)
+    {
+        System.out.println();
+        System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                           STOCK ACTUALIZADO                                    ║");
+        System.out.println("╠════════╦═══════════════════════════════════════════════════════════════════════╣");
+        System.out.println("║ CODIGO ║                    PRODUCTO - STOCK RESTANTE                          ║");
+        System.out.println("╠════════╬═══════════════════════════════════════════════════════════════════════╣");
+        
+        for (int i = 0; i < productosAgregados; i++)
+        {
+            Producto p = productos[i];
+            int cantVendida = cantidades[i];
+            String info = p.getDetalle() + " - Stock: " + p.getStock() + " (vendidos: " + cantVendida + ")";
+            if (info.length() > 67)
+            {
+                info = info.substring(0, 64) + "...";
+            }
+            System.out.printf("║%7d ║ %-67s ║%n", p.getCodigo(), info);
+        }
+        
+        System.out.println("╚════════╩═══════════════════════════════════════════════════════════════════════╝");
+    }
+
+    // Método para generar código de venta automáticamente
+    private static int generarCodigoVenta()
+    {
+        try
+        {
+            ArrayList<Venta> ventas = ArchivosVenta.leerVentas();
+            int maxCodigo = 0;
+            
+            for (Venta v : ventas)
+            {
+                if (v.getCodigo() > maxCodigo)
+                {
+                    maxCodigo = v.getCodigo();
+                }
+            }
+            
+            return maxCodigo + 1;
+        }
+        catch (Exception e)
+        {
+            // Si hay error o no hay ventas, empezar desde 1001
+            return 1001;
+        }
+    }
+
+    // Método mejorado para mostrar productos disponibles con stock
+    private static boolean mostrarProductosDisponiblesConStock()
+    {
+        try
+        {
+            ArrayList<Producto> productos = ArchivosProducto.leerProductos();
+            
+            if (productos.isEmpty())
+            {
+                System.out.println();
+                System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+                System.out.println("║                          NO HAY PRODUCTOS DISPONIBLES                         ║");
+                System.out.println("╚════════════════════════════════════════════════════════════════════════════════╝");
+                return false;
+            }
+            
+            System.out.println();
+            System.out.println("╔════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                            PRODUCTOS DISPONIBLES                              ║");
+            System.out.println("╠════════╦═══════════════════════════════════════════╦════════╦═════════════════╣");
+            System.out.println("║ CODIGO ║                 PRODUCTO                  ║ STOCK  ║     PRECIO      ║");
+            System.out.println("╠════════╬═══════════════════════════════════════════╬════════╬═════════════════╣");
+            
+            boolean hayProductosDisponibles = false;
+            
+            for (Producto p : productos)
+            {
+                String producto = p.getDetalle() + " - " + p.getMarca();
+                if (producto.length() > 39)
+                {
+                    producto = producto.substring(0, 36) + "...";
+                }
+                
+                // Solo mostrar productos con stock > 0
+                if (p.getStock() > 0)
+                {
+                    System.out.printf("║%7d ║ %-39s ║%7d ║ $%13.2f ║%n", 
+                        p.getCodigo(), producto, p.getStock(), p.getPrecio());
+                    hayProductosDisponibles = true;
+                }
+            }
+            
+            if (!hayProductosDisponibles)
+            {
+                System.out.println("║        ║                                       ║        ║                 ║");
+                System.out.println("║        ║        NO HAY PRODUCTOS CON STOCK    ║        ║                 ║");
+                System.out.println("║        ║                                       ║        ║                 ║");
+            }
+            
+            System.out.println("╚════════╩═══════════════════════════════════════════╩════════╩═════════════════╝");
+            
+            return hayProductosDisponibles;
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR AL MOSTRAR PRODUCTOS: " + e.getMessage());
+            return false;
+        }
     }
 }
