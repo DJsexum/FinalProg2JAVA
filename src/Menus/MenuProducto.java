@@ -526,45 +526,8 @@ public class MenuProducto
 
                 case 6:
                 {
-                    // BUSQUEDA AVANZADA POR DETALLE, MARCA O CATEGORIA
-                    System.out.println("BUSQUEDA AVANZADA DE PRODUCTOS");
-                    System.out.print("INGRESE TEXTO A BUSCAR (DETALLE, MARCA O CATEGORIA, 0 PARA CANCELAR): ");
-                    String texto = scanner.nextLine().trim();
-                    if (texto.equals("0"))
-                    {
-                        System.out.println("OPERACION CANCELADA.");
-                        break;
-                    }
-                        try
-                        {
-                            ArrayList<Producto> lista = ArchivosProducto.leerProductos();
-                            ArrayList<Producto> encontrados = new ArrayList<>();
-                            
-                            // Buscar coincidencias en detalle, marca o categoria (ignorando mayusculas/minusculas)
-                            for (Producto p : lista)
-                            {
-                                if (p.getDetalle().toUpperCase().contains(texto.toUpperCase()) ||
-                                p.getMarca().toUpperCase().contains(texto.toUpperCase()) ||
-                                p.getCategoria().toString().toUpperCase().contains(texto.toUpperCase()))
-                                {
-                                    encontrados.add(p);
-                                }
-                            }
-                            
-                            if (encontrados.isEmpty())
-                            {
-                                System.out.println("NO SE ENCONTRARON PRODUCTOS CON ESE CRITERIO.");
-                            }
-                                else
-                                {
-                                    System.out.println("PRODUCTOS ENCONTRADOS:");
-                                    Producto.mostrarListaProductosEnTabla(encontrados);
-                                }
-                        }
-                            catch (Exception e)
-                            {
-                                System.out.println("ERROR EN LA BUSQUEDA: " + e.getMessage().toUpperCase());
-                            }
+                    // BUSQUEDA AVANZADA CON MENU DE SELECCION
+                    busquedaAvanzadaProductos();
                 break;
                 }
 
@@ -667,6 +630,199 @@ public class MenuProducto
                     {
                         System.out.println("INGRESE UN VALOR VALIDO.");
                     }
+        }
+    }
+
+    // Método para búsqueda avanzada con menú de selección
+    private static void busquedaAvanzadaProductos()
+    {
+        int opcionBusqueda;
+        
+        do 
+        {
+            System.out.println("\n┌─────────────────────────────────────────────┐");
+            System.out.println("│            BUSQUEDA AVANZADA                │");
+            System.out.println("├─────────────────────────────────────────────┤");
+            System.out.println("│        [1] BUSCAR POR DETALLE               │");
+            System.out.println("│        [2] BUSCAR POR MARCA                 │");
+            System.out.println("│        [3] BUSCAR POR CATEGORIA             │");
+            System.out.println("├─────────────────────────────────────────────┤");
+            System.out.println("│        [0] VOLVER AL MENU ANTERIOR          │");
+            System.out.println("└─────────────────────────────────────────────┘");
+            System.out.print("SELECCIONE UNA OPCION: ");
+            
+            opcionBusqueda = leerEntero();
+            
+            switch (opcionBusqueda)
+            {
+                case 1:
+                    buscarPorDetalle();
+                return; // Salir después de la búsqueda
+                    
+                case 2:
+                    buscarPorMarca();
+                return; // Salir después de la búsqueda
+                    
+                case 3:
+                    buscarPorCategoria();
+                return; // Salir después de la búsqueda
+                    
+                case 0:
+                    System.out.println("REGRESANDO AL MENU ANTERIOR...");
+                return;
+                    
+                default:
+                    System.out.println("OPCION INVALIDA. INTENTE DE NUEVO.");
+            }
+        } 
+        while (opcionBusqueda != 0);
+    }
+
+    // Buscar productos por detalle
+    private static void buscarPorDetalle()
+    {
+        System.out.print("\nINGRESE TEXTO A BUSCAR EN DETALLE (0 PARA CANCELAR): ");
+        String texto = scanner.nextLine().trim();
+        
+        if (texto.equals("0"))
+        {
+            System.out.println("BUSQUEDA CANCELADA.");
+            return;
+        }
+        
+        if (texto.isEmpty())
+        {
+            System.out.println("DEBE INGRESAR ALGUN TEXTO PARA BUSCAR.");
+            return;
+        }
+        // Leer la lista de productos desde el archivo y busca los que coincidan con el detalle
+        try
+        {
+            ArrayList<Producto> lista = ArchivosProducto.leerProductos();
+            ArrayList<Producto> encontrados = new ArrayList<>();
+            
+            for (Producto p : lista)
+            {
+                if (p.getDetalle().toUpperCase().contains(texto.toUpperCase()))
+                {
+                    encontrados.add(p);
+                }
+            }
+            
+            mostrarResultadosBusqueda(encontrados, "DETALLE", texto);
+        }
+            catch (Exception e)
+            {
+                System.out.println("ERROR EN LA BUSQUEDA: " + e.getMessage().toUpperCase());
+            }
+    }
+
+    // Buscar productos por marca
+    private static void buscarPorMarca()
+    {
+        System.out.print("\nINGRESE TEXTO A BUSCAR EN MARCA (0 PARA CANCELAR): ");
+        String texto = scanner.nextLine().trim();
+        
+        if (texto.equals("0"))
+        {
+            System.out.println("BUSQUEDA CANCELADA.");
+            return;
+        }
+        
+        if (texto.isEmpty())
+        {
+            System.out.println("DEBE INGRESAR ALGUN TEXTO PARA BUSCAR.");
+            return;
+        }
+        
+        try
+        {
+            ArrayList<Producto> lista = ArchivosProducto.leerProductos();
+            ArrayList<Producto> encontrados = new ArrayList<>();
+            
+            for (Producto p : lista)
+            {
+                if (p.getMarca().toUpperCase().contains(texto.toUpperCase()))
+                {
+                    encontrados.add(p);
+                }
+            }
+            
+            mostrarResultadosBusqueda(encontrados, "MARCA", texto);
+        }
+            catch (Exception e)
+            {
+                System.out.println("ERROR EN LA BUSQUEDA: " + e.getMessage().toUpperCase());
+            }
+    }
+
+    // Buscar productos por categoría con menú de selección
+    private static void buscarPorCategoria()
+    {
+        System.out.println("\n┌─────────────────────────────────────────────┐");
+        System.out.println("│           SELECCIONAR CATEGORIA             │");
+        System.out.println("├─────────────────────────────────────────────┤");
+        
+        // Mostrar todas las categorías
+        Categoria[] categorias = Categoria.values();
+        for (int i = 0; i < categorias.length; i++) 
+        {
+            System.out.printf("│                [%d] %-31s │%n", (i + 1), categorias[i].toString());
+        }
+        System.out.println("├─────────────────────────────────────────────┤");
+        System.out.println("│                [0] CANCELAR                 │");
+        System.out.println("└─────────────────────────────────────────────┘");
+        
+        System.out.print("SELECCIONE UNA OPCION: ");
+        int numeroCategoria = leerEntero();
+        
+        if (numeroCategoria == 0)
+        {
+            System.out.println("BUSQUEDA CANCELADA.");
+            return;
+        }
+        
+        if (numeroCategoria < 1 || numeroCategoria > categorias.length)
+        {
+            System.out.println("OPCION INVALIDA. INTENTE DE NUEVO.");
+            return;
+        }
+        
+        Categoria categoriaSeleccionada = categorias[numeroCategoria - 1];
+        
+        try
+        {
+            ArrayList<Producto> lista = ArchivosProducto.leerProductos();
+            ArrayList<Producto> encontrados = new ArrayList<>();
+            
+            for (Producto p : lista)
+            {
+                if (p.getCategoria() == categoriaSeleccionada)
+                {
+                    encontrados.add(p);
+                }
+            }
+            
+            mostrarResultadosBusqueda(encontrados, "CATEGORIA", categoriaSeleccionada.toString());
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR EN LA BUSQUEDA: " + e.getMessage().toUpperCase());
+        }
+    }
+
+    // Método auxiliar para mostrar resultados de búsqueda
+    private static void mostrarResultadosBusqueda(ArrayList<Producto> encontrados, String tipoBusqueda, String criterio)
+    {
+        if (encontrados.isEmpty())
+        {
+            System.out.println("\nNO SE ENCONTRARON PRODUCTOS POR " + tipoBusqueda + " CON CRITERIO: " + criterio.toUpperCase());
+        }
+        else
+        {
+            System.out.println("\n=== PRODUCTOS ENCONTRADOS POR " + tipoBusqueda + ": " + criterio.toUpperCase() + " ===");
+            System.out.println("SE ENCONTRARON " + encontrados.size() + " PRODUCTO(S):");
+            Producto.mostrarListaProductosEnTabla(encontrados);
         }
     }
 }
