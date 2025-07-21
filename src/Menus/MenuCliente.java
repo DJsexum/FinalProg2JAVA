@@ -17,13 +17,14 @@ public class MenuCliente
         do
         {
             System.out.println("\n┌───────────────────────────────────────────────┐");
-            System.out.println("│                MENU DE CLIENTES               │");
+            System.out.println("│                   CLIENTES                    │");
             System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│           [1] ALTA DE CLIENTE                 │");
             System.out.println("│           [2] LISTAR CLIENTES                 │");
             System.out.println("│           [3] BUSCAR CLIENTE POR DNI          │");
             System.out.println("│           [4] MODIFICAR CLIENTE               │");
             System.out.println("│           [5] BAJA DE CLIENTE                 │");
+            System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│           [0] VOLVER AL MENU PRINCIPAL        │");
             System.out.println("└───────────────────────────────────────────────┘");
             System.out.print("SELECCIONE UNA OPCION: ");
@@ -53,41 +54,19 @@ public class MenuCliente
                 break;
 
                 case 4:
-                    System.out.print("INGRESE DNI DEL CLIENTE A MODIFICAR: ");
-                    int dniMod = leerEntero(scanner);
-                    Cliente clienteMod = (Cliente) new Cliente().buscaPersona(dniMod);
-                    if (clienteMod != null)
-                    {
-                        clienteMod.modificarPersona();
-                    }
-                        else
-                        {
-                            System.out.println("NO SE ENCONTRO CLIENTE CON ESE DNI.");
-                        }
+                    new Cliente().modificarPersona();
                 break;
 
                 case 5:
-                    System.out.print("INGRESE DNI DEL CLIENTE A DAR DE BAJA: ");
-                    int dniBaja = leerEntero(scanner);
-                    Cliente clienteBaja = (Cliente) new Cliente().buscaPersona(dniBaja);
-                    if (clienteBaja != null)
-                    {
-                        clienteBaja.bajaPersona(clienteBaja);
-                    }
-                        else
-                        {
-                            System.out.println("NO SE ENCONTRO CLIENTE CON ESE DNI.");
-                        }
+                    new Cliente().bajaPersona();
                 break;
 
                 case 0:
-                    System.out.println("\n┌───────────────────────────────────────────────┐");
-                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
-                    System.out.println("└───────────────────────────────────────────────┘\n");
+                    // Aca nomas sale al menu principal :)
                 break;
 
                 default:
-                    System.out.println("OPCION INVALIDA. INTENTE DE NUEVO.");
+                    System.out.println("OPCION INVALIDA. INTENTE DE NUEVO: ");
             }
         }
         while (opcion != 0);

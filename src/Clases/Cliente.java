@@ -409,7 +409,7 @@ public class Cliente extends Persona
                                 modificacionExitosa = modificarProvincia(clienteMod);
                                 break;
                                 
-                            case 5: // MODIFICAR TODO
+                            case 5: // MODIFICA TODITO
                                 modificacionExitosa = modificarTodosLosCampos(clienteMod);
                                 break;
                                 
@@ -562,7 +562,77 @@ public class Cliente extends Persona
         }
     }
 
-    // Baja de cliente
+    // Baja de cliente con confirmación
+    public void bajaPersona()
+    {
+        try
+        {
+            // Primero mostrar todos los clientes disponibles
+            ArrayList<Cliente> lista = ArchivosCliente.leerClientes();
+            if (lista.isEmpty())
+            {
+                System.out.println(quitarAcentos("NO HAY CLIENTES REGISTRADOS.\n").toUpperCase());
+                return;
+            }
+            
+            System.out.println(quitarAcentos("CLIENTES DISPONIBLES:").toUpperCase());
+            mostrarEncabezadoClientes();
+            for (int i = 0; i < lista.size(); i++)
+            {
+                if (i > 0) {
+                    mostrarLineaSeparadora();
+                }
+                System.out.println(lista.get(i));
+            }
+            mostrarPieClientes();
+            
+            System.out.print(quitarAcentos("\nINGRESE DNI DEL CLIENTE A DAR DE BAJA (0 PARA CANCELAR): ").toUpperCase());
+            int dni = leerEntero();
+            if (dni == 0)
+            {
+                System.out.println(quitarAcentos("OPERACION CANCELADA.\n").toUpperCase());
+                return;
+            }
+            
+            Cliente clienteBaja = ArchivosCliente.buscarPorDni(dni);
+            if (clienteBaja != null)
+            {
+                System.out.println(quitarAcentos("\nCLIENTE SELECCIONADO PARA DAR DE BAJA:").toUpperCase());
+                mostrarEncabezadoClientes();
+                System.out.println(clienteBaja);
+                mostrarPieClientes();
+                
+                System.out.print(quitarAcentos("\n¿CONFIRMA ELIMINACION? (S/N): ").toUpperCase());
+                String confirmacion = scanner.nextLine().toUpperCase();
+                if (confirmacion.equals("S"))
+                {
+                    boolean eliminado = ArchivosCliente.eliminarCliente(dni);
+                    if (eliminado)
+                    {
+                        System.out.println(quitarAcentos("CLIENTE DADO DE BAJA CORRECTAMENTE.").toUpperCase());
+                    }
+                        else
+                        {
+                            System.out.println(quitarAcentos("ERROR AL DAR DE BAJA EL CLIENTE.").toUpperCase());
+                        }
+                }
+                    else
+                    {
+                        System.out.println(quitarAcentos("OPERACION CANCELADA.\n").toUpperCase());
+                    }
+            }
+                else
+                {
+                    System.out.println(quitarAcentos("NO SE ENCONTRO CLIENTE CON DNI: ").toUpperCase() + dni);
+                }
+        }
+            catch (Exception e)
+            {
+                System.out.println(quitarAcentos("ERROR AL DAR DE BAJA CLIENTE: ").toUpperCase() + e.getMessage());
+            }
+    }
+
+    // Baja de cliente (método original para compatibilidad)
     @Override
     public void bajaPersona(Persona persona)
     {

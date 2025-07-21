@@ -265,7 +265,6 @@ public class Empleado extends Persona
                                 System.out.println(quitarAcentos("OPCION INVALIDA. INTENTE NUEVAMENTE.\n").toUpperCase());
                                 break;
                         }
-                        
                         if (modificacionExitosa)
                         {
                             System.out.println(quitarAcentos("EMPLEADO MODIFICADO CORRECTAMENTE.\n").toUpperCase());
@@ -273,20 +272,20 @@ public class Empleado extends Persona
                         }
                     }
                 }
+                    else
+                    {
+                        System.out.println(quitarAcentos("MODIFICACION CANCELADA.\n").toUpperCase());
+                    }
+            }
                 else
                 {
-                    System.out.println(quitarAcentos("MODIFICACION CANCELADA.\n").toUpperCase());
+                    System.out.println(quitarAcentos("NO SE ENCONTRO EMPLEADO CON ESE LEGAJO.\n").toUpperCase());
                 }
-            }
-            else
+        }
+            catch (Exception e)
             {
-                System.out.println(quitarAcentos("NO SE ENCONTRO EMPLEADO CON ESE LEGAJO.\n").toUpperCase());
+                System.out.println(quitarAcentos("ERROR AL MODIFICAR EMPLEADO: " + e.getMessage()).toUpperCase());
             }
-        }
-        catch (Exception e)
-        {
-            System.out.println(quitarAcentos("ERROR AL MODIFICAR EMPLEADO: " + e.getMessage()).toUpperCase());
-        }
     }
 
     // Método auxiliar para leer enteros con validación
@@ -441,6 +440,77 @@ public class Empleado extends Persona
             }
     }
 
+    // Baja de empleado con confirmación
+    public void bajaPersona()
+    {
+        try
+        {
+            // Primero mostrar todos los empleados disponibles
+            ArrayList<Empleado> lista = Archivos.ArchivosEmpleado.leerEmpleados();
+            if (lista.isEmpty())
+            {
+                System.out.println(quitarAcentos("NO HAY EMPLEADOS REGISTRADOS.\n").toUpperCase());
+                return;
+            }
+            
+            System.out.println(quitarAcentos("EMPLEADOS DISPONIBLES:").toUpperCase());
+            mostrarEncabezadoEmpleados();
+            for (int i = 0; i < lista.size(); i++)
+            {
+                if (i > 0) {
+                    mostrarLineaSeparadoraEmpleados();
+                }
+                System.out.println(lista.get(i));
+            }
+            mostrarPieEmpleados();
+            
+            System.out.print(quitarAcentos("\nINGRESE LEGAJO DEL EMPLEADO A DAR DE BAJA (0 PARA CANCELAR): ").toUpperCase());
+            int legajo = leerEntero();
+            if (legajo == 0)
+            {
+                System.out.println(quitarAcentos("OPERACION CANCELADA.\n").toUpperCase());
+                return;
+            }
+            
+            Empleado empleadoBaja = Archivos.ArchivosEmpleado.buscarPorLegajo(legajo);
+            if (empleadoBaja != null)
+            {
+                System.out.println(quitarAcentos("\nEMPLEADO SELECCIONADO PARA DAR DE BAJA:").toUpperCase());
+                mostrarEncabezadoEmpleados();
+                System.out.println(empleadoBaja);
+                mostrarPieEmpleados();
+                
+                System.out.print(quitarAcentos("\n¿CONFIRMA ELIMINACION? (S/N): ").toUpperCase());
+                String confirmacion = scanner.nextLine().toUpperCase();
+                if (confirmacion.equals("S"))
+                {
+                    boolean eliminado = Archivos.ArchivosEmpleado.eliminarEmpleado(legajo);
+                    if (eliminado)
+                    {
+                        System.out.println(quitarAcentos("EMPLEADO DADO DE BAJA CORRECTAMENTE.").toUpperCase());
+                    }
+                        else
+                        {
+                            System.out.println(quitarAcentos("ERROR AL DAR DE BAJA EL EMPLEADO.").toUpperCase());
+                        }
+                }
+                    else
+                    {
+                        System.out.println(quitarAcentos("OPERACION CANCELADA.\n").toUpperCase());
+                    }
+            }
+                else
+                {
+                    System.out.println(quitarAcentos("NO SE ENCONTRO EMPLEADO CON LEGAJO: ").toUpperCase() + legajo);
+                }
+        }
+            catch (Exception e)
+            {
+                System.out.println(quitarAcentos("ERROR AL DAR DE BAJA EMPLEADO: ").toUpperCase() + e.getMessage());
+            }
+    }
+
+    // Baja de empleado (método original para compatibilidad)
     @Override
     public void bajaPersona(Persona persona)
     {
@@ -487,12 +557,15 @@ public class Empleado extends Persona
         
         // Formatear fecha de egreso como dd-mm-yyyy o "ACTIVO"
         String fechaEgresoFormateada = getFechaEgreso() != null ? 
-                                      String.format("%02d-%02d-%04d", 
-                                                   getFechaEgreso().getDayOfMonth(),
-                                                   getFechaEgreso().getMonthValue(),
-                                                   getFechaEgreso().getYear()) : "ACTIVO";
+                                      String.format
+                                                ("%02d-%02d-%04d", 
+                                                    getFechaEgreso().getDayOfMonth(),
+                                                    getFechaEgreso().getMonthValue(),
+                                                    getFechaEgreso().getYear()
+                                                ) : "ACTIVO";
         
-        return String.format("│ %8s │ %6s │ %25s │ %10s │ %18s │ %15s │ %15s │ %15s │ %12s │ %15s │ %15s │ %10s │",
+        return String.format
+        ("│ %8s │ %6s │ %25s │ %10s │ %18s │ %15s │ %15s │ %15s │ %12s │ %15s │ %15s │ %10s │",
                 centrarTexto(String.valueOf(getDni()), 8),
                 centrarTexto(String.valueOf(getLegajo()), 6),
                 centrarTexto(quitarAcentos(getNombres()).toUpperCase() + " " + quitarAcentos(getApellidos()).toUpperCase(), 25),

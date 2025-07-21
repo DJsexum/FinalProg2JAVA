@@ -19,14 +19,15 @@ public class MenuEmpleado
         do
         {
             System.out.println("\n┌───────────────────────────────────────────────┐");
-            System.out.println("│               MENU DE EMPLEADOS               │");
+            System.out.println("│                   EMPLEADOS                   │");
             System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│         [1] ALTA DE EMPLEADO                  │");
             System.out.println("│         [2] LISTAR EMPLEADOS                  │");
             System.out.println("│         [3] BUSCAR EMPLEADO POR LEGAJO        │");
             System.out.println("│         [4] MODIFICAR EMPLEADO                │");
             System.out.println("│         [5] BAJA DE EMPLEADO                  │");
-            System.out.println("│         [0] SALIR                             │");
+            System.out.println("├───────────────────────────────────────────────┤");
+            System.out.println("│         [0] VOLVER AL MENU PRINCIPAL          │");
             System.out.println("└───────────────────────────────────────────────┘");
             System.out.print("SELECCIONE UNA OPCION: ");
             opcion = leerEntero();
@@ -54,9 +55,7 @@ public class MenuEmpleado
                 break;
 
                 case 0:
-                    System.out.println("\n┌───────────────────────────────────────────────┐");
-                    System.out.println("│       SALIENDO DEL MENU DE EMPLEADOS...      │");
-                    System.out.println("└───────────────────────────────────────────────┘\n");
+                    // Aca nomas sale al menu principal :)
                 break;
 
                 default:
@@ -99,17 +98,8 @@ public class MenuEmpleado
     // Opción 5: Baja de empleado
     private static void bajaEmpleado()
     {
-        System.out.print("INGRESE LEGAJO DEL EMPLEADO A DAR DE BAJA: ");
-        int legajo = leerEntero();
-        Empleado empleado = (Empleado) new Empleado().buscaPersona(legajo);
-        if (empleado != null)
-        {
-            new Empleado().bajaPersona(empleado);
-        }
-            else
-            {
-                System.out.println("NO SE ENCONTRO EMPLEADO CON ESE LEGAJO.");
-            }
+        Empleado empleado = new Empleado();
+        empleado.bajaPersona();
     }
 
     // Método auxiliar para leer enteros de forma segura

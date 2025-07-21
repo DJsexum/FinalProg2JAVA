@@ -38,7 +38,7 @@ public class Producto implements Comparable<Producto>
         if (detalle == null || detalle.trim().isEmpty())
             throw new Excepciones.ProductoInvalidoException("EL DETALLE DEL PRODUCTO NO PUEDE ESTAR VACIO.");
         if (precio < 0)
-            throw new Excepciones.ProductoInvalidoException("EL PRECIO DEL PRODUCTO DEBE SER UN NUMERO POSITIVO.");
+            throw new Excepciones.ProductoInvalidoException("EL PRECIO DEL PRODUCTO NO PUEDE SER NEGATIVO.");
         if (stock < 0)
             throw new Excepciones.ProductoInvalidoException("EL STOCK DEL PRODUCTO NO PUEDE SER NEGATIVO.");
 
@@ -128,6 +128,25 @@ public class Producto implements Comparable<Producto>
         this.talle = scanner.nextLine();
         System.out.print("PRECIO: ");
         this.precio = scanner.nextDouble(); scanner.nextLine();
+        
+        // Confirmación para precio 0
+        if (this.precio == 0) 
+        {
+            System.out.println("\n┌─────────────────────────────────────────────────────────┐");
+            System.out.println("│                      ATENCION                          │");
+            System.out.println("├─────────────────────────────────────────────────────────┤");
+            System.out.println("│  HAS INGRESADO PRECIO $0.00                            │");
+            System.out.println("│  ESTE PRODUCTO APARECERA COMO 'GRATIS' EN LAS LISTAS   │");
+            System.out.println("└─────────────────────────────────────────────────────────┘");
+            System.out.print("¿CONFIRMAS QUE EL PRODUCTO ES GRATIS? (S/N): ");
+            String confirmacion = scanner.nextLine().toUpperCase();
+            if (!confirmacion.equals("S")) 
+            {
+                System.out.print("INGRESA EL PRECIO CORRECTO: ");
+                this.precio = scanner.nextDouble(); scanner.nextLine();
+            }
+        }
+        
         System.out.print("MARCA: ");
         this.marca = scanner.nextLine();
         System.out.print("MATERIAL: ");
@@ -165,7 +184,7 @@ public class Producto implements Comparable<Producto>
             }
     }
 
-    // Modificar producto: pide nuevos datos y actualiza en archivo
+    // Modificar producto: pide nuevos datos y actualiza en archivo (ya se que podria haber modularizado más, pero lo hice así por que las neuronas a las horas que lo hice, me daban para hacerlo asi)
     public void modificarProducto()
     {
         System.out.print("NUEVO DETALLE: ");
@@ -174,6 +193,25 @@ public class Producto implements Comparable<Producto>
         this.talle = scanner.nextLine();
         System.out.print("NUEVO PRECIO: ");
         this.precio = scanner.nextDouble(); scanner.nextLine();
+        
+        // Confirmación para precio 0
+        if (this.precio == 0) 
+        {
+            System.out.println("\n┌─────────────────────────────────────────────────────────┐");
+            System.out.println("│                      ATENCION                           │");
+            System.out.println("├─────────────────────────────────────────────────────────┤");
+            System.out.println("│  HAS INGRESADO PRECIO $0.00                             │");
+            System.out.println("│  ESTE PRODUCTO APARECERA COMO 'GRATIS' EN LAS LISTAS    │");
+            System.out.println("└─────────────────────────────────────────────────────────┘");
+            System.out.print("¿CONFIRMAS QUE EL PRODUCTO ES GRATIS? (S/N): ");
+            String confirmacion = scanner.nextLine().toUpperCase();
+            if (!confirmacion.equals("S"))
+            {
+                System.out.print("INGRESA EL PRECIO CORRECTO: ");
+                this.precio = scanner.nextDouble(); scanner.nextLine();
+            }
+        }
+        
         System.out.print("NUEVA MARCA: ");
         this.marca = scanner.nextLine();
         System.out.print("NUEVO MATERIAL: ");
@@ -277,6 +315,9 @@ public class Producto implements Comparable<Producto>
         material = material.length() > 18 ? material.substring(0, 15) + "..." : material;
         String categoria = producto.getCategoria().toString().length() > 14 ? producto.getCategoria().toString().substring(0, 11) + "..." : producto.getCategoria().toString();
         
+        // Formatear precio: mostrar "GRATIS" si es 0, sino el precio con 2 decimales
+        String precioTexto = (producto.getPrecio() == 0) ? "GRATIS" : String.format("%.2f", producto.getPrecio());
+        
         // Mostrar la fila del producto
         System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
             centrarTexto(String.valueOf(producto.getCodigo()), 8), 
@@ -285,7 +326,7 @@ public class Producto implements Comparable<Producto>
             centrarTexto(material, 18),
             centrarTexto(detalle, 22),
             centrarTexto(talle, 8), 
-            centrarTexto(String.format("%.2f", producto.getPrecio()), 14),
+            centrarTexto(precioTexto, 14),
             centrarTexto(String.valueOf(producto.getStock()), 8));
             
         System.out.println("└────────┴──────────────┴─────────────────┴──────────────────┴──────────────────────┴────────┴──────────────┴────────┘");
@@ -323,6 +364,9 @@ public class Producto implements Comparable<Producto>
             material = material.length() > 18 ? material.substring(0, 15) + "..." : material;
             String categoria = p.getCategoria().toString().length() > 14 ? p.getCategoria().toString().substring(0, 11) + "..." : p.getCategoria().toString();
             
+            // Formatear precio: mostrar "GRATIS" si es 0, sino el precio con 2 decimales
+            String precioTexto = (p.getPrecio() == 0) ? "GRATIS" : String.format("%.2f", p.getPrecio());
+            
             // Mostrar la fila del producto
             System.out.printf("│%8s│%14s│%17s│%18s│%22s│%8s│%14s│%8s│\n",
                 centrarTexto(String.valueOf(p.getCodigo()), 8), 
@@ -331,7 +375,7 @@ public class Producto implements Comparable<Producto>
                 centrarTexto(material, 18),
                 centrarTexto(detalle, 22),
                 centrarTexto(talle, 8), 
-                centrarTexto(String.format("%.2f", p.getPrecio()), 14),
+                centrarTexto(precioTexto, 14),
                 centrarTexto(String.valueOf(p.getStock()), 8));
                 
             // Agregar línea separadora entre productos (excepto después del último)
@@ -386,12 +430,14 @@ public class Producto implements Comparable<Producto>
     @Override
     public String toString()
     {
+        String precioTexto = (precio == 0) ? "GRATIS" : String.valueOf(precio);
+        
         return "PRODUCTO:\n" +
                 "\n" +
                 "CODIGO = " + codigo + "\n" +
                 "DETALLE = " + detalle + "\n" +
                 "TALLE = " + talle + "\n" +
-                "PRECIO = " + precio + "\n" +
+                "PRECIO = " + precioTexto + "\n" +
                 "MARCA = " + marca + "\n" +
                 "MATERIAL = " + material + "\n" +
                 "CATEGORIA = " + categoria + "\n" +

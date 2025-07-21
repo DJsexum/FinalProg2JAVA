@@ -26,15 +26,15 @@ public enum Sexo
     {
         while (true)
         {
-            System.out.println("SELECCIONE EL SEXO:");
-            System.out.println("1. MASCULINO");
+            System.out.println("\n1. MASCULINO");
             System.out.println("2. FEMENINO");
             System.out.println("3. OTRO");
+            System.out.println("SELECCIONE EL SEXO: ");
 
             int opcion;
             while (!scanner.hasNextInt())
             {
-                System.out.print("INGRESE UN NUMERO VALIDO: ");
+                System.out.print("\nINGRESE UN NUMERO VALIDO: ");
                 scanner.next();
             }
             opcion = scanner.nextInt();
@@ -49,7 +49,7 @@ public enum Sexo
                 case 3:
                     return OTRO;
                 default:
-                    System.out.println("OPCION INVALIDA. INTENTE DE NUEVO.");
+                    System.out.println("OPCION INVALIDA");
             }
         }
     }

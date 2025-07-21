@@ -16,13 +16,14 @@ public class MenuMovimiento
         do
         {
             System.out.println("\n┌───────────────────────────────────────────────┐");
-            System.out.println("│              MENU DE MOVIMIENTOS              │");
+            System.out.println("│                  MOVIMIENTOS                  │");
             System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│        [1] ALTA DE MOVIMIENTO                 │");
             System.out.println("│        [2] LISTAR MOVIMIENTOS                 │");
             System.out.println("│        [3] BUSCAR MOVIMIENTO POR CODIGO       │");
             System.out.println("│        [4] MODIFICAR MOVIMIENTO               │");
             System.out.println("│        [5] BAJA DE MOVIMIENTO                 │");
+            System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│        [0] VOLVER AL MENU PRINCIPAL           │");
             System.out.println("└───────────────────────────────────────────────┘");
             System.out.print("SELECCIONE UNA OPCION: ");
@@ -58,9 +59,7 @@ public class MenuMovimiento
                 break;
 
                 case 0:
-                    System.out.println("\n┌───────────────────────────────────────────────┐");
-                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
-                    System.out.println("└───────────────────────────────────────────────┘\n");
+                    // Aca nomas sale al menu principal :)
                 break;
 
                 default:

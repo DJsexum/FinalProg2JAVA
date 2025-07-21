@@ -16,7 +16,7 @@ public class MenuCuentaCorriente
         do
         {
             System.out.println("\n┌───────────────────────────────────────────────┐");
-            System.out.println("│             MENU CUENTA CORRIENTE             │");
+            System.out.println("│               CUENTA CORRIENTE                │");
             System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│      [1] LISTAR CUENTAS CORRIENTES            │");
             System.out.println("│      [2] VER MOVIMIENTOS DE UNA CUENTA        │");
@@ -24,6 +24,7 @@ public class MenuCuentaCorriente
             System.out.println("│      [4] ELIMINAR CUENTA CORRIENTE            │");
             System.out.println("│      [5] AGREGAR MOVIMIENTO A UNA CUENTA      │");
             System.out.println("│      [6] MOSTRAR RESUMEN DE UNA CUENTA        │");
+            System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│      [0] VOLVER                               │");
             System.out.println("└───────────────────────────────────────────────┘");
             System.out.print("SELECCIONE UNA OPCION: ");
@@ -63,9 +64,7 @@ public class MenuCuentaCorriente
                 break;
 
                 case 0:
-                    System.out.println("\n┌───────────────────────────────────────────────┐");
-                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
-                    System.out.println("└───────────────────────────────────────────────┘\n");
+                    // Aca nomas sale al menu principal :)
                 break;
 
                 default:

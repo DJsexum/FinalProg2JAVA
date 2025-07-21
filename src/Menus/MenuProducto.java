@@ -19,7 +19,7 @@ public class MenuProducto
         do
         {
             System.out.println("\n┌───────────────────────────────────────────────┐");
-            System.out.println("│                MENU DE PRODUCTOS              │");
+            System.out.println("│                   PRODUCTOS                   │");
             System.out.println("├───────────────────────────────────────────────┤");
             System.out.println("│     [1] ALTA DE PRODUCTO                      │");
             System.out.println("│     [2] LISTAR PRODUCTOS                      │");
@@ -568,12 +568,8 @@ public class MenuProducto
                 }
 
                 case 0:
-                {
-                    System.out.println("\n┌───────────────────────────────────────────────┐");
-                    System.out.println("│           VOLVIENDO AL MENU PRINCIPAL         │");
-                    System.out.println("└───────────────────────────────────────────────┘\n");
+                    // Aca nomas sale al menu principal :)
                 break;
-                }
 
                 default:
                 {

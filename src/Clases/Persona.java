@@ -153,13 +153,13 @@ public abstract class Persona
                 
                 if (dni <= 0)
                 {
-                    throw new Principal.Excepciones.DniInvalidoException("EL DNI DEBE SER UN NUMERO VALIDO");
+                    throw new Principal.Excepciones.DniInvalidoException("EL DNI DEBE SER UN NUMERO VALIDO: ");
                 }
                 break;
             }
                 catch (NumberFormatException e)
                 {
-                    System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL DNI.");
+                    System.out.println("ERROR: DEBE INGRESAR SOLO NUMEROS PARA EL DNI: ");
                     dni = -1; // Resetear para continuar el bucle
                 }
                     catch (Principal.Excepciones.DniInvalidoException e)

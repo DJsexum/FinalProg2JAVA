@@ -15,16 +15,16 @@ public class MenuPrincipal
         {
             // DISEÑO PROFESIONAL DEL MENU PRINCIPAL
             System.out.println("\n┌───────────────────────────────────────────────┐");
-            System.out.println("│                MENU PRINCIPAL                 │");
+            System.out.println("│                 MENU PRINCIPAL                │");
             System.out.println("├───────────────────────────────────────────────┤");
-            System.out.println("│            [1] GESTION DE CLIENTES            │");
-            System.out.println("│            [2] GESTION DE EMPLEADOS           │");
-            System.out.println("│            [3] GESTION DE USUARIOS            │");
-            System.out.println("│            [4] GESTION DE PRODUCTOS           │");
-            System.out.println("│            [5] GESTION DE VENTAS              │");
-            System.out.println("│            [6] GESTION DE MOVIMIENTOS         │");
+            System.out.println("│                 [1] CLIENTES                  │");
+            System.out.println("│                 [2] EMPLEADOS                 │");
+            System.out.println("│                 [3] USUARIOS                  │");
+            System.out.println("│                 [4] PRODUCTOS                 │");
+            System.out.println("│                 [5] VENTAS                    │");
+            System.out.println("│                 [6] MOVIMIENTOS               │");
             System.out.println("├───────────────────────────────────────────────┤");
-            System.out.println("│            [0] SALIR DEL SISTEMA              │");
+            System.out.println("│                 [0] SALIR                     │");
             System.out.println("└───────────────────────────────────────────────┘");
             System.out.print("\nSELECCIONE UNA OPCION: ");
 
@@ -65,7 +65,6 @@ public class MenuPrincipal
                 case 0:
                     System.out.println("┌─────────────────────────────────────────────────┐");
                     System.out.println("│           GRACIAS POR USAR EL SISTEMA           │");
-                    System.out.println("│                SESION TERMINADA                 │");
                     System.out.println("└─────────────────────────────────────────────────┘\n");
                 break;
 
